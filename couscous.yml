@@ -1,0 +1,45 @@
+# Wondering what this file is? 
+# See: https://github.com/ovac/ovac-couscous-theme
+# See: http://couscous.io
+
+# Base URL of the published website
+baseUrl: https://www.qodehub.com/
+
+# Used to link to the GitHub project
+github:
+    user: qodehub
+    repo: bitgo-php
+
+widgets:
+    addthis: ra-599a2b3ed56dd5f2
+    googleAnalytics: UA-104991685-1
+    googletag: GTM-TWFSSDL
+
+template:
+    url: https://github.com/ovac/ovac-couscous-template
+
+include:
+    - .
+    - docs
+
+exclude:
+    - vendor
+
+title: QodeHub PHP SDK for Bitgo v2
+subTitle: PHP sdk.
+
+# The left menu bar
+menu:
+    sections:
+        introduction:
+            name: Introduction
+            items:
+                home:
+                    text: Home
+                    relativeUrl:
+        getting-started:
+            name: Getting Started
+            items:
+                installation:
+                    text: Installation
+                    relativeUrl: installation.html
