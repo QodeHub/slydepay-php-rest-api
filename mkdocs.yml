@@ -1,0 +1,8 @@
+site_name: qodehub/bitgo-php
+site_description: Qodehub's PHP-SDK for Bitgo.
+site_author: Victor Ariama (ovac4u)
+repo_url: https://github.com/qodehub/bitgo-php
+docs_dir: doc
+pages:
+- Home: 'index.md'
+- To-Do: 'todo.md'

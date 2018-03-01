@@ -13,6 +13,12 @@
             "qodehub\\bitgo-php\\" : "src/"
         }
     },
+    "repositories": {
+        "graph-composer": {
+            "type": "git",
+            "url": "https://github.com/jkphl/graph-composer"
+        }
+    },
     "require": {
         "php": ">=5.4.0",
         "guzzlehttp/guzzle": "^6.0.0"
@@ -27,17 +33,26 @@
         "satooshi/php-coveralls": "^1.0"
     },
     "scripts" : {
-        "phpunit"  : "phpunit",
+        "phpunit"  : "@phpunit",
+        "depgraph": "vendor/bin/graph-composer --no-dev export . doc/dependencies.svg",
         "phpcpd"   : "phpcpd src",
         "phpcs"    : "phpcs --standard=./vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ --extensions=php ./src",
         "phpcbf"   : "phpcbf",
         "phpmd"    : "phpmd ./src text phpmd.xml",
+        "phpdox": "vendor/bin/phpdox",
+        "phploc": "vendor/bin/phploc --count-tests --progress --log-xml build/phploc.xml src",
         "phpcpd-ci": "phpcpd --log-pmd=./build/phpcpd-report.xml  ./src",
         "phpmd-ci" : "phpmd ./src xml phpmd.xml --reportfile ./build/phpmd-report.xml",
         "phpcs-ci" : "phpcs --standard=./vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ --report=checkstyle --report-file=./build/phpcs-checkstyle-report.xml --extensions=php src",
         "test"     : "phpunit; composer phpcs; composer phpmd; composer phpcpd;",
         "sami"     : "sami.phar build ./sami.config.php -v",
         "document" : "bin/document.sh;",
-        "coverage" : "coveralls -v"
+        "coverage" : "coveralls -v",
+        "build": [
+            "@phploc",
+            "@phpmd",
+            "@phpunit",
+            "@phpdox"
+        ]
     }
 }
