@@ -1,0 +1,17 @@
+{
+  "generator-ovacphp": {
+    "php": ">=5.4",
+    "stability": "stable",
+    "vendor": "qodehub",
+    "project": "bitgo-php",
+    "description": "Bitgo v2 PHP SDK",
+    "website": "http://qodehub.github.io/bitgo-php",
+    "license": "MIT",
+    "namespace": "Qodehub",
+    "module": "Bitgo",
+    "authorName": "Victor Ariama (ovac4u)",
+    "authorEmail": "victorariama@qodehub.com",
+    "authorWebsite": "http://www.ovac4u.com",
+    "company": "QodeHub, Ltd."
+  }
+}
