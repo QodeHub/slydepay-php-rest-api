@@ -14,7 +14,7 @@
 namespace Qodehub\Bitgo\Wallet;
 
 /**
- * WalletAccessor Trait
+ * WalletAccessors Trait
  *
  * This traits holds the accessors for a wallet model
  */

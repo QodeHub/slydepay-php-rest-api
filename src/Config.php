@@ -33,6 +33,7 @@ class Config implements ConfigInterface
     protected $version;
     /**
      * This will be the Authorization Token
+     *
      * @var string
      */
     protected $token;

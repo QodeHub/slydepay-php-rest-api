@@ -80,6 +80,8 @@ class Handler
      * @param  string $errorCode
      * @param  array  $missingParameter
      * @return \Qodehub\Bitgo\Exception\BitgoException
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     protected function handleException($message, $statusCode, $errorType, $errorCode, $missingParameter, $rawOutput)
     {

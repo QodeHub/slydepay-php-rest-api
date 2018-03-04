@@ -30,16 +30,47 @@ subTitle: PHP sdk.
 
 # The left menu bar
 menu:
+
     sections:
+
         introduction:
             name: Introduction
             items:
                 home:
                     text: Home
                     relativeUrl:
+
         getting-started:
             name: Getting Started
             items:
                 installation:
                     text: Installation
                     relativeUrl: installation.html
+        
+        api:
+            name: Api
+            items:
+                api:
+                    text: Api
+                    relativeUrl: api/index.html
+
+                coverage:
+                    text: Coverage
+                    relativeUrl: coverage/index.html
+
+        development:
+            name: Development
+            items:
+                installation:
+                    text: Contributing
+                    relativeUrl: contributing.html
+
+                installation:
+                    text: Changelog
+                    relativeUrl: changelog.html
+        links:
+            name: Links
+            items:
+                hubtel-documentation:
+                    text: Bitgo API Official Documentation
+                    absoluteUrl: https://bitgo.github.io/bitgo-docs/?shell#wallet-operations-basic

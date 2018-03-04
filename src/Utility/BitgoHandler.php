@@ -32,6 +32,8 @@ use Qodehub\Bitgo\Exception\Handler;
  * requests and middlewares.
  *
  * @see http://docs.guzzlephp.org/en/stable/handlers-and-middleware.html Guzzle: Handlers and Middlewares.
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class BitgoHandler
 {

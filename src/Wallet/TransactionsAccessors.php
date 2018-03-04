@@ -14,7 +14,7 @@
 namespace Qodehub\Bitgo\Wallet;
 
 /**
- * TransactionAccessors Trait
+ * TransactionsAccessors Trait
  *
  * This traits holds accessors for the transactions class
  */
@@ -136,6 +136,26 @@ trait TransactionsAccessors
     public function setMinConfirms($minConfirms)
     {
         $this->minConfirms = $minConfirms;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransactionId()
+    {
+        return $this->transactionId;
+    }
+
+    /**
+     * @param mixed $transactionId
+     *
+     * @return self
+     */
+    public function setTransactionId($transactionId)
+    {
+        $this->transactionId = $transactionId;
 
         return $this;
     }

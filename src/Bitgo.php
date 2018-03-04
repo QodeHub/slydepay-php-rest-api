@@ -51,6 +51,7 @@ class Bitgo implements ConfigInterface
     }
     /**
      * Create a new Qodehub Studio
+     *
      * @return self A new class of self.
      */
     public static function make()

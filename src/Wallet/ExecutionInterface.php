@@ -16,7 +16,7 @@ namespace Qodehub\Bitgo\Wallet;
 use Qodehub\Bitgo\Api\ApiInterface;
 
 /**
- * Execution Interface
+ * ExecutionInterface Interface
  *
  * This is an interface for all classes that can be executed
  * directly from the wallet interface.
@@ -45,11 +45,8 @@ interface ExecutionInterface extends ApiInterface
      * You can also modify the wallet on the instance
      * by pasing in the wallet ID or instance
      *
-     * @param  Qodehub\Bitgo\Wallet|string $walletId     This is the wallet id.
-     *
-     * @return self                                      This will be the instance
-     *                                                   of the class it is
-     *                                                   called from.
+     * @param  string $walletId The wallet id to transact with
+     * @return self           the class instance
      */
-    public function wallet($walet);
+    public function wallet($walletId);
 }

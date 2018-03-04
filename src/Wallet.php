@@ -28,75 +28,89 @@ class Wallet extends Api implements WalletInterface
 
     /**
      * Admin rights on a walet
+     *
      * @var Object
      */
     protected $admin;
     /**
      * The wallet ID
+     *
      * @var string
      */
     protected $id;
     /**
      * The walet status. shows if the walet is active or not
+     *
      * @var boolean
      */
     protected $isActive;
     /**
      * A label of the wallet
+     *
      * @var string
      */
     protected $label;
     /**
      * The list of permissions on this wallet.
+     *
      * @var array
      */
     protected $permissions;
     /**
      * This private property will hold the set of keychains
      * returned from the bitgo API server
+     *
      * @var array
      */
     protected $private;
     /**
      * This is a boolean that shows if this wallet can
      * be used for spending
+     *
      * @var boolean
      */
     protected $spendingAccount;
     /**
      * This is the type of the walet. (i.e. SafeID)
+     *
      * @var tring
      */
     protected $type;
     /**
      * This is the url for this specific wallet.
+     *
      * @var string
      */
     protected $url;
     /**
      * This holds the number of approvals required to approve
      * pending approvals involving this wallet
+     *
      * @var boolean
      */
     protected $approvalsRequired;
     /**
      * This is the total balance on this wallet.
      * Including unconfirmed
+     *
      * @var float
      */
     protected $balance;
     /**
      * This is the confirmed balance on this wallet.
+     *
      * @var float
      */
     protected $confirmedBalance;
     /**
      * This is the total spendable balance on this wallet.
+     *
      * @var float
      */
     protected $spendableBalance;
     /**
      * The construct method accepts a the ID of the wallet that it will be interracting with.
+     *
      * @param string $walletId the wallet id to interract with
      */
     public function __construct($walletId = null)
@@ -106,10 +120,10 @@ class Wallet extends Api implements WalletInterface
     /**
      * Dynamically handle missing Static Call to sub classes.
      *
-     * @param  string $method
-     * @param  array  $parameters
-     * @return self
-     * @throws \BadMethodCallException
+     * @param   string $method
+     * @param   array  $parameters
+     * @return  self
+     * @throws  \BadMethodCallException
      * @example Wallet::transactions()->get();
      * @example Wallet::transactions()->get('transactionId');
      */
@@ -121,10 +135,10 @@ class Wallet extends Api implements WalletInterface
     /**
      * Dynamically handle calls to sub-classes and pass in the wallet instance ID.
      *
-     * @param  string $method
-     * @param  array  $parameters
-     * @return self
-     * @throws \BadMethodCallException
+     * @param   string $method
+     * @param   array  $parameters
+     * @return  self
+     * @throws  \BadMethodCallException
      * @example walletInstance->transactions()->get();
      * @example walletInstance->transactions()->get('transactionId');
      */

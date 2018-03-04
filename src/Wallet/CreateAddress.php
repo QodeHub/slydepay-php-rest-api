@@ -50,6 +50,7 @@ class CreateAddress extends Api implements ExecutionInterface
 
     /**
      * 0, 1, 10 or 11 (10 or 11 for SegWit)
+     *
      * @var number
      */
     protected $chain = 0;
@@ -76,6 +77,7 @@ class CreateAddress extends Api implements ExecutionInterface
 
     /**
      * Set the chain type
+     *
      * @param  number $chain (0, 1, 10 or 11 (10 or 11 for SegWit))
      * @return self
      */
@@ -97,26 +99,3 @@ class CreateAddress extends Api implements ExecutionInterface
         return $this->_post('/wallet/' . $this->getWalletId() . '/address/' . $this->getChain());
     }
 }
-/**
- * Query
- */
-// walletId    bitcoin address (string)    Yes    The ID of the wallet
-// chain    number    Yes    0, 1, 10 or 11 (10 or 11 for SegWit)
-
-/**
- * Response
- */
-// address    the chained address
-// chain    the chain (0, 1, 10 or 11)
-// index    the index of the address within the chain (0, 1, 2, …)
-// path    the BIP32 path of the address relative to the wallet root
-// redeemScript    the redeemScript for the address
-
-/**
- * Error Response
- */
-// 400 Bad Request    The request parameters were missing or incorrect.
-// 401 Unauthorized    The authentication parameters did not match.
-// 403 Forbidden    The wallet is not a multi-sig BIP32 (SafeHD) wallet
-// 404 Not Found    The wallet was not found
-// 406 Not acceptable    One of the keychains provided were not acceptable.

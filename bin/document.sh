@@ -17,7 +17,7 @@ php sami.phar update ./sami.config.php -v;
 php couscous.phar generate --target=./build/couscous;
 
 # clone the project and climb into the directory and switch to the gh-pages branch
-git clone https://www.github.com/qodehub/bitgo-php;
+git clone https://qodehub-victor@bitbucket.org/qodehub-team/payplux-bitgo-v2-php-sdk.git;
 
 cd bitgo-php;
 
@@ -45,4 +45,4 @@ mv  -v ../build/coverage/* ./coverage/;
 # Add all and commit to github if deploy was enabled
 git add --all . && git add **/.* && git commit -m 'Documentation Updated' && git push origin gh-pages;
 
-rm -rf ../bitgo-php;
+rm -rf ../payplux-bitgo-v2-php-sdk;

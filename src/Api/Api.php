@@ -202,9 +202,9 @@ abstract class Api implements ApiInterface
 
     /**
      * This method will hit the run request with any arguement passed into it
-     * It can be used interchangably with the run method.
+     * It can be used interchangably with the run, get or post method.
      *
-     * @param  any $args this will be any argument passed into this method
+     * @param  any ...$args The list of args
      * @return self
      */
     public function get(...$args)
@@ -214,9 +214,9 @@ abstract class Api implements ApiInterface
 
     /**
      * This method will hit the run request with any arguement passed into it
-     * It can be used interchangably with the run method.
+     * It can be used interchangably with the run, get or post method.
      *
-     * @param  any $args this will be any argument passed into this method
+     * @param  any ...$args The list of args
      * @return self
      */
     public function post(...$args)

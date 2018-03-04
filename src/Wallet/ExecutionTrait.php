@@ -21,23 +21,25 @@ namespace Qodehub\Bitgo\Wallet;
  * by classes where it is required since
  * it will be used extensively
  *
- * @see Qodehub\Bitgo\Wallet\ExecutionInterface
+ * @see \Qodehub\Bitgo\Wallet\ExecutionInterface
  */
 trait ExecutionTrait
 {
     /**
      * This is the wallet ID for which the address will
      * be created.
+     *
      * @var string
      */
     protected $walletId;
 
     /**
      * This will set the wallet that the address will be created on
+     *
      * @param  string $walletId The wallet ID should be passed in here
      * @return Qodehub\Bitgo\Wallet|string           The wallet ID or Instance
      *
-     * @see Qodehub\Bitgo\Wallet\ExecutionInterface
+     * @see \Qodehub\Bitgo\Wallet\ExecutionInterface
      */
     public function wallet($walletId)
     {

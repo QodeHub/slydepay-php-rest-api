@@ -104,6 +104,14 @@ class Transactions extends Api implements ExecutionInterface
      * @var number
      */
     protected $minConfirms;
+    /**
+     * This will be a transaction ID if the intention will
+     * be to get a single transaction instead of a
+     * collection of transaction
+     *
+     * @var string
+     */
+    protected $transactionId;
 
     /**
      * @param boolean $skip
@@ -167,13 +175,16 @@ class Transactions extends Api implements ExecutionInterface
 
     /**
      * The method places the call to the Bitgo API
-     * @param number|null $transactionId Id for a single transaciton resources
+     *
+     * @param  number|null $transactionId Id for a single transaciton resources
      * @return Object
      */
     public function run($transactionId = null)
     {
+        $this->setTransactionId($transactionId);
+
         $this->propertiesPassRequired();
 
-        return $this->_get('/wallet/' . $this->getWalletId() . '/tx/' . $transactionId, $this->propertiesToArray());
+        return $this->_get('/wallet/' . $this->getWalletId() . '/tx/' . $this->getTransactionId(), $this->propertiesToArray());
     }
 }
