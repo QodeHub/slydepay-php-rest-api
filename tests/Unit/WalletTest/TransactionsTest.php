@@ -206,7 +206,7 @@ class TransactonsTest extends TestCase
     }
 
     /** @test */
-    public function test_that_a_call_to_the_server_will_be_successful_if_all_is_right()
+    public function test_that_a_call_to_the_server_all_transactions_will_be_successful_if_all_is_right()
     {
         /**
          * Setup the Handler and middlewares interceptor to intercept the call to the server
@@ -248,7 +248,7 @@ class TransactonsTest extends TestCase
         /**
          * Run the call to the server
          */
-        $result = $mock->run();
+        $result = $mock->get();
 
         /**
          * Run assertion that call reached the Mock Server
@@ -269,6 +269,73 @@ class TransactonsTest extends TestCase
 
         $this->assertContains(
             "https://www.bitgo.com/wallet/existing-wallet-id/tx/",
+            $request->getUri()->__toString()
+        );
+    }
+    /** @test */
+    public function test_that_a_call_to_the_server_single_transactions_will_be_successful_if_all_is_right()
+    {
+        /**
+         * Setup the Handler and middlewares interceptor to intercept the call to the server
+         */
+        $container = [];
+
+        $history = Middleware::history($container);
+
+        $httpMock = new MockHandler([
+            new Response(200, ['X-Foo' => 'Bar'], json_encode(['X-Foo' => 'Bar'])),
+        ]);
+
+        $handlerStack = (new BitgoHandler($this->config, HandlerStack::create($httpMock)))->createHandler();
+
+        $handlerStack->push($history);
+
+        /**
+         * Listen to the Transactions class method and use the interceptor
+         *
+         * Intercept all calls to the server from the createHandler method
+         */
+        $mock = $this->getMockBuilder(Transactions::class)
+            ->setMethods(['createHandler'])
+            ->getMock();
+
+        $mock->expects($this->once())->method('createHandler')->will($this->returnValue($handlerStack));
+
+        /**
+         * Inject the configuration and use the
+         */
+        $mock
+            ->injectConfig(new Config())
+
+            //Setup the required parameters
+
+            ->wallet('existing-wallet-id')
+        ;
+
+        /**
+         * Run the call to the server
+         */
+        $result = $mock->get('existing-transaction-id');
+
+        /**
+         * Run assertion that call reached the Mock Server
+         */
+        $this->assertEquals($result, ['X-Foo' => 'Bar']);
+
+        /**
+         * Grab the requests and test that the request parameters
+         * are correct as expected.
+         */
+        $request = $container[0]['request'];
+
+        $this->assertEquals($request->getMethod(), 'GET', 'it should be a get request.');
+        $this->assertEquals($request->getUri()->getHost(), 'www.bitgo.com', 'Hostname should be www.bitgo.com');
+        $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
+
+        $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
+
+        $this->assertContains(
+            "https://www.bitgo.com/wallet/existing-wallet-id/tx/existing-transaction-id",
             $request->getUri()->__toString()
         );
     }

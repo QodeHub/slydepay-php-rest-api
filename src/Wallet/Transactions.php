@@ -112,9 +112,7 @@ class Transactions extends Api implements ExecutionInterface
      */
     public function skip($skip)
     {
-        $this->skip = $skip;
-
-        return $this;
+        return $this->setSkip($skip);
     }
 
     /**
@@ -124,9 +122,7 @@ class Transactions extends Api implements ExecutionInterface
      */
     public function limit($limit)
     {
-        $this->limit = $limit;
-
-        return $this;
+        return $this->setLimit($limit);
     }
 
     /**
@@ -136,9 +132,7 @@ class Transactions extends Api implements ExecutionInterface
      */
     public function compact($compact)
     {
-        $this->compact = $compact;
-
-        return $this;
+        return $this->setCompact($compact);
     }
 
     /**
@@ -148,9 +142,7 @@ class Transactions extends Api implements ExecutionInterface
      */
     public function minHeight($minHeight)
     {
-        $this->minHeight = $minHeight;
-
-        return $this;
+        return $this->setMinHeight($minHeight);
     }
 
     /**
@@ -160,9 +152,7 @@ class Transactions extends Api implements ExecutionInterface
      */
     public function maxHeight($maxHeight)
     {
-        $this->maxHeight = $maxHeight;
-
-        return $this;
+        return $this->setMaxHeight($maxHeight);
     }
 
     /**
@@ -172,9 +162,7 @@ class Transactions extends Api implements ExecutionInterface
      */
     public function minConfirms($minConfirms)
     {
-        $this->minConfirms = $minConfirms;
-
-        return $this;
+        return $this->setMinConfirms($minConfirms);
     }
 
     /**

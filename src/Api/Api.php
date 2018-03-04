@@ -199,4 +199,28 @@ abstract class Api implements ApiInterface
 
         return $this;
     }
+
+    /**
+     * This method will hit the run request with any arguement passed into it
+     * It can be used interchangably with the run method.
+     *
+     * @param  any $args this will be any argument passed into this method
+     * @return self
+     */
+    public function get(...$args)
+    {
+        return $this->run(...$args);
+    }
+
+    /**
+     * This method will hit the run request with any arguement passed into it
+     * It can be used interchangably with the run method.
+     *
+     * @param  any $args this will be any argument passed into this method
+     * @return self
+     */
+    public function post(...$args)
+    {
+        return $this->run(...$args);
+    }
 }
