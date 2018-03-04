@@ -10,7 +10,7 @@
     ],
     "autoload" : {
         "psr-4": {
-            "qodehub\\bitgo-php\\" : "src/"
+            "Qodehub\\Bitgo\\" : "src/"
         }
     },
     "repositories": {

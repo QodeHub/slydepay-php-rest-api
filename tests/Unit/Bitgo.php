@@ -11,24 +11,20 @@
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Tests\Unit\Api/Wallet;
+namespace Qodehub\Bitgo\Tests\Unit;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Api/Wallet Test
- *
- * Test case for Api/Wallet class
- */
 class Test extends TestCase
 {
+
     /**
-     * Filter list by Enterprise ID.
+     * The Qodehub\Bitgo Pay config.
      *
-     * @var string
+     * @var \Qodehub\Bitgo\Config
      */
-    protected $enterpriseId;
+    protected $config;
     /**
      * Setup resources and dependencies
      *

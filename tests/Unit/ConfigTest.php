@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package     Qodehub\Bitgo
  * @link        https://github.com/qodehub/bitgo-php
@@ -11,36 +10,25 @@
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace qodehub\Bitgo\Tests\Unit;
+namespace Qodehub\Bitgo\Tests\Unit;
 
-use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Qodehub\Bitgo\Bitgo;
+use Qodehub\Bitgo\Config;
 
-class Test extends TestCase
+class ConfigTest extends TestCase
 {
-
     /**
-     * The Qodehub\Bitgo Pay config.
-     *
-     * @var \Qodehub\Bitgo\Config
+     * A configuration instance to be used by the api
+     * @var Qodehub\Bitgo\Config
      */
     protected $config;
-    /**
-     * Setup resources and dependencies
-     *
-     * @return void
-     */
-    public function setUp()
+
+    /** @test */
+    public function a_new_config_instance_can_be_created()
     {
-        //
-    }
-    /**
-     * Close mockery.
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        m::close();
+        $this->config = new Config();
+
+        $this->assertTrue(true);
     }
 }

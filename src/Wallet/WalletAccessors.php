@@ -11,7 +11,7 @@
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Api;
+namespace Qodehub\Bitgo\Wallet;
 
 /**
  * WalletAccessor Trait
@@ -279,5 +279,14 @@ trait WalletAccessors
         $this->spendableBalance = $spendableBalance;
 
         return $this;
+    }
+
+    /**
+     * Set the wallet iD
+     * {@inheritdoc}
+     */
+    public function wallet($walletId)
+    {
+        $this->setId($walletId);
     }
 }

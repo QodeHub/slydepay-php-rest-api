@@ -34,17 +34,19 @@ trait CanCleanParameters
      */
     protected function propertiesPassRequired()
     {
-        $keys = array();
+        $keys = '';
 
         foreach ($this->parametersRequired as $key) {
-            if ($this->accessPropertyByKey($key)) {
-                return true;
+            if (is_null($this->accessPropertyByKey($key))) {
+                $keys .= $key . ', ';
             }
-
-            $keys['currentKey'] = $key;
         }
 
-        throw new MissingParameterException('The ' . $keys['currentKey'] . ' parameter is required');
+        if ($keys) {
+            throw new MissingParameterException(
+                str_replace(', .', '', 'The following parameters are required: ' . $keys . '.')
+            );
+        }
     }
     /**
      * This method picks up all the defined properties the

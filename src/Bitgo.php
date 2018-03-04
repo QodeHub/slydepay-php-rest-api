@@ -50,7 +50,8 @@ class Bitgo implements ConfigInterface
         $this->config = new Config();
     }
     /**
-     * Create a new Qodehub\Bitgo instance.
+     * Create a new Qodehub Studio
+     * @return self A new class of self.
      */
     public static function make()
     {

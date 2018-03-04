@@ -32,6 +32,11 @@ class Config implements ConfigInterface
      */
     protected $version;
     /**
+     * This will be the Authorization Token
+     * @var string
+     */
+    protected $token;
+    /**
      * Constructor
      */
     public function __construct()
@@ -51,6 +56,26 @@ class Config implements ConfigInterface
     public function setPackageVersion($version)
     {
         $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return self
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
 
         return $this;
     }

@@ -11,7 +11,7 @@
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo;
+namespace Qodehub\Bitgo\Api;
 
 /**
  * Enforce implementation rules on all classes that need to

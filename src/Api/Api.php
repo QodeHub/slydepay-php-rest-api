@@ -11,7 +11,7 @@
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo;
+namespace Qodehub\Bitgo\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -50,16 +50,6 @@ abstract class Api implements ApiInterface
      * @var \GuzzleHttp\Psr7\Response
      */
     protected $response;
-    /**
-     * Constructor.
-     *
-     * @param  \Qodehub\Bitgo\ConfigInterface $config
-     * @return void
-     */
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
     /**
      * Injects the configuration to the Api Instance
      *
@@ -150,7 +140,7 @@ abstract class Api implements ApiInterface
     {
         if ($this->config instanceof Config) {
             try {
-                $this->response = $this->getClient()->{$httpMethod}($this->config->getAccountNumber() . $url, [
+                $this->response = $this->getClient()->{$httpMethod}( /*$this->config->getAccountNumber() .*/$url, [
                     'json' => $parameters,
                 ]);
 

@@ -20,9 +20,9 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Qodehub\Bitgo\Bitgo;
 use Qodehub\Bitgo\Config;
 use Qodehub\Bitgo\Exception\Handler;
-use Qodehub\Bitgo\Pay;
 
 /**
  * Bitgo Handler Class
@@ -50,8 +50,8 @@ class BitgoHandler
     /**
      * Constructor for the BitgoHandler class
      *
-     * @param \Qodehub\Bitgo\Config $config
-     * @param \GuzzleHttp\HandlerStack   $stack
+     * @param \Qodehub\Bitgo\Config    $config
+     * @param \GuzzleHttp\HandlerStack $stack
      */
     public function __construct(Config $config, HandlerStack $stack = null)
     {
@@ -68,7 +68,7 @@ class BitgoHandler
     {
         $this->pushHeaderMiddleware(
             function (RequestInterface $request) {
-                return $request->withHeader('User-Agent', Pay::CLIENT . ' v' . Pay::VERSION);
+                return $request->withHeader('User-Agent', Bitgo::CLIENT . ' v' . Bitgo::VERSION);
             }
         );
 
@@ -76,9 +76,7 @@ class BitgoHandler
             function (RequestInterface $request) {
                 return $request->withHeader(
                     'Authorization',
-                    'Basic ' . base64_encode(
-                        $this->config->getClientId() . ':' . $this->config->getClientSecret()
-                    )
+                    'Basic ' . $this->config->getToken()
                 );
             }
         );
