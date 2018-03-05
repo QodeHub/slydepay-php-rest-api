@@ -27,7 +27,7 @@ deploy_document(){
 	# clone the project and climb into the directory and switch to the gh-pages branch
 	git clone https://qodehub-victor@bitbucket.org/qodehub-team/payplux-bitgo-v2-php-sdk.git staging_dir;
 
-	cd bitgo-php;
+	cd staging_dir;
 
 	git checkout gh-pages;
 

@@ -7,6 +7,7 @@ composer-temp.phar
 /composer.lock
 couscous.phar
 sami.phar
+/staging_dir
 
 # -- Bower -- #
 *bower_components
