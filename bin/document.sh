@@ -2,10 +2,10 @@
 
 deploy_document(){
 
-	echo ""
+	echo "Running all tests!"
 	bin/ci.sh
 
-	echo ""
+	echo "Checking for documenters"
 	# get sami if it does not exist.
 	[ -e sami.phar ] && echo "Sami found\r\n" || curl -O http://get.sensiolabs.org/sami.phar | php;
 
@@ -14,7 +14,7 @@ deploy_document(){
 
 	echo "Cleaning staging area\r\n";
 
-	rm -rf ../payplux-bitgo-v2-php-sdk;
+	rm -rf staging_dir;
 
 	echo "Generating Documentation\r\n";
 
@@ -25,7 +25,7 @@ deploy_document(){
 	php couscous.phar generate --target=./build/couscous;
 
 	# clone the project and climb into the directory and switch to the gh-pages branch
-	git clone https://qodehub-victor@bitbucket.org/qodehub-team/payplux-bitgo-v2-php-sdk.git;
+	git clone https://qodehub-victor@bitbucket.org/qodehub-team/payplux-bitgo-v2-php-sdk.git staging_dir;
 
 	cd bitgo-php;
 
