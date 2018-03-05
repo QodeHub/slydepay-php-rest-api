@@ -13,12 +13,6 @@
             "Qodehub\\Bitgo\\" : "src/"
         }
     },
-    "repositories": {
-        "graph-composer": {
-            "type": "git",
-            "url": "https://github.com/jkphl/graph-composer"
-        }
-    },
     "require": {
         "php": ">=5.4.0",
         "guzzlehttp/guzzle": "^6.3"
@@ -34,8 +28,8 @@
         "phploc/phploc": "^4.0"
     },
     "scripts" : {
-        "phpunit"  : "@phpunit",
-        "depgraph": "vendor/bin/graph-composer --no-dev export . doc/dependencies.svg",
+        "phpunit"  : "phpunit",
+        "depgraph" : "vendor/bin/graph-composer --no-dev export . doc/dependencies.svg",
         "phpcpd"   : "phpcpd src",
         "phpcs"    : "phpcs --standard=./vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ --extensions=php ./src",
         "phpcbf"   : "phpcbf",
