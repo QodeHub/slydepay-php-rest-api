@@ -5,7 +5,9 @@ pwd;
 php --version;
 
 # get composer
-curl -sS https://getcomposer.org/installer | php;
+# get sami if it does not exist.
+[ -e composer.phar ] && echo "Composer found\r\n" || curl -sS https://getcomposer.org/installer | php;
+
 php composer.phar update;
 
 # create the build dir if doesn't exist

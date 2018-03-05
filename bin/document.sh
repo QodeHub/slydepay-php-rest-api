@@ -1,48 +1,68 @@
 #!/bin/sh
-bin/ci.sh
 
-echo ""
-# get sami if it does not exist.
-[ -e sami.phar ] && echo "Sami found\r\n" || curl -O http://get.sensiolabs.org/sami.phar | php;
+deploy_document(){
 
-# get couscous if it does not exist.
-[ -e couscous.phar ] && echo "Couscous found\r\n" || curl -O http://couscous.io/couscous.phar | php;
+	echo ""
+	bin/ci.sh
 
-echo "Generating Documentation\r\n";
+	echo ""
+	# get sami if it does not exist.
+	[ -e sami.phar ] && echo "Sami found\r\n" || curl -O http://get.sensiolabs.org/sami.phar | php;
 
-# Run the sami generator
-php sami.phar update ./sami.config.php -v;
+	# get couscous if it does not exist.
+	[ -e couscous.phar ] && echo "Couscous found\r\n" || curl -O http://couscous.io/couscous.phar | php;
 
-# Run the couscous static site generator
-php couscous.phar generate --target=./build/couscous;
+	echo "Cleaning staging area\r\n";
 
-# clone the project and climb into the directory and switch to the gh-pages branch
-git clone https://qodehub-victor@bitbucket.org/qodehub-team/payplux-bitgo-v2-php-sdk.git;
+	rm -rf ../payplux-bitgo-v2-php-sdk;
 
-cd bitgo-php;
+	echo "Generating Documentation\r\n";
 
-git checkout gh-pages;
+	# Run the sami generator
+	php sami.phar update ./sami.config.php -v;
 
-# Remove all files from the github pages folder
-shopt -s extglob;
-shopt -s dotglob nullglob;
-rm -rf !(*.git);
+	# Run the couscous static site generator
+	php couscous.phar generate --target=./build/couscous;
 
-# Make a directory for the sami generated doc and test coverage
-mkdir -p ./api;
-mkdir -p ./coverage;
-touch .nojekyll;
+	# clone the project and climb into the directory and switch to the gh-pages branch
+	git clone https://qodehub-victor@bitbucket.org/qodehub-team/payplux-bitgo-v2-php-sdk.git;
 
-# copy all files from the couscous generated folder into the empty github-pages branch folder
-mv  -v ../build/couscous/* ./;
+	cd bitgo-php;
 
-# copy all files from the sami generated folder into the api folder
-mv  -v ../build/sami/* ./api/;
+	git checkout gh-pages;
 
-# copy all files from the coverage generated folder into the coverage folder
-mv  -v ../build/coverage/* ./coverage/;
+	# Remove all files from the github pages folder
+	shopt -s extglob;
+	shopt -s dotglob nullglob;
+	rm -rf !*.git;
 
-# Add all and commit to github if deploy was enabled
-git add --all . && git add **/.* && git commit -m 'Documentation Updated' && git push origin gh-pages;
+	# Make a directory for the sami generated doc and test coverage
+	mkdir -p ./api;
+	mkdir -p ./coverage;
+	touch .nojekyll;
 
-rm -rf ../payplux-bitgo-v2-php-sdk;
+	# copy all files from the couscous generated folder into the empty github-pages branch folder
+	mv  -v ../build/couscous/* ./;
+
+	# copy all files from the sami generated folder into the api folder
+	mv  -v ../build/sami/* ./api/;
+
+	# copy all files from the coverage generated folder into the coverage folder
+	mv  -v ../build/coverage/* ./coverage/;
+
+	# Add all and commit to github if deploy was enabled
+	git add --all . && git add **/.* && git commit -m 'Update Documentation 📒' && git push origin gh-pages;
+}
+
+
+# Check that the commits has been made
+if git diff-index --quiet HEAD --; then
+    if [[ "$(git push --porcelain)" == *"Done"* ]]
+	then
+		echo "Local changes were pushed."
+
+		deploy_document
+	fi
+else
+    echo "Please commit and push your changes first."
+fi
