@@ -18,7 +18,20 @@ use Qodehub\Bitgo\Api\ApiInterface;
 /**
  * WalletInterface Interface
  *
- * This will be the base for all wallet related transaction
+ * This is an interface for all classes that can be executed
+ * directly from the wallet interface.
+ *
+ * Methods here will be called magically in order to migrate
+ * data from the wallet to the class that is called
+ * from the wallet instance.
+ *
+ * The following example will create an instance of the
+ * 'Qodehub\Bitgo\Wallet\CreateAddress::class' class
+ * and will pass data required to the new class
+ * instace so that most required data are
+ * readily accessible
+ *
+ * @example $walletInstance->createAddress()->run();
  */
 interface WalletInterface extends ApiInterface
 {

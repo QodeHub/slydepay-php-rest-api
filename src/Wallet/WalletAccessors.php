@@ -13,8 +13,6 @@
 
 namespace Qodehub\Bitgo\Wallet;
 
-use Qodehub\Bitgo\WalletTrait;
-
 /**
  * WalletAccessors Trait
  *
@@ -22,7 +20,6 @@ use Qodehub\Bitgo\WalletTrait;
  */
 trait WalletAccessors
 {
-    use WalletTrait;
 
     /**
      * @return boolean
