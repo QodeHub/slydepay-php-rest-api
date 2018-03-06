@@ -16,6 +16,7 @@ use Qodehub\Bitgo\Api\Api;
 use Qodehub\Bitgo\Config;
 use Qodehub\Bitgo\Wallet\WalletAccessors;
 use Qodehub\Bitgo\Wallet\WalletInterface;
+use Qodehub\Bitgo\Wallet\WalletTrait;
 
 /**
  * Wallet Class
@@ -25,15 +26,16 @@ use Qodehub\Bitgo\Wallet\WalletInterface;
  * identify the keys used to sign with the wallet
  * using the Get Keychain API.
  *
- * @example Transactions::wallet('waletId')->get();
- * @example Transactions::wallet('waletId')->get('waletId');
- * @example Transactions::wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
+ * @example Transactions::btc($config)->wallet('waletId')->get();
+ * @example Transactions::btc($config)->wallet('waletId')->get('waletId');
+ * @example Transactions::btc($config)->wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
  *
  * @SuppressWarnings(PHPMD.LongVariable)
  */
 class Wallet extends Api implements WalletInterface
 {
     use WalletAccessors;
+    use WalletTrait;
 
     /**
      * An object containing the policies set on the wallet
