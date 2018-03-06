@@ -25,7 +25,6 @@ use Qodehub\Bitgo\Config;
  */
 trait Coin
 {
-
     /**
      * This is the coin type.
      *
@@ -133,15 +132,7 @@ trait Coin
          * Restrict the static class names.
          */
         if (in_array(strtolower($method), self::possibleCoinTypes())) {
-
-            /**
-             * If the class name is among possible coins,
-             * create a new instance of the class using
-             * this trait and set the coins to static
-             * coin name.
-             */
-
-            return (new self(...$parameters))->coinType($method);
+            return self::initializeWithCoinName($method, $parameters);
         }
 
         /**
@@ -158,5 +149,34 @@ trait Coin
         }
 
         throw new \BadStaticCallException('Undefined method [ ' . $method . '] called.');
+    }
+
+    /**
+     * This will initialize the class with the static coin method name
+     *
+     * @param  string $method     The method name.
+     * @param  any    $parameters The remianing parameters passed into the coin.
+     * @return self
+     */
+    private static function initializeWithCoinName($method, $config = null, ...$parameters)
+    {
+        /**
+         * If the class name is among possible coins,
+         * create a new instance of the class using
+         * this trait and set the coins to static
+         * coin name.
+         */
+
+        $instance = (new self(...$parameters))->coinType($method);
+
+        /**
+         * Inject the Api configuration if is the first arguement passed in
+         * is a configuration instance.
+         */
+        if ($config instanceof Config) {
+            $instance->injectConfig($config);
+        }
+
+        return $instance;
     }
 }
