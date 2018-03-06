@@ -16,6 +16,7 @@ namespace Qodehub\Bitgo\Api;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\uri_template;
 use Qodehub\Bitgo\Config;
 use Qodehub\Bitgo\ConfigInterface;
 use Qodehub\Bitgo\Exception\Handler;
@@ -51,13 +52,18 @@ abstract class Api implements ApiInterface
      * @var \GuzzleHttp\Psr7\Response
      */
     protected $response;
+
     /**
-     * This will be changed to true in child classes that use
-     * the CurrencyTrait.
+     * Constructor.
      *
-     * @var boolean
+     * @param  \Qodehub\Bitgo\ConfigInterface $config
+     * @return void
      */
-    protected $isCoinPath = false;
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+
     /**
      * Injects the configuration to the Api Instance
      *
@@ -148,9 +154,17 @@ abstract class Api implements ApiInterface
     {
         if ($this->config instanceof Config) {
             try {
-                $this->response = $this->getClient()->{$httpMethod}($url, [
-                    'json' => $parameters,
-                ]);
+                $this->response = $this->getClient($parameters)->{$httpMethod}(
+
+                    \GuzzleHttp\uri_template(
+
+                        $this->getBasePath() . $this->getOrSkipCoin() . $url,
+                        $parameters
+                    ),
+                    [
+                        'json' => $parameters,
+                    ]
+                );
 
                 return json_decode((string) $this->response->getBody(), true);
             } catch (ClientException $e) {
@@ -167,12 +181,14 @@ abstract class Api implements ApiInterface
      *
      * @return \GuzzleHttp\Client
      */
-    protected function getClient()
+    protected function getClient($parameters)
     {
         return new Client(
             [
-                'base_uri' => $this->config->getBaseUrl() . $this->getBasePath() . $this->skipOrAppendCoin(),
+                'base_uri' => $this->config->getBaseUrl(),
                 'handler' => $this->createHandler($this->config),
+                $parameters,
+
             ]
         );
     }
@@ -215,20 +231,20 @@ abstract class Api implements ApiInterface
      *
      * @return string|null the coin path partial
      */
-    public function skipOrAppendCoin()
+    public function getOrSkipCoin()
     {
-        if ($this->isCoinPath) {
+        if (method_exists($this, 'getCoinType')) {
 
             /**
              * Validate that there is a value on the coin
              * Api
              */
-            if ($this->coin) {
-                return '/' . $this->coin;
+            if ($this->getCoinType()) {
+                return '/' . $this->getCoinType();
             }
 
             throw new MissingParameterException(
-                str_replace('The coin value is required.')
+                'The coinType value is required.'
             );
         }
     }
