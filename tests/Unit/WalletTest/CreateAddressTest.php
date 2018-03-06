@@ -148,7 +148,7 @@ class CreateAddressTest extends TestCase
         /**
          * Run the call to the server
          */
-        $result = $mock->post();
+        $result = $mock->run();
 
         /**
          * Run assertion that call reached the Mock Server

@@ -18,32 +18,33 @@ use Qodehub\Bitgo\Wallet\WalletAccessors;
 use Qodehub\Bitgo\Wallet\WalletInterface;
 
 /**
- * Api/Wallet Class
+ * Wallet Class
  *
- * This will be the base for all wallet related transaction
+ * This API call retrieves wallet object information by the wallet ID.
+ * This is useful to get the balance of the wallet, or
+ * identify the keys used to sign with the wallet
+ * using the Get Keychain API.
+ *
+ * @example Transactions::wallet('waletId')->get();
+ * @example Transactions::wallet('waletId')->get('waletId');
+ * @example Transactions::wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
  */
 class Wallet extends Api implements WalletInterface
 {
     use WalletAccessors;
 
     /**
-     * Admin rights on a walet
+     * An object containing the policies set on the wallet
      *
      * @var Object
      */
     protected $admin;
     /**
-     * The wallet ID
+     * ID of the wallet (also the first receiving address)
      *
      * @var string
      */
     protected $id;
-    /**
-     * The walet status. shows if the walet is active or not
-     *
-     * @var boolean
-     */
-    protected $isActive;
     /**
      * A label of the wallet
      *
@@ -51,65 +52,74 @@ class Wallet extends Api implements WalletInterface
      */
     protected $label;
     /**
-     * The list of permissions on this wallet.
-     *
-     * @var array
-     */
-    protected $permissions;
-    /**
-     * This private property will hold the set of keychains
-     * returned from the bitgo API server
-     *
-     * @var array
-     */
-    protected $private;
-    /**
-     * This is a boolean that shows if this wallet can
-     * be used for spending
-     *
-     * @var boolean
-     */
-    protected $spendingAccount;
-    /**
-     * This is the type of the walet. (i.e. SafeID)
-     *
-     * @var tring
-     */
-    protected $type;
-    /**
-     * This is the url for this specific wallet.
+     * The digital currency this wallet holds
      *
      * @var string
      */
-    protected $url;
+    protected $coin;
     /**
-     * This holds the number of approvals required to approve
-     * pending approvals involving this wallet
+     * Array of key ids on the wallet, in the order of User, Backup and BitGo.
+     *
+     * @var array
+     */
+    protected $keys;
+    /**
+     * Enterprise ID if wallet belongs to an enterprise
+     *
+     * @var string
+     */
+    protected $enterprise;
+    /**
+     * Array of users and their permissions on the requested wallet
+     *
+     * @var string
+     */
+    protected $users;
+    /**
+     * Number of approvers needed to confirm transactions or
+     * policy changes on the wallet
      *
      * @var boolean
      */
     protected $approvalsRequired;
     /**
-     * This is the total balance on this wallet.
-     * Including unconfirmed
+     * The current amount of satoshi that is currently spendable.
+     * (May not be set for some coins.)
      *
      * @var float
      */
     protected $balance;
     /**
-     * This is the confirmed balance on this wallet.
+     * The amount of satoshis you have within your wallet
+     * in the form of confirmed unspents.
+     * (May not be set for some coins.)
      *
      * @var float
      */
     protected $confirmedBalance;
     /**
-     * This is the total spendable balance on this wallet.
+     * The current amount of satoshi that is currently
+     * spendable. (May not be set for some coins.)
      *
      * @var float
      */
     protected $spendableBalance;
     /**
-     * The construct method accepts a the ID of the wallet that it will be interracting with.
+     * True if the wallet initialization transaction(s)
+     * is(are) still unconfirmed (valid for Ethereum)
+     *
+     * @var boolean
+     */
+    protected $pendingChainInitialization;
+    /**
+     * True if wallet is a cold wallet
+     *
+     * @var boolean
+     */
+    protected $isCold;
+    /**
+     * The construct method accepts a the ID of the wallet
+     * that it will be interracting with.
      *
      * @param string $walletId the wallet id to interract with
      */
@@ -144,7 +154,12 @@ class Wallet extends Api implements WalletInterface
      */
     public function __call($method, array $parameters)
     {
-        if (in_array($method, ['transactions', 'addresses', 'sendCoins', 'createAddress'])) {
+        /**
+         * Restrict the possible methods that can be called.
+         *
+         * @see \Qodehub\Bitgo::getApiInstance
+         */
+        if (in_array($method, ['transactions', 'transfers', 'addresses', 'create', 'sendCoins', 'createAddress', 'createWallet'])) {
 
             /**
              * Append a capitalized name of the method

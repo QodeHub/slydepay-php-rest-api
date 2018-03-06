@@ -38,12 +38,58 @@ class Config implements ConfigInterface
      */
     protected $token;
     /**
-     * Constructor
+     * This is the host for the Bitgo Server
+     * @var string
      */
-    public function __construct()
+    protected $host = 'test.bitgo.com';
+    /**
+     * This will be the port on which the server is running.
+     * @var integer
+     */
+    protected $port = 80;
+    /**
+     * This will be a boolean as to if or not the server
+     * runs on a https server.
+     *
+     * @var boolean
+     */
+    protected $secure = true;
+    /**
+     * This will be a boolean as to if or not the server
+     * runs on a https server.
+     *
+     * @var boolean
+     */
+    protected $scheme;
+
+    /**
+     * Constructor
+     *
+     * This configuration constructor holds the config data.
+     * @param string  $token  This is your token from the Bitgo Server
+     * @param boolean $secure This determines if the servere url should be HTTP(S)
+     * @param string  $host   This is the reacable Bitgo Server
+     * @param integer $port   This is the port for the reachable Bitgo server
+     */
+    public function __construct($token = null, $secure = 1, $host = 'test.bitgo.com', $port = 80)
     {
         $this->setPackageVersion(Bitgo::VERSION);
+        $this->setToken($token ?: getenv('BITGO_TOKEN'));
+        $this->setHost($host ?: getenv('BITGO_HOST'));
+        $this->setSecure($secure ?: (bool) getenv('BITGO_SECURE'));
+        $this->setPort($port ?: getenv('BITGO_PORT'));
     }
+
+    /**
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        $this->setScheme($this->getSecure() ? 'https' : 'http');
+
+        return $this->baseUrl($this->getScheme() . '://' . $this->getHost() . ':' . $this->getPort());
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -77,6 +123,106 @@ class Config implements ConfigInterface
     public function setToken($token)
     {
         $this->token = $token;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isSecure()
+    {
+        return $this->secure;
+    }
+
+    /**
+     * @param boolean $secure
+     *
+     * @return self
+     */
+    public function setSecure($secure)
+    {
+        $this->secure = $secure;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param string $version
+     *
+     * @return self
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param string $host
+     *
+     * @return self
+     */
+    public function setHost($host)
+    {
+        $this->host = $host;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     * @param integer $port
+     *
+     * @return self
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isScheme()
+    {
+        return $this->scheme;
+    }
+
+    /**
+     * @param boolean $scheme
+     *
+     * @return self
+     */
+    public function setScheme($scheme)
+    {
+        $this->scheme = $scheme;
 
         return $this;
     }

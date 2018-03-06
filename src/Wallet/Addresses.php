@@ -25,8 +25,9 @@ use Qodehub\Bitgo\Wallet\ExecutionTrait;
  *
  * This class will require that a walletId is present. Examples are attaches
  *
- * @example Transactions::wallet('waletId')->get();
- * @example Transactions::wallet('waletId')->get('waletId');
+ * @example Addresses::btc('waletId')->get();
+ * @example Btc::wallet('waletId')->addresses($optional-address-id)->config($config)->get();
+ * @example Bitgo::btc($config)->wallet('waletId')->addresses($optional-address-id)->get();
  * @example Transactions::wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
  */
 class Addresses extends Api implements ExecutionInterface
@@ -246,7 +247,8 @@ class Addresses extends Api implements ExecutionInterface
         $this->propertiesPassRequired();
 
         return $this->_get(
-            '/wallet/' . $this->getWalletId() . '/addresses/' . $this->getAddress(), $this->propertiesToArray()
+            '/wallet/' . $this->getWalletId() . '/addresses/' . $this->getAddress(),
+            $this->propertiesToArray()
         );
     }
 }

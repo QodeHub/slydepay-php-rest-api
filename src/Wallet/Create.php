@@ -1,5 +1,8 @@
 <?php
 /**
+ * FIX
+ */
+/**
  * @package     Qodehub\Bitgo
  * @link        https://github.com/qodehub/bitgo-php
  *
@@ -20,21 +23,17 @@ use Qodehub\Bitgo\Wallet\ExecutionInterface;
 use Qodehub\Bitgo\Wallet\ExecutionTrait;
 
 /**
- * CreateAddress Class
+ * Create Class
  *
- * This class is responsible for creating addresses
- * on a wallet.
+ * This class exposes fascades for creating
+ * a wallet or an address in giving wallet
  *
- * @example Wallet::createAddress()
- *
- * Wallet::createWallet()
- * Wallet::create()
- * Wallet::address()->create()
- * Wallet::createAddress()
- * Address::create()->walletId($walletId)->run()
- * Address::create()->wallet($walletId)->run()
+ * @example Create::address()->walletId()->run()
+ * @example Create::wallet()->run()
+ * @example Create::createWallet()->run()
+ * @example Create::createAddress()->run()
  */
-class CreateAddress extends Api implements ExecutionInterface
+class Create extends Api implements ExecutionInterface
 {
     use ExecutionTrait;
     use MassAssignable;
@@ -60,7 +59,7 @@ class CreateAddress extends Api implements ExecutionInterface
      *
      * @var number
      */
-    protected $chain = 10;
+    protected $chain = 0;
 
     /**
      * Construct for creating a new instance of this class

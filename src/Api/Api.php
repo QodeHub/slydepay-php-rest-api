@@ -19,6 +19,7 @@ use GuzzleHttp\Psr7\Response;
 use Qodehub\Bitgo\Config;
 use Qodehub\Bitgo\ConfigInterface;
 use Qodehub\Bitgo\Exception\Handler;
+use Qodehub\Bitgo\Exception\MissingParameterException;
 use Qodehub\Bitgo\Utility\BitgoHandler;
 
 /**
@@ -42,7 +43,7 @@ abstract class Api implements ApiInterface
      *
      * @var string
      */
-    protected $baseUrl = 'https://www.bitgo.com/api/v1';
+    protected $baseUrl = 'https://www.bitgo.com/api/v2';
     /**
      * This is the response received from the bitgo server
      * if no exception was thrown.
@@ -50,6 +51,13 @@ abstract class Api implements ApiInterface
      * @var \GuzzleHttp\Psr7\Response
      */
     protected $response;
+    /**
+     * This will be changed to true in child classes that use
+     * the CurrencyTrait.
+     *
+     * @var boolean
+     */
+    protected $isCoinPath = false;
     /**
      * Injects the configuration to the Api Instance
      *
@@ -140,7 +148,7 @@ abstract class Api implements ApiInterface
     {
         if ($this->config instanceof Config) {
             try {
-                $this->response = $this->getClient()->{$httpMethod}( /*$this->config->getAccountNumber() .*/$url, [
+                $this->response = $this->getClient()->{$httpMethod}($url, [
                     'json' => $parameters,
                 ]);
 
@@ -163,7 +171,7 @@ abstract class Api implements ApiInterface
     {
         return new Client(
             [
-                'base_uri' => $this->baseUrl,
+                'base_uri' => $this->baseUrl . $this->skipOrAppendCoin(),
                 'handler' => $this->createHandler($this->config),
             ]
         );
@@ -201,15 +209,27 @@ abstract class Api implements ApiInterface
     }
 
     /**
-     * This method will hit the run request with any arguement passed into it
-     * It can be used interchangably with the run, get or post method.
-     *
-     * @param  any ...$args The list of args
-     * @return self
+     * Skip or append coin path depending on if
+     * the isCoinPath was changed to true by
+     * a child class.
+     * @return string|null the coin path partial
      */
-    public function get(...$args)
+    public function skipOrAppendCoin()
     {
-        return $this->run(...$args);
+        if ($this->isCoinPath) {
+
+            /**
+             * Validate that there is a value on the coin
+             * Api
+             */
+            if ($this->coin) {
+                return '/' . $this->coin;
+            }
+
+            throw new MissingParameterException(
+                str_replace('The coin value is required.')
+            );
+        }
     }
 
     /**
@@ -219,7 +239,7 @@ abstract class Api implements ApiInterface
      * @param  any ...$args The list of args
      * @return self
      */
-    public function post(...$args)
+    public function get(...$args)
     {
         return $this->run(...$args);
     }

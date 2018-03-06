@@ -14,6 +14,7 @@
 namespace Qodehub\Bitgo;
 
 use Qodehub\Bitgo\Config;
+use Qodehub\Bitgo\CurrencyTrait;
 
 /**
  * Bitgo Class
@@ -23,6 +24,8 @@ use Qodehub\Bitgo\Config;
  */
 class Bitgo implements ConfigInterface
 {
+    use CurrencyTrait;
+
     /**
      * The package version.
      *
@@ -95,42 +98,65 @@ class Bitgo implements ConfigInterface
 
         return $this;
     }
+
     /**
-     * Dynamically handle missing Static Api Classes and Methods.
-     *
-     * @param  string $className
-     * @param  array  $parameters
-     * @return \Qodehub\Bitgo\Api\Transaction
-     * @throws \BadMethodCallException
-     */
-    public static function __callStatic($className, array $parameters)
-    {
-        return (new self)->getApiInstance($className, ...$parameters);
-    }
-    /**
-     * Dynamically handle missing Api Classes and Methods.
+     * Returns the class instance for the given method if it
+     * falls within the allowed methods.
      *
      * @param  string $method
-     * @param  array  $parameters
-     * @return \Qodehub\Bitgo\Api\Transaction
-     */
-    public function __call($method, array $parameters)
-    {
-        return $this->getApiInstance($method, ...$parameters);
-    }
-    /**
-     * Returns the Api class instance for the given method.
-     *
-     * @param  string $className
      * @return \Qodehub\Bitgo\Api\Transaction
      * @throws \BadMethodCallException
+     *
+     * @example \Qodehub\Bitgo::createWallet()->run();
+     * @example \Qodehub\Bitgo::wallet()->getBalance()->run();
+     * @example \Qodehub\Bitgo::wallet()->transactions()->get();
+     * @example \Qodehub\Bitgo::setConfig($config)->wallet()->getBalance()->run();
      */
-    protected function getApiInstance($className, ...$parameters)
+    protected function getApiInstance($method, ...$parameters)
     {
-        $class = '\\Qodehub\\Bitgo\\Api\\' . ucwords($className);
-        if (class_exists($class)) {
-            return (new $class(...$parameters))->injectConfig($this->config);
+        /**
+         * Restrict the possible methods that can be called.
+         * Reason: so that unexpected behavious like
+         * mis-spelling errors can be caught and
+         * also -- Private and protected methods
+         * can stay private and protected.
+         *
+         * I hope you get the basic idea! ;-)
+         */
+        if (in_array($method, ['wallet', 'createWallet'])) {
+
+            /**
+             * Append a capitalized name of the method
+             * passed in, to create a class address
+             *
+             * @var string
+             */
+            $class = '\\Qodehub\\Bitgo\\' . ucwords($method);
+
+            /**
+             * Check if the class exists
+             */
+            if (class_exists($class)) {
+                /**
+                 * Create a new instance of the class
+                 * since it exists and is in the
+                 * list of allowed magic
+                 * methods lists.
+                 */
+                $executionInstace = new $class(...$parameters);
+
+                /**
+                 * Inject the Api configuration if
+                 * any exists on the chain.
+                 */
+                if ($this->config instanceof Config) {
+                    $executionInstace->injectConfig($this->config);
+                }
+
+                return $executionInstace;
+            }
         }
-        throw new \BadMethodCallException('Undefined method [ ' . $className . '] called.');
+
+        throw new \BadMethodCallException('Undefined method [ ' . $method . '] called.');
     }
 }

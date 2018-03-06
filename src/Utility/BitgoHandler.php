@@ -78,7 +78,7 @@ class BitgoHandler
             function (RequestInterface $request) {
                 return $request->withHeader(
                     'Authorization',
-                    'Basic ' . $this->config->getToken()
+                    'Bearer ' . $this->config->getToken()
                 );
             }
         );
