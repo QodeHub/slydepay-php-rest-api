@@ -14,10 +14,10 @@
 namespace Qodehub\Bitgo\Wallet;
 
 use Qodehub\Bitgo\Api\Api;
+use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\Wallet\ExecutionTrait;
-use Qodehub\Bitgo\Wallet\TransactionsAccessors;
+use Qodehub\Bitgo\Wallet\WalletTrait;
 
 /**
  * Transactions Class
@@ -28,14 +28,14 @@ use Qodehub\Bitgo\Wallet\TransactionsAccessors;
  *
  * @example Transactions::wallet('waletId')->get();
  * @example Transactions::wallet('waletId')->get('waletId');
- * @example Transactions::wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
+ * @example Transactions::wallet('waletId')->prevId(10)->allTokens(10)->minConfirms(10)->compact()->get();
  */
-class Transactions extends Api implements ExecutionInterface
+class Transactions extends Api implements WalletInterface
 {
-    use ExecutionTrait;
+    use WalletTrait;
     use MassAssignable;
-    use TransactionsAccessors;
     use CanCleanParameters;
+    use Coin;
 
     /**
      * {@inheritdoc}
@@ -48,143 +48,154 @@ class Transactions extends Api implements ExecutionInterface
      * {@inheritdoc}
      */
     protected $parametersOptional = [
-        'skip',
-        'limit',
-        'compact',
-        'minHeight',
-        'maxHeight',
-        'minConfirms',
+        'prevId',
+        'allTokens',
+        'transactionId',
     ];
 
     /**
      * Construct for creating a new instance of this class
      *
-     * @param array $data An array with assignable Parameters
+     * @param array|string $data An array with assignable Parameters or the
+     *                           transactionID
      */
-    public function __construct($data = [])
+    public function __construct($data = null)
     {
-        $this->massAssign($data);
+
+        if (is_string($data)) {
+            $this->setTransactionId($data);
+        }
+
+        if (is_array($data)) {
+            $this->massAssign($data);
+        }
     }
 
     /**
-     * The starting index number to list from. Default is 0.
+     * The ID of a single transaction. This will need to be set
+     * in order to get a single transaction.
      *
-     * @var boolean
-     */
-    protected $skip;
-    /**
-     * Max number of results to return in a single call (default=25, max=250)
-     *
-     * @var number
-     */
-    protected $limit;
-    /**
-     * Omit inputs and outputs in the transaction results
-     *
-     * @var boolean
-     */
-    protected $compact;
-    /**
-     * A lower limit of blockchain height at which the transaction
-     * was confirmed. Does not filter unconfirmed transactions.
-     *
-     * @var number
-     */
-    protected $minHeight;
-    /**
-     * An upper limit of blockchain height at which the transaction was confirmed.
-     *
-     * @var number
-     */
-    protected $maxHeight;
-    /**
-     * Only shows transactions with at least this many confirmations,
-     * filters transactions that have fewer confirmations.
-     *
-     * @var number
-     */
-    protected $minConfirms;
-    /**
-     * This will be a transaction ID if the intention will
-     * be to get a single transaction instead of a
-     * collection of transaction
-     *
-     * @var string
+     * @var srring
      */
     protected $transactionId;
 
     /**
-     * @param boolean $skip
+     * ontinue iterating from this prevId (provided
+     * by nextBatchPrevId in the previous list)
      *
+     * @var string
+     */
+    protected $prevId;
+    /**
+     * Gets transfers of all tokens associated
+     * with this wallet. Only valid for eth/teth.
+     *
+     * @var boolean
+     */
+    protected $allTokens;
+
+    /**
+     * Find a single transacton adminst all the transactions
+     * from the server.
+     *
+     * @param  string $transactionId This will be an existing
+     *                               transaction id
      * @return self
      */
-    public function skip($skip)
+    public function find($transactionId)
     {
-        return $this->setSkip($skip);
+        return $this->setTransactionId($transactionId);
     }
 
     /**
-     * @param number $limit
+     * @param string $prevId
      *
      * @return self
      */
-    public function limit($limit)
+    public function prevId($prevId)
     {
-        return $this->setLimit($limit);
+        return $this->setprevId($prevId);
     }
 
     /**
-     * @param boolean $compact
+     * @param boolean $allTokens
      *
      * @return self
      */
-    public function compact($compact)
+    public function allTokens($allTokens)
     {
-        return $this->setCompact($compact);
+        return $this->setallTokens($allTokens);
     }
 
     /**
-     * @param number $minHeight
-     *
-     * @return self
+     * @return string
      */
-    public function minHeight($minHeight)
+    public function getTransactionId()
     {
-        return $this->setMinHeight($minHeight);
+        return $this->transactionId;
     }
 
     /**
-     * @param number $maxHeight
+     * @param string $transactionId
      *
      * @return self
      */
-    public function maxHeight($maxHeight)
+    public function setTransactionId($transactionId)
     {
-        return $this->setMaxHeight($maxHeight);
+        $this->transactionId = $transactionId;
+
+        return $this;
     }
 
     /**
-     * @param number $minConfirms
+     * @return string
+     */
+    public function getPrevId()
+    {
+        return $this->prevId;
+    }
+
+    /**
+     * @param string $prevId
      *
      * @return self
      */
-    public function minConfirms($minConfirms)
+    public function setPrevId($prevId)
     {
-        return $this->setMinConfirms($minConfirms);
+        $this->prevId = $prevId;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAllTokens()
+    {
+        return $this->allTokens;
+    }
+
+    /**
+     * @param boolean $allTokens
+     *
+     * @return self
+     */
+    public function setAllTokens($allTokens)
+    {
+        $this->allTokens = $allTokens;
+
+        return $this;
     }
 
     /**
      * The method places the call to the Bitgo API
      *
-     * @param  number|null $transactionId Id for a single transaciton resources
      * @return Object
      */
-    public function run($transactionId = null)
+    public function run()
     {
-        $this->setTransactionId($transactionId);
-
         $this->propertiesPassRequired();
 
-        return $this->_get('/wallet/' . $this->getWalletId() . '/tx/' . $this->getTransactionId(), $this->propertiesToArray());
+        return $this->_get('/wallet/{walletId}/tx/{transactionId}', $this->propertiesToArray());
     }
 }
