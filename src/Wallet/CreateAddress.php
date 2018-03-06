@@ -14,10 +14,11 @@ namespace Qodehub\Bitgo\Wallet;
 
 use GuzzleHttp\Psr7\Response;
 use Qodehub\Bitgo\Api\Api;
+use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\WalletTrait;
 use Qodehub\Bitgo\Wallet\WalletInterface;
+use Qodehub\Bitgo\Wallet\WalletTrait;
 
 /**
  * CreateAddress Class
@@ -39,12 +40,12 @@ class CreateAddress extends Api implements WalletInterface
     use MassAssignable;
     use CanCleanParameters;
     use WalletTrait;
+    use Coin;
 
     /**
      * {@inheritdoc}
      */
     protected $parametersRequired = [
-        'chain',
         'walletId',
     ];
 
@@ -52,15 +53,41 @@ class CreateAddress extends Api implements WalletInterface
      * {@inheritdoc}
      */
     protected $parametersOptional = [
-
+        'label',
+        'allowMigrated',
+        'chain',
+        'gasPrice',
+        'label',
     ];
 
     /**
-     * 0, 1, 10 or 11 (10 or 11 for SegWit)
+     * Specifies the address format, defaults to 0,
+     * use 10 for SegWit (only on BTC and BTG)
      *
-     * @var number
+     * @var integer
      */
-    protected $chain = 10;
+    protected $chain;
+
+    /**
+     * No  Set to true to enable address creation for migrated BCH wallets.
+     *
+     * @var boolean
+     */
+    protected $allowMigrated;
+
+    /**
+     * Custom gas price to be used for deployment of receive addresses (only for Ethereum)
+     *
+     * @var integer
+     */
+    protected $gasPrice;
+
+    /**
+     * Human-readable name for the address
+     *
+     * @var string
+     */
+    protected $label;
 
     /**
      * Construct for creating a new instance of this class
@@ -104,6 +131,99 @@ class CreateAddress extends Api implements WalletInterface
     }
 
     /**
+     * Set the value of the allow migrated
+     *
+     * @param  boolean $allowMigrated
+     * @return self
+     */
+    public function allowMigrated($allowMigrated)
+    {
+        return $this->setAllowMigrated($allowMigrated);
+    }
+
+    /**
+     * Set the value of the Gas Price
+     *
+     * @param  integer $gasPrice
+     * @return self
+     */
+    public function gasPrice($gasPrice)
+    {
+        return $this->setGasPrice($gasPrice);
+    }
+
+    /**
+     * Set the value of the label
+     *
+     * @param  string $label
+     * @return self
+     */
+    public function label($label)
+    {
+        return $this->setLabel($label);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAllowMigrated()
+    {
+        return $this->allowMigrated;
+    }
+
+    /**
+     * @param boolean $allowMigrated
+     *
+     * @return self
+     */
+    public function setAllowMigrated($allowMigrated)
+    {
+        $this->allowMigrated = $allowMigrated;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getGasPrice()
+    {
+        return $this->gasPrice;
+    }
+
+    /**
+     * @param integer $gasPrice
+     *
+     * @return self
+     */
+    public function setGasPrice($gasPrice)
+    {
+        $this->gasPrice = $gasPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return self
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    /**
      * This will call the api and create the wallet after all parameters
      * have been set.
      *
@@ -111,8 +231,12 @@ class CreateAddress extends Api implements WalletInterface
      */
     public function run()
     {
+
         $this->propertiesPassRequired();
 
-        return $this->_post('/wallet/' . $this->getWalletId() . '/address/' . $this->getChain());
+        return $this->_post(
+            '/wallet/{walletId}/address',
+            $this->propertiesToArray()
+        );
     }
 }
