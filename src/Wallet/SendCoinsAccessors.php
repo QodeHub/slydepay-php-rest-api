@@ -20,6 +20,25 @@ namespace Qodehub\Bitgo\Wallet;
  */
 trait SendCoinsAccessors
 {
+    /**
+     * @return integer
+     */
+    public function getLedgerSequenceDelta()
+    {
+        return $this->ledgerSequenceDelta;
+    }
+
+    /**
+     * @param integer $ledgerSequenceDelta
+     *
+     * @return self
+     */
+    public function setLedgerSequenceDelta($ledgerSequenceDelta)
+    {
+        $this->ledgerSequenceDelta = $ledgerSequenceDelta;
+
+        return $this;
+    }
 
     /**
      * @return string
@@ -84,46 +103,6 @@ trait SendCoinsAccessors
     /**
      * @return integer
      */
-    public function getFee()
-    {
-        return $this->fee;
-    }
-
-    /**
-     * @param integer $fee
-     *
-     * @return self
-     */
-    public function setFee($fee)
-    {
-        $this->fee = $fee;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    /**
-     * @param string $message
-     *
-     * @return self
-     */
-    public function setMessage($message)
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * @return integer
-     */
     public function getFeeRate()
     {
         return $this->feeRate;
@@ -142,61 +121,41 @@ trait SendCoinsAccessors
     }
 
     /**
-     * @return number
+     * @return boolean
      */
-    public function getFeeTxConfirmTarget()
+    public function getNoSplitChange()
     {
-        return $this->feeTxConfirmTarget;
+        return $this->noSplitChange;
     }
 
     /**
-     * @param number $feeTxConfirmTarget
+     * @param boolean $noSplitChange
      *
      * @return self
      */
-    public function setFeeTxConfirmTarget($feeTxConfirmTarget)
+    public function setNoSplitChange($noSplitChange)
     {
-        $this->feeTxConfirmTarget = $feeTxConfirmTarget;
+        $this->noSplitChange = $noSplitChange;
 
         return $this;
     }
 
     /**
-     * @return integer
+     * @return                                  boolean
      */
-    public function getMaxFeeRate()
+    public function getEnforceMinConfirmsForChange()
     {
-        return $this->maxFeeRate;
+        return $this->enforceMinConfirmsForChange;
     }
 
     /**
-     * @param integer $maxFeeRate
+     * @param                                  boolean $enforceMinConfirmsForChange
      *
      * @return self
      */
-    public function setMaxFeeRate($maxFeeRate)
+    public function setEnforceMinConfirmsForChange($enforceMinConfirmsForChange)
     {
-        $this->maxFeeRate = $maxFeeRate;
-
-        return $this;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getMinUnspentSize()
-    {
-        return $this->minUnspentSize;
-    }
-
-    /**
-     * @param integer $minUnspentSize
-     *
-     * @return self
-     */
-    public function setMinUnspentSize($minUnspentSize)
-    {
-        $this->minUnspentSize = $minUnspentSize;
+        $this->enforceMinConfirmsForChange = $enforceMinConfirmsForChange;
 
         return $this;
     }
@@ -222,123 +181,41 @@ trait SendCoinsAccessors
     }
 
     /**
-     * @return boolean
-     * @SuppressWarnings(PHPMD.LongVariable)
-     */
-    public function isEnforceMinConfirmsForChange()
-    {
-        return $this->enforceMinConfirmsForChange;
-    }
-
-    /**
-     * @param boolean $enforceMinConfirmsForChange
-     *
-     * @return self
-     * @SuppressWarnings(PHPMD.LongVariable)
-     */
-    public function setEnforceMinConfirmsForChange($enforceMinConfirmsForChange)
-    {
-        $this->enforceMinConfirmsForChange = $enforceMinConfirmsForChange;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getSequenceId()
+    public function getPrv()
     {
-        return $this->sequenceId;
+        return $this->prv;
     }
 
     /**
-     * @param string $sequenceId
+     * @param string $prv
      *
      * @return self
      */
-    public function setSequenceId($sequenceId)
+    public function setPrv($prv)
     {
-        $this->sequenceId = $sequenceId;
+        $this->prv = $prv;
 
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return integer
      */
-    public function isInstant()
+    public function getNumblocks()
     {
-        return $this->instant;
+        return $this->numblocks;
     }
 
     /**
-     * @param boolean $instant
+     * @param integer $numblocks
      *
      * @return self
      */
-    public function setInstant($instant)
+    public function setNumblocks($numblocks)
     {
-        $this->instant = $instant;
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isForceChangeAtEnd()
-    {
-        return $this->forceChangeAtEnd;
-    }
-
-    /**
-     * @param boolean $forceChangeAtEnd
-     *
-     * @return self
-     */
-    public function setForceChangeAtEnd($forceChangeAtEnd)
-    {
-        $this->forceChangeAtEnd = $forceChangeAtEnd;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getChangeAddress()
-    {
-        return $this->changeAddress;
-    }
-
-    /**
-     * @param string $changeAddress
-     *
-     * @return self
-     */
-    public function setChangeAddress($changeAddress)
-    {
-        $this->changeAddress = $changeAddress;
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isNoSplitChange()
-    {
-        return $this->noSplitChange;
-    }
-
-    /**
-     * @param boolean $noSplitChange
-     *
-     * @return self
-     */
-    public function setNoSplitChange($noSplitChange)
-    {
-        $this->noSplitChange = $noSplitChange;
+        $this->numblocks = $numblocks;
 
         return $this;
     }
@@ -364,82 +241,161 @@ trait SendCoinsAccessors
     }
 
     /**
-     * @return boolean
+     * @return integer
      */
-    public function isValidate()
+    public function getMinValue()
     {
-        return $this->validate;
+        return $this->minValue;
     }
 
     /**
-     * @param boolean $validate
+     * @param integer $minValue
      *
      * @return self
      */
-    public function setValidate($validate)
+    public function setMinValue($minValue)
     {
-        $this->validate = $validate;
+        $this->minValue = $minValue;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return integer
      */
-    public function getFeeSingleKeySourceAddress()
+    public function getMaxValue()
     {
-        return $this->feeSingleKeySourceAddress;
+        return $this->maxValue;
     }
 
     /**
-     * @param string $feeSingleKeySourceAddress
+     * @param integer $maxValue
      *
      * @return self
-     * @SuppressWarnings(PHPMD.LongVariable)
      */
-    public function setFeeSingleKeySourceAddress($feeSingleKeySourceAddress)
+    public function setMaxValue($maxValue)
     {
-        $this->feeSingleKeySourceAddress = $feeSingleKeySourceAddress;
+        $this->maxValue = $maxValue;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return integer
      */
-    public function getFeeSingleKeyWIF()
+    public function getGasLimit()
     {
-        return $this->feeSingleKeyWIF;
+        return $this->gasLimit;
     }
 
     /**
-     * @param string $feeSingleKeyWIF
+     * @param integer $gasLimit
      *
      * @return self
      */
-    public function setFeeSingleKeyWIF($feeSingleKeyWIF)
+    public function setGasLimit($gasLimit)
     {
-        $this->feeSingleKeyWIF = $feeSingleKeyWIF;
+        $this->gasLimit = $gasLimit;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return integer
      */
-    public function getOtp()
+    public function getGasPrice()
     {
-        return $this->otp;
+        return $this->gasPrice;
     }
 
     /**
-     * @param string $otp
+     * @param integer $gasPrice
      *
      * @return self
      */
-    public function setOtp($otp)
+    public function setGasPrice($gasPrice)
     {
-        $this->otp = $otp;
+        $this->gasPrice = $gasPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getSequenceId()
+    {
+        return $this->sequenceId;
+    }
+
+    /**
+     * @param integer $sequenceId
+     *
+     * @return self
+     */
+    public function setSequenceId($sequenceId)
+    {
+        $this->sequenceId = $sequenceId;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getSegwit()
+    {
+        return $this->segwit;
+    }
+
+    /**
+     * @param integer $segwit
+     *
+     * @return self
+     */
+    public function setSegwit($segwit)
+    {
+        $this->segwit = $segwit;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getLastLedgerSequence()
+    {
+        return $this->lastLedgerSequence;
+    }
+
+    /**
+     * @param integer $lastLedgerSequence
+     *
+     * @return self
+     */
+    public function setLastLedgerSequence($lastLedgerSequence)
+    {
+        $this->lastLedgerSequence = $lastLedgerSequence;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param integer $comment
+     *
+     * @return self
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
 
         return $this;
     }

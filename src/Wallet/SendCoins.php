@@ -15,9 +15,11 @@ namespace Qodehub\Bitgo\Wallet;
 
 use GuzzleHttp\Psr7\Response;
 use Qodehub\Bitgo\Api\Api;
+use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\Wallet\ExecutionTrait;
+use Qodehub\Bitgo\Wallet\WalletInterface;
+use Qodehub\Bitgo\Wallet\WalletTrait;
 
 /**
  * SendCoins Class
@@ -32,17 +34,19 @@ use Qodehub\Bitgo\Wallet\ExecutionTrait;
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class SendCoins extends Api implements ExecutionInterface
+class SendCoins extends Api implements WalletInterface
 {
-    use ExecutionTrait;
+    use WalletTrait;
     use MassAssignable;
     use CanCleanParameters;
     use SendCoinsAccessors;
+    use Coin;
 
     /**
      * {@inheritdoc}
      */
     protected $parametersRequired = [
+        'walletId',
         'address',
         'amount',
         'walletPassphrase',
@@ -52,23 +56,22 @@ class SendCoins extends Api implements ExecutionInterface
      * {@inheritdoc}
      */
     protected $parametersOptional = [
-        'fee',
-        'message',
+        'prv',
+        'numBlocks',
         'feeRate',
-        'feeTxConfirmTarget',
-        'maxFeeRate',
-        'minUnspentSize',
+        'comment',
         'minConfirms',
         'enforceMinConfirmsForChange',
-        'sequenceId',
-        'instant',
-        'forceChangeAtEnd',
-        'noSplitChange',
         'targetWalletUnspents',
-        'validate',
-        'feeSingleKeySourceAddress',
-        'feeSingleKeyWIF',
-        'otp',
+        'noSplitChange',
+        'minValue',
+        'maxValue',
+        'gasPrice',
+        'gasLimit',
+        'sequenceId',
+        'segwit',
+        'lastLedgerSequence',
+        'ledgerSequenceDelta',
     ];
     /**
      * Destination bitcoin address
@@ -91,20 +94,11 @@ class SendCoins extends Api implements ExecutionInterface
      */
     protected $walletPassphrase;
     /**
-     * The absolute fee in satoshis to be paid to the
-     * Bitcoin miners. HIGHLY recommended to leave
-     * undefined and use ‘feeTxConfirmTarget’
-     * instead for dynamic fee estimates.
-     *
-     * @var integer
-     */
-    protected $fee;
-    /**
-     * User-provided string (this does not hit the blockchain)
+     * Any additional comment to attach to the transaction
      *
      * @var string
      */
-    protected $message;
+    protected $comment;
     /**
      * The fee in satoshis /per kB/ of transaction size to be
      * paid to the Bitcoin miners. HIGHLY recommended to
@@ -115,37 +109,12 @@ class SendCoins extends Api implements ExecutionInterface
      */
     protected $feeRate;
     /**
-     * Calculate fees per kilobyte, targeting transaction
-     * confirmation in this number of blocks.
-     * Default: 2, Minimum: 1, Maximum: 1000.
+     * Set to true to disable automatic change splitting
+     * for purposes of unspent management.
      *
-     * @var number
+     * @var boolean
      */
-    protected $feeTxConfirmTarget;
-    /**
-     * An upper bound for the fee rate in satoshi per kB.
-     * Useful to set as a safety measure
-     * when using dynamic fees.
-     *
-     * @var integer
-     */
-    protected $maxFeeRate;
-    /**
-     * Minimum amount in satoshis for an unspent to be
-     * considered usable.
-     * Defaults to 5460 (to combat tx dust spam).
-     *
-     * @var integer
-     */
-    protected $minUnspentSize;
-    /**
-     * only choose unspent inputs with a certain number
-     * of confirmations. We recommend setting this to 1
-     * and using enforceMinConfirmsForChange.
-     *
-     * @var integer
-     */
-    protected $minConfirms;
+    protected $noSplitChange;
     /**
      * Defaults to false. When constructing a transaction,
      * minConfirms will only be enforced for unspents
@@ -156,73 +125,89 @@ class SendCoins extends Api implements ExecutionInterface
      */
     protected $enforceMinConfirmsForChange;
     /**
-     * A custom user-provided string that can be used to
-     * uniquely identify the state of this transaction
-     * before and after signing
+     * Minimum number of confirmations unspents
+     * going into this transaction should have.
+     *
+     * @var integer
+     */
+    protected $minConfirms;
+    /**
+     * The private key in string form if the
+     * walletPassphrase is not available
      *
      * @var string
      */
-    protected $sequenceId;
+    protected $prv;
     /**
-     * A custom user-provided string that can be used to
-     * uniquely identify the state of this transaction
-     * before and after signing
+     * Estimates the approximate fee per kilobyte necessary
+     * for a transaction confirmation within numBlocks blocks.
      *
-     * @var boolean
+     * @var integer
      */
-    protected $instant;
+    protected $numblocks;
     /**
-     * Forces the change address to be the last output.
-     *
-     * @var boolean
-     */
-    protected $forceChangeAtEnd;
-    /**
-     * Specifies the change address instead of creating a new one.
-     *
-     * @var string
-     */
-    protected $changeAddress;
-    /**
-     * Set to true to disable automatic change splitting
-     * for purposes of unspent management.
-     *
-     * @var boolean
-     */
-    protected $noSplitChange;
-    /**
-     * Specify a number of target unspents to maintain in the wallet.
+     * The desired count of unspents in the wallet. If the wallet’s
+     * current unspent count is lower than the target, up to
+     * four additional change outputs will be added to the
+     * transaction. To reduce unspent count in your
+     * wallet see 'Consolidate Unspents’.
      *
      * @var integer
      */
     protected $targetWalletUnspents;
     /**
-     * Extra verification of the change addresses, which is
-     * always done server-side and is redundant
-     * client-side (defaults to true).
+     * Ignore unspents smaller than this amount of satoshis
      *
-     * @var boolean
+     * @var integer
      */
-    protected $validate;
+    protected $minValue;
     /**
-     * Use this single key address to pay fees
+     * Ignore unspents larger than this amount of satoshis
      *
-     * @var string
+     * @var integer
      */
-    protected $feeSingleKeySourceAddress;
+    protected $maxValue;
     /**
-     * Use the address based on this private key to pay fees
+     * Custom gas limit for the transaction
      *
-     * @var string
+     * @var integer
      */
-    protected $feeSingleKeyWIF;
+    protected $gasLimit;
     /**
-     * A 7 digit code used to bypass a policy with the “getOTP” action type.
+     * Custom gas price to be used for sending the transaction
+     * This only applies for ETH
      *
-     * @var string
-     * @see https://bitgo.github.io/bitgo-docs/?shell#wallet-policy
+     * @var integer
      */
-    protected $otp;
+    protected $gasPrice;
+    /**
+     * The sequence ID of the transaction
+     *
+     * @var integer
+     */
+    protected $sequenceId;
+    /**
+     * Allow SegWit unspents to be used, and create SegWit change.
+     *
+     * @var integer
+     */
+    protected $segwit;
+    /**
+     * Absolute max ledger the transaction should be accepted in,
+     * whereafter it will be rejected.
+     *
+     * @var integer
+     */
+    protected $lastLedgerSequence;
+    /**
+     * Relative ledger height (in relation to the current ledger)
+     * that the transaction should be accepted in,
+     * whereafter it will be rejected.
+     *
+     * @var integer
+     */
+    protected $ledgerSequenceDelta;
+
     /**
      * Construct for creating a new instance of this class
      *
@@ -234,14 +219,67 @@ class SendCoins extends Api implements ExecutionInterface
     }
 
     /**
-     * This will be the address that the coins will be sent to
+     * This is the address that the coins will be sent
+     * to. This method can be used interchangably with
+     * receiver, to and address.
      *
-     * @param  string $address Address to send coins to
+     * @param  string $address this will be the receiving address
+     * @return self
+     */
+    public function to($address)
+    {
+        return $this->receiver($address);
+    }
+
+    /**
+     * This is the address that the coins will be sent
+     * to. This method can be used interchangably with
+     * receiver, to and address.
+     *
+     * @param  string $address this will be the receiving address
+     * @return self
+     */
+    public function receiver($address)
+    {
+        return $this->address($address);
+    }
+    /**
+     * This is the address that the coins will be sent
+     * to. This method can be used interchangably with
+     * receiver, to and address.
+     *
+     * @param  string $address this will be the receiving address
      * @return self
      */
     public function address($address)
     {
         return $this->setAddress($address);
+    }
+    /**
+     * Use this chain method to define the amount of coins
+     * that will be sent.
+     *
+     * @param  integer $amount This will be the amount will be sent.
+     *                         In BTC for example this will be the
+     *                         amount in satoshi.
+     * @return self
+     */
+    public function amount($amount)
+    {
+        return $this->setAmount($amount);
+    }
+
+    /**
+     * This will set the wallet passphrase and allow a chain method to
+     * the run function.
+     *
+     * @param  string $walletPassphrase The passphrase for the wallet
+     *                                  to send money from.
+     * @return self
+     */
+    public function passPhrase($walletPassphrase)
+    {
+        return $this->setWalletPassphrase($walletPassphrase);
     }
 
     /**
@@ -253,6 +291,9 @@ class SendCoins extends Api implements ExecutionInterface
     {
         $this->propertiesPassRequired();
 
-        return $this->_get('/wallet/' . $this->getWalletId() . '/tx/' . $this->getTransactionId(), $this->propertiesToArray());
+        return $this->_post(
+            '/wallet/{walletId}/sendcoins',
+            $this->propertiesToArray()
+        );
     }
 }
