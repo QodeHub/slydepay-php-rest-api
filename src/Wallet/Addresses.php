@@ -14,9 +14,10 @@
 namespace Qodehub\Bitgo\Wallet;
 
 use Qodehub\Bitgo\Api\Api;
+use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\Wallet\ExecutionTrait;
+use Qodehub\Bitgo\Wallet\WalletTrait;
 
 /**
  * Addresses Class
@@ -30,11 +31,12 @@ use Qodehub\Bitgo\Wallet\ExecutionTrait;
  * @example Bitgo::btc($config)->wallet('waletId')->addresses($optional-address-id)->get();
  * @example Transactions::wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
  */
-class Addresses extends Api implements ExecutionInterface
+class Addresses extends Api implements WalletInterface
 {
-    use ExecutionTrait;
+    use WalletTrait;
     use MassAssignable;
     use CanCleanParameters;
+    use Coin;
 
     /**
      * {@inheritdoc}
@@ -47,169 +49,44 @@ class Addresses extends Api implements ExecutionInterface
      * {@inheritdoc}
      */
     protected $parametersOptional = [
-        'chain',
-        'skip',
-        'limit',
-        'details',
+        'address',
     ];
 
     /**
-     * Optionally restrict to chain 0, 1, 10 or 11
+     * Get for a single address. This could be an address or and addressID
      *
-     * @var number
-     */
-    protected $chain;
-    /**
-     *     Skip this number of results
-     *
-     * @var number
-     */
-    protected $skip;
-    /**
-     * Limit number of results to this number (default=25, max=500)
-     *
-     * @var number
-     */
-    protected $limit;
-    /**
-     * Include details like balance and transaction count info
-     *
-     * @var boolean
-     */
-    protected $details;
-    /**
-     * Get for a single address
-     *
-     * @var boolean
+     * @var string
      */
     protected $address;
 
     /**
      * Construct for creating a new instance of this class
      *
-     * @param array $data An array with assignable Parameters
+     * @param array|string $data An array with assignable Parameters or an
+     *                           Address or an addressID
      */
-    public function __construct($data = [])
+    public function __construct($data = null)
     {
-        $this->massAssign($data);
+
+        if (is_string($data)) {
+            $this->address = $data;
+        }
+
+        if (is_array($data)) {
+            $this->massAssign($data);
+        }
     }
 
     /**
-     * @param boolean $skip
+     * This will allow chaining the address to the insance
+     *
+     * @param string $address This is an address or an addressID
      *
      * @return self
      */
-    public function skip($skip)
+    public function address($address)
     {
-        return $this->setSkip($skip);
-    }
-
-    /**
-     * @param number $limit
-     *
-     * @return self
-     */
-    public function limit($limit)
-    {
-        return $this->setLimit($limit);
-    }
-
-    /**
-     * @param boolean $chain
-     *
-     * @return self
-     */
-    public function chain($chain)
-    {
-        return $this->setChain($chain);
-    }
-
-    /**
-     * @param boolean $details
-     *
-     * @return self
-     */
-    public function details($details)
-    {
-        return $this->setDetails($details);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getChain()
-    {
-        return $this->chain;
-    }
-
-    /**
-     * @param mixed $chain
-     *
-     * @return self
-     */
-    public function setChain($chain)
-    {
-        $this->chain = $chain;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSkip()
-    {
-        return $this->skip;
-    }
-
-    /**
-     * @param mixed $skip
-     *
-     * @return self
-     */
-    public function setSkip($skip)
-    {
-        $this->skip = $skip;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    /**
-     * @param mixed $limit
-     *
-     * @return self
-     */
-    public function setLimit($limit)
-    {
-        $this->limit = $limit;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDetails()
-    {
-        return $this->details;
-    }
-
-    /**
-     * @param mixed $details
-     *
-     * @return self
-     */
-    public function setDetails($details)
-    {
-        $this->details = $details;
+        $this->address = $address;
 
         return $this;
     }
@@ -230,6 +107,7 @@ class Addresses extends Api implements ExecutionInterface
     public function setAddress($address)
     {
         $this->address = $address;
+        $this->urlPattern = '';
 
         return $this;
     }
@@ -237,17 +115,14 @@ class Addresses extends Api implements ExecutionInterface
     /**
      * The method places the call to the Bitgo API
      *
-     * @param  string|null $address get data for a single address
      * @return Object
      */
-    public function run($address = null)
+    public function run()
     {
-        $this->setAddress($address);
-
         $this->propertiesPassRequired();
 
         return $this->_get(
-            '/wallet/' . $this->getWalletId() . '/addresses/' . $this->getAddress(),
+            '/wallet/{walletId}' . ($this->getAddress() ? '/address/{address}' : '/addresses'),
             $this->propertiesToArray()
         );
     }
