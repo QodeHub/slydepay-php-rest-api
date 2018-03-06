@@ -22,11 +22,11 @@ namespace Qodehub\Bitgo\Api;
 interface ApiInterface
 {
     /**
-     * Returns the API base url.
+     * Returns the API base path.
      *
      * @return string
      */
-    public function getBaseUrl();
+    public function getBasePath();
     /**
      * Send a GET request.
      *

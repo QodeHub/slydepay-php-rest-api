@@ -36,6 +36,9 @@ use Qodehub\Bitgo\Wallet\ExecutionTrait;
  * Wallet::createAddress()
  * Address::create()->walletId($walletId)->run()
  * Address::create()->wallet($walletId)->run()
+ *
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class CreateWallet extends Api implements ExecutionInterface
 {

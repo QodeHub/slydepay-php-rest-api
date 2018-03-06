@@ -69,7 +69,25 @@ class TransactonsTest extends TestCase
      */
 
     /**
-     * Hold the configuration
+     * The bearer token that will be used by this API
+     * @var string
+     */
+    protected $token = 'existing-token';
+
+    /**
+     * This will determine if HTTP(S) will be used
+     * @var boolean
+     */
+    protected $secure = true;
+
+    /**
+     * This is the host on which the Bitgo API is running.
+     * @var string
+     */
+    protected $host = 'some-host.com';
+
+    /**
+     * The configuration instance.
      * @var Config
      */
     protected $config;
@@ -80,8 +98,7 @@ class TransactonsTest extends TestCase
      */
     public function setup()
     {
-        $this->config = new Config();
-        $this->config->setToken('a_valid_token');
+        $this->config = new Config($this->token, $this->secure, $this->host);
     }
 
     /** @test */
@@ -238,7 +255,7 @@ class TransactonsTest extends TestCase
          * Inject the configuration and use the
          */
         $mock
-            ->injectConfig(new Config())
+            ->injectConfig($this->config)
 
             //Setup the required parameters
 
@@ -262,13 +279,13 @@ class TransactonsTest extends TestCase
         $request = $container[0]['request'];
 
         $this->assertEquals($request->getMethod(), 'GET', 'it should be a get request.');
-        $this->assertEquals($request->getUri()->getHost(), 'www.bitgo.com', 'Hostname should be www.bitgo.com');
+        $this->assertEquals($request->getUri()->getHost(), 'some-host.com', 'Hostname should be some-host.com');
         $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
 
         $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
 
         $this->assertContains(
-            "https://www.bitgo.com/wallet/existing-wallet-id/tx/",
+            "https://some-host.com/wallet/existing-wallet-id/tx/",
             $request->getUri()->__toString()
         );
     }
@@ -305,7 +322,7 @@ class TransactonsTest extends TestCase
          * Inject the configuration and use the
          */
         $mock
-            ->injectConfig(new Config())
+            ->injectConfig($this->config)
 
             //Setup the required parameters
 
@@ -329,13 +346,13 @@ class TransactonsTest extends TestCase
         $request = $container[0]['request'];
 
         $this->assertEquals($request->getMethod(), 'GET', 'it should be a get request.');
-        $this->assertEquals($request->getUri()->getHost(), 'www.bitgo.com', 'Hostname should be www.bitgo.com');
+        $this->assertEquals($request->getUri()->getHost(), 'some-host.com', 'Hostname should be some-host.com');
         $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
 
         $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
 
         $this->assertContains(
-            "https://www.bitgo.com/wallet/existing-wallet-id/tx/existing-transaction-id",
+            "https://some-host.com/wallet/existing-wallet-id/tx/existing-transaction-id",
             $request->getUri()->__toString()
         );
     }

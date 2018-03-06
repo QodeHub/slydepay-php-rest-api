@@ -16,8 +16,8 @@ use GuzzleHttp\Psr7\Response;
 use Qodehub\Bitgo\Api\Api;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\Wallet\ExecutionInterface;
-use Qodehub\Bitgo\Wallet\ExecutionTrait;
+use Qodehub\Bitgo\WalletTrait;
+use Qodehub\Bitgo\Wallet\WalletInterface;
 
 /**
  * CreateAddress Class
@@ -34,11 +34,11 @@ use Qodehub\Bitgo\Wallet\ExecutionTrait;
  * Address::create()->walletId($walletId)->run()
  * Address::create()->wallet($walletId)->run()
  */
-class CreateAddress extends Api implements ExecutionInterface
+class CreateAddress extends Api implements WalletInterface
 {
-    use ExecutionTrait;
     use MassAssignable;
     use CanCleanParameters;
+    use WalletTrait;
 
     /**
      * {@inheritdoc}

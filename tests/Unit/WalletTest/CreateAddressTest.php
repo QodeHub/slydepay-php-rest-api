@@ -26,7 +26,35 @@ use Qodehub\Bitgo\Wallet\CreateAddress;
 
 class CreateAddressTest extends TestCase
 {
+    /**
+     * The bearer token that will be used by this API
+     * @var string
+     */
+    protected $token = 'existing-token';
+
+    /**
+     * This will determine if HTTP(S) will be used
+     * @var boolean
+     */
+    protected $secure = true;
+
+    /**
+     * This is the host on which the Bitgo API is running.
+     * @var string
+     */
+    protected $host = 'some-host.com';
+
+    /**
+     * The configuration instance.
+     * @var Config
+     */
     protected $config;
+
+    /**
+     * This is the ID of the wallet used in this test
+     * @var string
+     */
+    protected $walletId = 'existing-wallet-id';
 
     /**
      * Setup the test environment viriables
@@ -34,7 +62,19 @@ class CreateAddressTest extends TestCase
      */
     public function setup()
     {
-        $this->config = new Config();
+        $this->config = new Config($this->token, $this->secure, $this->host);
+    }
+
+    /** @test */
+    public function the_create_address_method_can_be_called_with_an_entry_static_coin_method()
+    {
+        /**
+         * Set the currency name-space
+         * @var CreateAddress
+         */
+        $instance = Bitgo::btc()->wallet($this->walletId)->createAddress();
+
+        $this->assertInstanceOf(CreateAddress::class, $instance);
     }
 
     /** @test */
@@ -45,7 +85,7 @@ class CreateAddressTest extends TestCase
          * Create the wallet instance
          * @var Wallet
          */
-        $wallet = new Wallet('existing-wallet-id');
+        $wallet = new Wallet($this->walletId);
 
         /**
          * Call the createAddress Magic method on the wallet instance
@@ -55,7 +95,7 @@ class CreateAddressTest extends TestCase
         /**
          * Assert that the CreateAddress Instance received the wallet ID
          */
-        $this->assertEquals($createAddressInstance->getWalletId(), 'existing-wallet-id');
+        $this->assertEquals($createAddressInstance->getWalletId(), $this->walletId);
 
         return $createAddressInstance;
     }
@@ -102,7 +142,7 @@ class CreateAddressTest extends TestCase
     //     $mock->method('execute')->will($this->returnValue(null));
 
     //     $this->expectException(\Qodehub\Bitgo\Exception\MissingParameterException::class);
-    //     $mock->wallet('existing-wallet-id')->run();
+    //     $mock->wallet($this->walletId)->run();
     // }
 
     /** @test */
@@ -138,11 +178,11 @@ class CreateAddressTest extends TestCase
          * Inject the configuration and use the
          */
         $mock
-            ->injectConfig(new Config())
+            ->injectConfig($this->config)
 
             //Setup the required parameters
 
-            ->wallet('existing-wallet-id')
+            ->wallet($this->walletId)
             ->chain(0);
 
         /**
@@ -162,13 +202,13 @@ class CreateAddressTest extends TestCase
         $request = $container[0]['request'];
 
         $this->assertEquals($request->getMethod(), 'POST', 'it should be a post request.');
-        $this->assertEquals($request->getUri()->getHost(), 'www.bitgo.com', 'Hostname should be www.bitgo.com');
+        $this->assertEquals($request->getUri()->getHost(), 'some-host.com', 'Hostname should be some-host.com');
         $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
 
         $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
 
         $this->assertContains(
-            "https://www.bitgo.com/wallet/existing-wallet-id/address/0",
+            "https://some-host.com/wallet/existing-wallet-id/address/0",
             $request->getUri()->__toString()
         );
     }

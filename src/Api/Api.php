@@ -39,11 +39,11 @@ abstract class Api implements ApiInterface
      */
     protected $config;
     /**
-     * The Default Bitgo Base Api url
+     * The default basePath on the API instance
      *
      * @var string
      */
-    protected $baseUrl = 'https://www.bitgo.com/api/v2';
+    protected $basePath = '/api/v2';
     /**
      * This is the response received from the bitgo server
      * if no exception was thrown.
@@ -69,25 +69,25 @@ abstract class Api implements ApiInterface
         return $this->setConfig($config);
     }
     /**
-     * Change the Default Api baseUrl
+     * Change the Default Api basePath
      *
-     * @param  string $baseUrl The Bitgo Resource Base URL
+     * @param  string $basePath The Bitgo Resource Base Path
      * @return self
      */
-    public function setBaseUrl($baseUrl)
+    public function setBasePath($basePath)
     {
-        $this->baseUrl = $baseUrl;
+        $this->basePath = $basePath;
 
         return $this;
     }
     /**
-     * Get the Bitgo payment Base Url from the Api Instance
+     * Get the Bitgo payment Base Path from the Api Instance
      *
-     * @return string [This is the base URL that is on the class instance]
+     * @return string [This is the base Path that is on the class instance]
      */
-    public function getBaseUrl()
+    public function getBasePath()
     {
-        return $this->baseUrl;
+        return $this->basePath;
     }
     /**
      * {@inheritdoc}
@@ -171,7 +171,7 @@ abstract class Api implements ApiInterface
     {
         return new Client(
             [
-                'base_uri' => $this->baseUrl . $this->skipOrAppendCoin(),
+                'base_uri' => $this->config->getBaseUrl() . $this->getBasePath() . $this->skipOrAppendCoin(),
                 'handler' => $this->createHandler($this->config),
             ]
         );
@@ -212,6 +212,7 @@ abstract class Api implements ApiInterface
      * Skip or append coin path depending on if
      * the isCoinPath was changed to true by
      * a child class.
+     *
      * @return string|null the coin path partial
      */
     public function skipOrAppendCoin()

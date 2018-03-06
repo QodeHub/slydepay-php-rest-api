@@ -28,6 +28,8 @@ use Qodehub\Bitgo\Wallet\WalletInterface;
  * @example Transactions::wallet('waletId')->get();
  * @example Transactions::wallet('waletId')->get('waletId');
  * @example Transactions::wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
+ *
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class Wallet extends Api implements WalletInterface
 {

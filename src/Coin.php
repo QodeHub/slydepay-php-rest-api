@@ -16,80 +16,100 @@ namespace Qodehub\Bitgo;
 use Qodehub\Bitgo\Config;
 
 /**
- * CurrencyTrait Trait
+ * CoinTrait Trait
  *
  * This trait initializes the currency namespace
  * on any class that uses it.
  *
  * @see \Qodehub\Bitgo\Wallet\ExecutionInterface
  */
-trait CurrencyTrait
+trait Coin
 {
+
     /**
      * This is the coin type.
      *
      * @var string
      */
-    protected $coin;
+    protected $coinType;
 
     /**
-     * [$coin description]
-     * @var [type]
+     * This is the ID of the wallet that the
+     * API will interact with. It is also the
+     * first wallet receiving address.
+     *
+     * @var string
      */
-    protected $isCoinPath = true;
+    protected $walletId;
 
     /**
-     * It's as it sounds. These are possible
+     * Just as it sounds -- these are possible
      * coins that can be be used with this plugin.
      *
-     * @var array
+     * @return array an array of possible coins
      */
-    private $posibleCoins = [
-        'btc',
-        'bch',
-        'btg',
-        'eth',
-        'ltc',
-        'rmg',
-        'erc',
-        'omg',
-        'zrx',
-        'fun',
-        'gnt',
-        'rep',
-        'bat',
-        'knc',
-        'cvc',
-        'eos',
-        'qrl',
-        'nmr',
-        'pay',
-        'brd',
-        'tbtc',
-        'tbch',
-        'teth',
-        'tltc',
-        'txrp',
-        'trmg',
-        'terc',
-    ];
+    protected static function possibleCoinTypes()
+    {
+        return [
+            'btc',
+            'bch',
+            'btg',
+            'eth',
+            'ltc',
+            'rmg',
+            'erc',
+            'omg',
+            'zrx',
+            'fun',
+            'gnt',
+            'rep',
+            'bat',
+            'knc',
+            'cvc',
+            'eos',
+            'qrl',
+            'nmr',
+            'pay',
+            'brd',
+            'tbtc',
+            'tbch',
+            'teth',
+            'tltc',
+            'txrp',
+            'trmg',
+            'terc',
+        ];
+    }
+
+    /**
+     * This will set the coin type on the class instance
+     *
+     * @param  string $coinType The wallet ID should be passed in here
+     * @return Qodehub\Bitgo\Wallet|string           The wallet ID or Instance
+     *
+     * @see \Qodehub\Bitgo\Wallet\ExecutionInterface
+     */
+    public function coinType($coinType)
+    {
+        return $this->setCoinType($coinType);
+    }
 
     /**
      * @return string
      */
-    public function getCoin()
+    public function getCoinType()
     {
-        return $this->coin;
+        return $this->coinType;
     }
 
     /**
-     * @param string $coin
+     * @param string $coinType
      *
      * @return self
      */
-    public function setCoin($coin)
+    public function setCoinType($coinType)
     {
-        $this->coin = $coin;
+        $this->coinType = $coinType;
 
         return $this;
     }
@@ -112,7 +132,7 @@ trait CurrencyTrait
         /**
          * Restrict the static class names.
          */
-        if (in_array(str_tolower($method), $this->possibleCoins)) {
+        if (in_array(strtolower($method), self::possibleCoinTypes())) {
 
             /**
              * If the class name is among possible coins,
@@ -121,7 +141,7 @@ trait CurrencyTrait
              * coin name.
              */
 
-            return (new self(...$parameters))->coin($method);
+            return (new self(...$parameters))->coinType($method);
         }
 
         /**
@@ -134,7 +154,7 @@ trait CurrencyTrait
              * if the static method name is one of the above methods.
              */
 
-            return (new self)->{$method}(...$parameters);
+            return (new self)->$method(...$parameters);
         }
 
         throw new \BadStaticCallException('Undefined method [ ' . $method . '] called.');

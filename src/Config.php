@@ -39,14 +39,16 @@ class Config implements ConfigInterface
     protected $token;
     /**
      * This is the host for the Bitgo Server
+     *
      * @var string
      */
     protected $host = 'test.bitgo.com';
     /**
      * This will be the port on which the server is running.
+     *
      * @var integer
      */
-    protected $port = 80;
+    protected $port;
     /**
      * This will be a boolean as to if or not the server
      * runs on a https server.
@@ -58,20 +60,28 @@ class Config implements ConfigInterface
      * This will be a boolean as to if or not the server
      * runs on a https server.
      *
-     * @var boolean
+     * @var string
      */
     protected $scheme;
+
+    /**
+     * The Default Bitgo Base Api url
+     *
+     * @var string
+     */
+    protected $baseUrl;
 
     /**
      * Constructor
      *
      * This configuration constructor holds the config data.
+     *
      * @param string  $token  This is your token from the Bitgo Server
      * @param boolean $secure This determines if the servere url should be HTTP(S)
      * @param string  $host   This is the reacable Bitgo Server
      * @param integer $port   This is the port for the reachable Bitgo server
      */
-    public function __construct($token = null, $secure = 1, $host = 'test.bitgo.com', $port = 80)
+    public function __construct($token = null, $secure = 1, $host = 'test.bitgo.com', $port = null)
     {
         $this->setPackageVersion(Bitgo::VERSION);
         $this->setToken($token ?: getenv('BITGO_TOKEN'));
@@ -81,15 +91,29 @@ class Config implements ConfigInterface
     }
 
     /**
-     * @return string
+     * Get the Bitgo payment Base Url from the Api Instance
+     *
+     * @return string [This is the base URL that is on the class instance]
      */
     public function getBaseUrl()
     {
-        $this->setScheme($this->getSecure() ? 'https' : 'http');
+        $this->setScheme($this->isSecure() ? 'https' : 'http');
 
-        return $this->baseUrl($this->getScheme() . '://' . $this->getHost() . ':' . $this->getPort());
+        return $this->baseUrl ?: $this->getScheme() . '://' . $this->getHost() . ($this->getPort() ? (':' . $this->getPort()) : null);
     }
 
+    /**
+     * Change the Default Api baseUrl
+     *
+     * @param  string $baseUrl The Bitgo Resource Base URL
+     * @return self
+     */
+    public function setBaseUrl($baseUrl)
+    {
+        $this->$baseUrl = $baseUrl;
+
+        return $this;
+    }
     /**
      * {@inheritdoc}
      */
@@ -225,5 +249,13 @@ class Config implements ConfigInterface
         $this->scheme = $scheme;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScheme()
+    {
+        return $this->scheme;
     }
 }

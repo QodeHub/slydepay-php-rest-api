@@ -13,6 +13,8 @@
 
 namespace Qodehub\Bitgo\Wallet;
 
+use Qodehub\Bitgo\WalletTrait;
+
 /**
  * WalletAccessors Trait
  *
@@ -20,6 +22,7 @@ namespace Qodehub\Bitgo\Wallet;
  */
 trait WalletAccessors
 {
+    use WalletTrait;
 
     /**
      * @return boolean
@@ -279,14 +282,5 @@ trait WalletAccessors
         $this->spendableBalance = $spendableBalance;
 
         return $this;
-    }
-
-    /**
-     * Set the wallet iD
-     * {@inheritdoc}
-     */
-    public function wallet($walletId)
-    {
-        $this->setId($walletId);
     }
 }

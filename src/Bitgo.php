@@ -13,8 +13,8 @@
 
 namespace Qodehub\Bitgo;
 
+use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\CurrencyTrait;
 
 /**
  * Bitgo Class
@@ -24,7 +24,7 @@ use Qodehub\Bitgo\CurrencyTrait;
  */
 class Bitgo implements ConfigInterface
 {
-    use CurrencyTrait;
+    use Coin;
 
     /**
      * The package version.
@@ -46,11 +46,43 @@ class Bitgo implements ConfigInterface
     protected $config;
 
     /**
-     * Create a new Qodehub\Bitgo instance via constructor.
+     * Constructor
+     *
+     * @param Config|array|string $config This could either be the configuration
+     *                                    instance, an array with the configuration
+     *                                    data, or the bearer token.
+     * @param boolean             $secure This will switch https on or off. Defaults to true.
+     * @param string              $host   this is a string of the host address excluding the scheme and port
+     * @param integer             $port   This is the Api port.
      */
-    public function __construct()
+    public function __construct($config = null, $secure = null, $host = null, $port = null)
     {
-        $this->config = new Config();
+
+        /**
+         * Check if a configuration instance was passed in.
+         */
+        if ($config instanceof Config) {
+            $this->config = $config;
+
+            return;
+        }
+
+        /**
+         * Check if an array was passed and with key and values
+         */
+        if (is_array($config)) {
+            $this->config = new Config($config['config'], $config['secure'], $config['host'], $config['port']);
+
+            return;
+        }
+
+        /**
+         * If the data was not an array, or a
+         * Config instance, then we can asume
+         * that the the configuration data
+         * was passed accordingly.
+         */
+        $this->config = new Config($config, $secure, $host, $port);
     }
     /**
      * Create a new Qodehub Studio
@@ -97,6 +129,18 @@ class Bitgo implements ConfigInterface
         $this->config->setPackageVersion($version);
 
         return $this;
+    }
+
+    /**
+     * Dynamically handle missing Api Classes and Methods.
+     *
+     * @param  string $method
+     * @param  array  $parameters
+     * @return \OVAC\HubtelPayment\Api\Transaction
+     */
+    public function __call($method, array $parameters)
+    {
+        return $this->getApiInstance($method, ...$parameters);
     }
 
     /**
