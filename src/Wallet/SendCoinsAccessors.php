@@ -17,6 +17,8 @@ namespace Qodehub\Bitgo\Wallet;
  * SendCoinsAccessors Trait
  *
  * This traits holds accessors for the SendCoins class
+ *
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 trait SendCoinsAccessors
 {

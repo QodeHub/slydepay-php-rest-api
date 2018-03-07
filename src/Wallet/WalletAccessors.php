@@ -22,26 +22,6 @@ trait WalletAccessors
 {
 
     /**
-     * @return boolean
-     */
-    public function isAdmin()
-    {
-        return $this->admin;
-    }
-
-    /**
-     * @param boolean $admin
-     *
-     * @return self
-     */
-    public function setAdmin($admin)
-    {
-        $this->admin = $admin;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getId()
@@ -62,21 +42,21 @@ trait WalletAccessors
     }
 
     /**
-     * @return boolean
+     * @return integer
      */
-    public function isIsActive()
+    public function getLimit()
     {
-        return $this->isActive;
+        return $this->limit;
     }
 
     /**
-     * @param boolean $isActive
+     * @param integer $limit
      *
      * @return self
      */
-    public function setIsActive($isActive)
+    public function setLimit($limit)
     {
-        $this->isActive = $isActive;
+        $this->limit = $limit;
 
         return $this;
     }
@@ -84,79 +64,19 @@ trait WalletAccessors
     /**
      * @return string
      */
-    public function getLabel()
+    public function getAllTokens()
     {
-        return $this->label;
+        return $this->allTokens;
     }
 
     /**
-     * @param string $label
+     * @param string $allTokens
      *
      * @return self
      */
-    public function setLabel($label)
+    public function setAllTokens($allTokens)
     {
-        $this->label = $label;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPermissions()
-    {
-        return $this->permissions;
-    }
-
-    /**
-     * @param array $permissions
-     *
-     * @return self
-     */
-    public function setPermissions(array $permissions)
-    {
-        $this->permissions = $permissions;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPrivate()
-    {
-        return $this->private;
-    }
-
-    /**
-     * @param array $private
-     *
-     * @return self
-     */
-    public function setPrivate(array $private)
-    {
-        $this->private = $private;
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isSpendingAccount()
-    {
-        return $this->spendingAccount;
-    }
-
-    /**
-     * @param boolean $spendingAccount
-     *
-     * @return self
-     */
-    public function setSpendingAccount($spendingAccount)
-    {
-        $this->spendingAccount = $spendingAccount;
+        $this->allTokens = $allTokens;
 
         return $this;
     }
@@ -164,119 +84,19 @@ trait WalletAccessors
     /**
      * @return string
      */
-    public function getType()
+    public function getPrevId()
     {
-        return $this->type;
+        return $this->prevId;
     }
 
     /**
-     * @param string $type
+     * @param string $prevId
      *
      * @return self
      */
-    public function setType(string $type)
+    public function setPrevId($prevId)
     {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     *
-     * @return self
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isApprovalsRequired()
-    {
-        return $this->approvalsRequired;
-    }
-
-    /**
-     * @param boolean $approvalsRequired
-     *
-     * @return self
-     */
-    public function setApprovalsRequired($approvalsRequired)
-    {
-        $this->approvalsRequired = $approvalsRequired;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getBalance()
-    {
-        return $this->balance;
-    }
-
-    /**
-     * @param float $balance
-     *
-     * @return self
-     */
-    public function setBalance($balance)
-    {
-        $this->balance = $balance;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getConfirmedBalance()
-    {
-        return $this->confirmedBalance;
-    }
-
-    /**
-     * @param float $confirmedBalance
-     *
-     * @return self
-     */
-    public function setConfirmedBalance($confirmedBalance)
-    {
-        $this->confirmedBalance = $confirmedBalance;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getSpendableBalance()
-    {
-        return $this->spendableBalance;
-    }
-
-    /**
-     * @param float $spendableBalance
-     *
-     * @return self
-     */
-    public function setSpendableBalance($spendableBalance)
-    {
-        $this->spendableBalance = $spendableBalance;
+        $this->prevId = $prevId;
 
         return $this;
     }

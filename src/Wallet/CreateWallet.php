@@ -17,10 +17,10 @@ namespace Qodehub\Bitgo\Wallet;
 
 use GuzzleHttp\Psr7\Response;
 use Qodehub\Bitgo\Api\Api;
+use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\Wallet\ExecutionInterface;
-use Qodehub\Bitgo\Wallet\ExecutionTrait;
+use Qodehub\Bitgo\Wallet;
 
 /**
  * CreateAddress Class
@@ -40,68 +40,92 @@ use Qodehub\Bitgo\Wallet\ExecutionTrait;
  * @SuppressWarnings(PHPMD.ShortVariable)
  * @SuppressWarnings(PHPMD.LongVariable)
  */
-class CreateWallet extends Api implements ExecutionInterface
+class CreateWallet extends Wallet implements WalletInterface
 {
-    use ExecutionTrait;
     use MassAssignable;
     use CanCleanParameters;
-    use Keychains;
+    use Coin;
 
     /**
      * {@inheritdoc}
      */
     protected $parametersRequired = [
         'label',
-        'm',
-        'n',
-        'keychains',
+        'passphrase',
     ];
 
     /**
      * {@inheritdoc}
      */
     protected $parametersOptional = [
+        'userKey',
+        'backupXpub',
+        'backupXpubProvider',
         'enterprise',
         'disableTransactionNotifications',
+        'gasPrice',
+        'passcodeEncryptionCode',
     ];
 
     /**
-     * A label for this wallet
+     * A Human-readable name for the wallet
      *
      * @var string
      */
     protected $label;
     /**
-     * The number of signatures required to redeem (must be 2)
+     * Passphrase to decrypt the wallet’s private key.
      *
-     * @var integer
+     * @var string
      */
-    protected $m = 2;
+    protected $passphrase;
     /**
-     * The number of keys in the wallet (must be 3)
+     * Optional xpub to be used as the user key.
      *
-     * @var integer
+     * @var string
      */
-    protected $n = 3;
+    protected $userKey;
     /**
-     * An array of n keychain xpubs to use with this wallet;
-     * last must be a BitGo key
+     * Optional xpub to be used as the backup key.
      *
-     * @var Keychains
+     * @var string
      */
-    protected $keychains;
+    protected $backupXpub;
     /**
-     * Enterprise ID to create this wallet under.
+     * Optional key recovery service to provide
+     * and store the backup key.
+     *
+     * @var string
+     */
+    protected $backupXpubProvider;
+    /**
+     * ID of the enterprise to associate
+     * this wallet with.
      *
      * @var string
      */
     protected $enterprise;
     /**
-     * Set to true to prevent wallet transaction notifications
+     * Will prevent wallet transaction
+     * notifications if set to true.
      *
      * @var boolean
      */
     protected $disableTransactionNotifications;
+    /**
+     * Will prevent wallet transaction
+     * notifications if set to true.
+     *
+     * @var integer
+     */
+    protected $gasPrice;
+    /**
+     * Encryption code for wallet passphrase
+     * (used for lost passphrase recovery)
+     *
+     * @var string
+     */
+    protected $passcodeEncryptionCode;
 
     /**
      * Construct for creating a new instance of this class
@@ -114,28 +138,67 @@ class CreateWallet extends Api implements ExecutionInterface
     }
 
     /**
-     * Set the keychains for the bitgo network
+     * Set a human-readable label for the wallet
+     * that will be created
      *
-     * @param  Keychains $keychains This is a keychains instance
-     *                              containing with all three
-     *                              keys configured
-     *                              ([XPUB_USER, XPUB_BACKUP, XPUB_BACKUP])
-     * @return self
-     */
-    public function keychains(Keychains $keychains)
-    {
-        return $this->setKeychains($keychains);
-    }
-
-    /**
-     * This will set the label of the wallet.
-     *
-     * @param  string $label This is the label for the wallet
+     * @param  string $label A human readable label
      * @return self
      */
     public function label($label)
     {
         return $this->setLabel($label);
+    }
+
+    /**
+     * Set the security passphrase or otherwise password
+     * for the wallet that will be created.
+     *
+     * @param  string $passphrase A secure password for the wallet.
+     * @return self
+     */
+    public function passphrase($passphrase)
+    {
+        return $this->setPassphrase($passphrase);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParametersRequired()
+    {
+        return $this->parametersRequired;
+    }
+
+    /**
+     * @param mixed $parametersRequired
+     *
+     * @return self
+     */
+    public function setParametersRequired($parametersRequired)
+    {
+        $this->parametersRequired = $parametersRequired;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParametersOptional()
+    {
+        return $this->parametersOptional;
+    }
+
+    /**
+     * @param mixed $parametersOptional
+     *
+     * @return self
+     */
+    public function setParametersOptional($parametersOptional)
+    {
+        $this->parametersOptional = $parametersOptional;
+
+        return $this;
     }
 
     /**
@@ -159,21 +222,81 @@ class CreateWallet extends Api implements ExecutionInterface
     }
 
     /**
-     * @return Keychains
+     * @return string
      */
-    public function getKeychains()
+    public function getPassphrase()
     {
-        return $this->keychains;
+        return $this->passphrase;
     }
 
     /**
-     * @param Keychains $keychains
+     * @param string $passphrase
      *
      * @return self
      */
-    public function setKeychains(Keychains $keychains)
+    public function setPassphrase($passphrase)
     {
-        $this->keychains = $keychains;
+        $this->passphrase = $passphrase;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserKey()
+    {
+        return $this->userKey;
+    }
+
+    /**
+     * @param string $userKey
+     *
+     * @return self
+     */
+    public function setUserKey($userKey)
+    {
+        $this->userKey = $userKey;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackupXpub()
+    {
+        return $this->backupXpub;
+    }
+
+    /**
+     * @param string $backupXpub
+     *
+     * @return self
+     */
+    public function setBackupXpub($backupXpub)
+    {
+        $this->backupXpub = $backupXpub;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackupXpubProvider()
+    {
+        return $this->backupXpubProvider;
+    }
+
+    /**
+     * @param string $backupXpubProvider
+     *
+     * @return self
+     */
+    public function setBackupXpubProvider($backupXpubProvider)
+    {
+        $this->backupXpubProvider = $backupXpubProvider;
 
         return $this;
     }
@@ -201,7 +324,7 @@ class CreateWallet extends Api implements ExecutionInterface
     /**
      * @return boolean
      */
-    public function getDisableTransactionNotifications()
+    public function isDisableTransactionNotifications()
     {
         return $this->disableTransactionNotifications;
     }
@@ -219,6 +342,46 @@ class CreateWallet extends Api implements ExecutionInterface
     }
 
     /**
+     * @return integer
+     */
+    public function getGasPrice()
+    {
+        return $this->gasPrice;
+    }
+
+    /**
+     * @param integer $gasPrice
+     *
+     * @return self
+     */
+    public function setGasPrice($gasPrice)
+    {
+        $this->gasPrice = $gasPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasscodeEncryptionCode()
+    {
+        return $this->passcodeEncryptionCode;
+    }
+
+    /**
+     * @param string $passcodeEncryptionCode
+     *
+     * @return self
+     */
+    public function setPasscodeEncryptionCode($passcodeEncryptionCode)
+    {
+        $this->passcodeEncryptionCode = $passcodeEncryptionCode;
+
+        return $this;
+    }
+
+    /**
      * This will call the api and create the wallet after all parameters
      * have been set.
      *
@@ -228,6 +391,6 @@ class CreateWallet extends Api implements ExecutionInterface
     {
         $this->propertiesPassRequired();
 
-        return $this->_post('/wallet/' . $this->getWalletId() . '/address/' . $this->getChain());
+        return $this->_post('/wallet/generate');
     }
 }

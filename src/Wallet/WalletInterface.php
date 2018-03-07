@@ -52,4 +52,60 @@ interface WalletInterface extends ApiInterface
      *                                                   called from.
      */
     public function wallet($walletId);
+
+    /**
+     * This function will place a magic call to the create
+     * address class, giving all available methods on
+     * for chaining.
+     *
+     * @param  array|null $attributes This will accept an
+     *                                array of arguements for
+     *                                configuration.
+     * @return CreateAddress
+     */
+    public function createAddress($attributes = []);
+
+    /**
+     * This function will place a magic call to the SendCoins
+     * class, giving all available methods on for chaining.
+     *
+     * @param  array|null $attributes This will accept an
+     *                                array of arguements
+     *                                for configuration.
+     * @return SendCoins
+     */
+    public function sendCoins($attributes = []);
+
+    /**
+     * This function will place a magic call to the Create
+     * class, giving all available methods on for chaining.
+     *
+     * @param  array|null $attributes This will accept an
+     *                                array of arguements
+     *                                for configuration.
+     * @return Create
+     */
+    public function create($attributes = []);
+
+    /**
+     * This function will place a magic call to the Addresses
+     * class, giving all available methods on for chaining.
+     *
+     * @param  array|null $attributes This will accept an
+     *                                array of arguements
+     *                                for configuration.
+     * @return Addresses
+     */
+    public function addresses($attributes = []);
+
+    /**
+     * This function will place a magic call to the CreateWallet
+     * class, giving all available methods on for chaining.
+     *
+     * @param  array|null $attributes This will accept an
+     *                                array of arguements
+     *                                for configuration.
+     * @return CreateWallet
+     */
+    public function createWallet($attributes = []);
 }

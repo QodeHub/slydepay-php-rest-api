@@ -17,7 +17,7 @@ use Qodehub\Bitgo\Api\Api;
 use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\Wallet\WalletTrait;
+use Qodehub\Bitgo\Wallet;
 
 /**
  * Transactions Class
@@ -30,9 +30,8 @@ use Qodehub\Bitgo\Wallet\WalletTrait;
  * @example Transactions::wallet('waletId')->get('waletId');
  * @example Transactions::wallet('waletId')->prevId(10)->allTokens(10)->minConfirms(10)->compact()->get();
  */
-class Transactions extends Api implements WalletInterface
+class Transactions extends Wallet implements WalletInterface
 {
-    use WalletTrait;
     use MassAssignable;
     use CanCleanParameters;
     use Coin;

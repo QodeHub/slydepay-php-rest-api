@@ -17,8 +17,7 @@ use Qodehub\Bitgo\Api\Api;
 use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\Wallet\WalletInterface;
-use Qodehub\Bitgo\Wallet\WalletTrait;
+use Qodehub\Bitgo\Wallet;
 
 /**
  * CreateAddress Class
@@ -35,11 +34,10 @@ use Qodehub\Bitgo\Wallet\WalletTrait;
  * Address::create()->walletId($walletId)->run()
  * Address::create()->wallet($walletId)->run()
  */
-class CreateAddress extends Api implements WalletInterface
+class CreateAddress extends Wallet implements WalletInterface
 {
     use MassAssignable;
     use CanCleanParameters;
-    use WalletTrait;
     use Coin;
 
     /**

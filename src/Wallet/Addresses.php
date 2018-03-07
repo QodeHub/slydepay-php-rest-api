@@ -13,11 +13,10 @@
 
 namespace Qodehub\Bitgo\Wallet;
 
-use Qodehub\Bitgo\Api\Api;
 use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\Wallet\WalletTrait;
+use Qodehub\Bitgo\Wallet;
 
 /**
  * Addresses Class
@@ -31,13 +30,11 @@ use Qodehub\Bitgo\Wallet\WalletTrait;
  * @example Bitgo::btc($config)->wallet('waletId')->addresses($optional-address-id)->get();
  * @example Transactions::wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
  */
-class Addresses extends Api implements WalletInterface
+class Addresses extends Wallet implements WalletInterface
 {
-    use WalletTrait;
     use MassAssignable;
     use CanCleanParameters;
     use Coin;
-
     /**
      * {@inheritdoc}
      */

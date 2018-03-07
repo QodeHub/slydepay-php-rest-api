@@ -18,8 +18,7 @@ use Qodehub\Bitgo\Api\Api;
 use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
-use Qodehub\Bitgo\Wallet\WalletInterface;
-use Qodehub\Bitgo\Wallet\WalletTrait;
+use Qodehub\Bitgo\Wallet;
 
 /**
  * SendCoins Class
@@ -34,9 +33,8 @@ use Qodehub\Bitgo\Wallet\WalletTrait;
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class SendCoins extends Api implements WalletInterface
+class SendCoins extends Wallet implements WalletInterface
 {
-    use WalletTrait;
     use MassAssignable;
     use CanCleanParameters;
     use SendCoinsAccessors;
@@ -73,6 +71,7 @@ class SendCoins extends Api implements WalletInterface
         'lastLedgerSequence',
         'ledgerSequenceDelta',
     ];
+
     /**
      * Destination bitcoin address
      *
@@ -225,6 +224,8 @@ class SendCoins extends Api implements WalletInterface
      *
      * @param  string $address this will be the receiving address
      * @return self
+     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function to($address)
     {

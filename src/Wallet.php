@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Qodehub\Bitgo
  * @link        https://github.com/qodehub/bitgo-php
@@ -14,6 +15,8 @@ namespace Qodehub\Bitgo;
 
 use Qodehub\Bitgo\Api\Api;
 use Qodehub\Bitgo\Config;
+use Qodehub\Bitgo\Utility\CanCleanParameters;
+use Qodehub\Bitgo\Utility\MassAssignable;
 use Qodehub\Bitgo\Wallet\WalletAccessors;
 use Qodehub\Bitgo\Wallet\WalletInterface;
 use Qodehub\Bitgo\Wallet\WalletTrait;
@@ -36,91 +39,46 @@ class Wallet extends Api implements WalletInterface
 {
     use WalletAccessors;
     use WalletTrait;
+    use CanCleanParameters;
+    use MassAssignable;
+    use Coin;
 
     /**
-     * An object containing the policies set on the wallet
-     *
-     * @var Object
+     * {@inheritdoc}
      */
-    protected $admin;
+    protected $parametersRequired = [];
+
     /**
-     * ID of the wallet (also the first receiving address)
+     * {@inheritdoc}
+     */
+    protected $parametersOptional = [
+        'walletId',
+        'allTokens',
+        'prevId',
+        'limit',
+    ];
+
+    /**
+     * Max number of results in a single call. Defaults to 25.
+     *
+     * @var integer
+     */
+    protected $limit;
+    /**
+     * Gets details of all tokens associated with
+     * this wallet. Only valid for eth/teth
      *
      * @var string
      */
-    protected $id;
+    protected $allTokens;
     /**
-     * A label of the wallet
+     * Continue iterating wallets from this prevId as
+     * provided by nextBatchPrevId in the previous list
      *
      * @var string
      */
-    protected $label;
-    /**
-     * The digital currency this wallet holds
-     *
-     * @var string
-     */
-    protected $coin;
-    /**
-     * Array of key ids on the wallet, in the order of User, Backup and BitGo.
-     *
-     * @var array
-     */
-    protected $keys;
-    /**
-     * Enterprise ID if wallet belongs to an enterprise
-     *
-     * @var string
-     */
-    protected $enterprise;
-    /**
-     * Array of users and their permissions on the requested wallet
-     *
-     * @var string
-     */
-    protected $users;
-    /**
-     * Number of approvers needed to confirm transactions or
-     * policy changes on the wallet
-     *
-     * @var boolean
-     */
-    protected $approvalsRequired;
-    /**
-     * The current amount of satoshi that is currently spendable.
-     * (May not be set for some coins.)
-     *
-     * @var float
-     */
-    protected $balance;
-    /**
-     * The amount of satoshis you have within your wallet
-     * in the form of confirmed unspents.
-     * (May not be set for some coins.)
-     *
-     * @var float
-     */
-    protected $confirmedBalance;
-    /**
-     * The current amount of satoshi that is currently
-     * spendable. (May not be set for some coins.)
-     *
-     * @var float
-     */
-    protected $spendableBalance;
-    /**
-     * True if the wallet initialization transaction(s)
-     * is(are) still unconfirmed (valid for Ethereum)
-     *
-     * @var boolean
-     */
-    protected $pendingChainInitialization;
-    /**
-     * True if wallet is a cold wallet
-     *
-     * @var boolean
-     */
-    protected $isCold;
+    protected $prevId;
+
     /**
      * The construct method accepts a the ID of the wallet
      * that it will be interracting with.
@@ -131,19 +89,79 @@ class Wallet extends Api implements WalletInterface
     {
         $this->setId($walletId);
     }
+
     /**
-     * Dynamically handle missing Static Call to sub classes.
-     *
-     * @param   string $method
-     * @param   array  $parameters
-     * @return  self
-     * @throws  \BadMethodCallException
-     * @example Wallet::transactions()->get();
-     * @example Wallet::transactions()->get('transactionId');
+     * {@inheritdoc}
      */
-    public static function __callStatic($method, array $parameters)
+    public function createAddress($attributes = [])
     {
-        return (new self)->__call($method, $parameters);
+        return $this->getWalletInstance('CreateAddress', $attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sendCoins($attributes = [])
+    {
+        return $this->getWalletInstance('SendCoins', $attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function create($attributes = [])
+    {
+        if ($this instanceof Addresses) {
+            return $this->getWalletIntsance('CreateWallet', $attributes);
+        }
+
+        return $this->getWalletInstance('CreateWallet', $attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addresses($attributes = [])
+    {
+        return $this->getWalletInstance('Addresses', $attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function transactions($attributes = [])
+    {
+        return $this->getWalletInstance('Transactions', $attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createWallet($attributes = [])
+    {
+        return $this->getWalletInstance('CreateWallet', $attributes);
+    }
+
+    /**
+     * This will set the ID of the wallet that you want to get.
+     * for a single wallet.
+     *
+     * @param  string $walletId Wallet ID
+     * @return self
+     */
+    public function find($walletId)
+    {
+        return $this->setWalletId($walletId);
+    }
+
+    /**
+     * The method places the call to the Bitgo API
+     *
+     * @return Response
+     */
+    public function run()
+    {
+        return $this->_get('/wallet/{walletId}', $this->propertiesToArray());
     }
 
     /**
@@ -156,55 +174,59 @@ class Wallet extends Api implements WalletInterface
      * @example walletInstance->transactions()->get();
      * @example walletInstance->transactions()->get('transactionId');
      */
-    public function __call($method, array $parameters)
+    protected function getWalletInstance($method, $parameters)
     {
+
         /**
-         * Restrict the possible methods that can be called.
+         * Append a capitalized name of the method
+         * passed in, to create a class address
          *
-         * @see \Qodehub\Bitgo::getApiInstance
+         * @var string
          */
-        if (in_array($method, ['transactions', 'transfers', 'addresses', 'create', 'sendCoins', 'createAddress', 'createWallet'])) {
+        $class = '\\Qodehub\\Bitgo\\Wallet\\' . ucwords($method);
+
+        /**
+         * Check if the class exists
+         */
+        if (class_exists($class)) {
+            /**
+             * Create a new instance of the class
+             * since it exists and is in the
+             * list of allowed magic
+             * methods lists.
+             */
+            $executionInstace = new $class(...$parameters);
 
             /**
-             * Append a capitalized name of the method
-             * passed in, to create a class address
-             *
-             * @var string
+             * Inject the wallet ID from the current
+             * wallet instance so that it is
+             * accessible in the class
+             * that will need it.
              */
-            $class = '\\Qodehub\\Bitgo\\Wallet\\' . ucwords($method);
+            $executionInstace->wallet($this->getId());
 
             /**
-             * Check if the class exists
+             * Inject the coin type
              */
-            if (class_exists($class)) {
-                /**
-                 * Create a new instance of the class
-                 * since it exists and is in the
-                 * list of allowed magic
-                 * methods lists.
-                 */
-                $executionInstace = new $class(...$parameters);
+            $executionInstace->coinType($this->getCoinType());
 
-                /**
-                 * Inject the wallet ID from the current
-                 * wallet instance so that it is
-                 * accessible in the class
-                 * that will need it.
-                 */
-                $executionInstace->wallet($this->id);
-
-                /**
-                 * Inject the Api configuration if
-                 * any exists on the chain.
-                 */
-                if ($this->config instanceof Config) {
-                    $executionInstace->injectConfig($this->config);
-                }
-
-                return $executionInstace;
+            /**
+             * Inject the Api configuration if
+             * any exists on the chain.
+             */
+            if ($this->getConfig() instanceof Config) {
+                $executionInstace->injectConfig($this->getConfig());
             }
+
+            return $executionInstace;
         }
 
+        /**
+         * Catch bad method calls and throw and error.
+         * This will be expected if the dynamic
+         * method does not exist in the array
+         * list
+         */
         throw new \BadMethodCallException('Undefined method [ ' . $method . '] called.');
     }
 }

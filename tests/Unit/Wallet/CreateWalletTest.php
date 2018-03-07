@@ -23,9 +23,9 @@ use Qodehub\Bitgo\Config;
 use Qodehub\Bitgo\Exception\MissingParameterException;
 use Qodehub\Bitgo\Utility\BitgoHandler;
 use Qodehub\Bitgo\Wallet;
-use Qodehub\Bitgo\Wallet\CreateAddress;
+use Qodehub\Bitgo\Wallet\CreateWallet;
 
-class CreateAddressTest extends TestCase
+class CreateWalletTest extends TestCase
 {
     /**
      * The bearer token that will be used by this API
@@ -52,16 +52,22 @@ class CreateAddressTest extends TestCase
     protected $config;
 
     /**
-     * This is the ID of the wallet used in this test
-     * @var string
-     */
-    protected $walletId = 'existing-wallet-id';
-
-    /**
      * This is the coin type used for this test. Can be changed for other coin tests.
      * @var string
      */
     protected $coin = 'tbtc';
+
+    /**
+     * This is the label we will use for testing the wallet.
+     * @var string
+     */
+    protected $label = 'my new wallet';
+
+    /**
+     * This is the waller passphrase that will be used in this test.
+     * @var string
+     */
+    protected $walletPassphrase = 'hello-world';
 
     /**
      * Setup the test environment viriables
@@ -77,147 +83,81 @@ class CreateAddressTest extends TestCase
     {
         /**
          * Set the currency name-space
-         * @var CreateAddress
+         * @var CreateWallet
          */
-        $instance = Bitgo::{$this->coin}()->wallet($this->walletId)->createAddress();
+        $instance = Bitgo::{$this->coin}()->createWallet();
 
-        $this->assertInstanceOf(CreateAddress::class, $instance);
-    }
+        $this->assertInstanceOf(CreateWallet::class, $instance);
 
-    /** @test */
-    public function the_instace_should_have_a_wallet_id_when_called_from_a_wallet_instance()
-    {
-
-        /**
-         * Create the wallet instance
-         * @var Wallet
-         */
-        $wallet = new Wallet($this->walletId);
-
-        /**
-         * Call the createAddress Magic method on the wallet instance
-         */
-        $createAddressInstance = $wallet->createAddress();
-
-        /**
-         * Assert that the CreateAddress Instance received the wallet ID
-         */
-        $this->assertEquals($createAddressInstance->getWalletId(), $this->walletId);
-
-        return $createAddressInstance;
+        return $instance;
     }
 
     /**
      * @test
-     * @depends the_instace_should_have_a_wallet_id_when_called_from_a_wallet_instance
+     * @depends the_create_address_method_can_be_called_with_an_entry_static_coin_method
      */
-    public function the_instance_has_a_chain_method_for_setting_the_chain($createAddressInstance)
+    public function the_instance_has_a_chain_method_for_setting_the_label_method($CreateWalletInstance)
     {
-        $createAddressInstance->chain(10);
+        $CreateWalletInstance->label($this->label);
 
-        $this->assertEquals($createAddressInstance->getChain(), 10);
+        $this->assertEquals($CreateWalletInstance->getLabel(), $this->label);
 
-        $createAddressInstance->chain(1);
+        $CreateWalletInstance->label('another-label');
 
-        $this->assertEquals($createAddressInstance->getChain(), 1);
+        $this->assertEquals($CreateWalletInstance->getLabel(), 'another-label');
 
-        return $createAddressInstance->chain(2);
-    }
-
-    /**
-     * @test
-     * @depends the_instace_should_have_a_wallet_id_when_called_from_a_wallet_instance
-     */
-    public function the_instance_can_chain_to_an_allowMigrated_method_and_set_allowMigrated_property($createAddressInstance)
-    {
-        $createAddressInstance->allowMigrated(true);
-
-        $this->assertEquals($createAddressInstance->getAllowMigrated(), true);
-
-        $createAddressInstance->allowMigrated(false);
-
-        $this->assertEquals($createAddressInstance->getAllowMigrated(), false);
-
-        return $createAddressInstance->allowMigrated(true);
-    }
-
-    /**
-     * @test
-     * @depends the_instace_should_have_a_wallet_id_when_called_from_a_wallet_instance
-     */
-    public function the_instance_can_chain_to_a_gasPrice_method_and_set_the_gasPrice_property($createAddressInstance)
-    {
-
-        $createAddressInstance->gasPrice(10);
-
-        $this->assertEquals($createAddressInstance->getGasPrice(), 10);
-
-        $createAddressInstance->gasPrice(20);
-
-        $this->assertEquals($createAddressInstance->getGasPrice(), 20);
-
-        return $createAddressInstance->gasPrice(30);
-    }
-
-    /**
-     * @test
-     * @depends the_instace_should_have_a_wallet_id_when_called_from_a_wallet_instance
-     */
-    public function the_instance_can_chain_to_a_label_method_and_set_a_label_property($createAddressInstance)
-    {
-        $createAddressInstance->label('my new address');
-
-        $this->assertEquals($createAddressInstance->getLabel(), 'my new address');
-
-        $createAddressInstance->label('my old address');
-
-        $this->assertEquals($createAddressInstance->getLabel(), 'my old address');
-
-        return $createAddressInstance->label('my address');
+        return $CreateWalletInstance->label($this->label);
     }
 
     /** @test */
     public function the_insance_can_be_accessed_statically_and_determine_the_coin_type_based_on_entry()
     {
-        $instance = CreateAddress::tltc();
+        $instance = CreateWallet::{$this->coin}();
 
-        $this->assertInstanceOf(CreateAddress::class, $instance);
+        $this->assertInstanceOf(CreateWallet::class, $instance);
 
-        $this->assertEquals($instance->getCoinType(), 'tltc');
+        $this->assertEquals($instance->getCoinType(), $this->coin);
     }
 
     /** @test */
-    public function a_call_to_the_run_method_should_return_an_error_if_the_walletID_is_missing()
+    public function a_call_to_the_run_method_should_return_an_error_if_the_label_value_is_missing()
     {
         /**
-         * Mock the getClient method in the CreateAddress to intercept calls to the server
+         * Mock the getClient method in the CreateWallet to intercept calls to the server
          */
-        $mock = $this->getMockBuilder(CreateAddress::class)
+        $mock = $this->getMockBuilder(CreateWallet::class)
             ->setMethods(['getClient'])
             ->getMock();
 
         $mock->method('getClient')->will($this->returnValue(null));
 
         $this->expectException(MissingParameterException::class);
-        $mock->chain(10)->run();
+
+        $mock
+            ->injectConfig($this->config)
+            ->coinType($this->coin)
+            ->passphrase($this->walletPassphrase)
+            ->run();
     }
 
     /** @test */
     public function a_call_to_the_run_method_should_return_an_error_if_the_coin_value_is_missing()
     {
         /**
-         * Mock the getClient method in the CreateAddress to intercept calls to the server
+         * Mock the getClient method in the CreateWallet to intercept calls to the server
          */
-        $mock = $this->getMockBuilder(CreateAddress::class)
+        $mock = $this->getMockBuilder(CreateWallet::class)
             ->setMethods(['getClient'])
             ->getMock();
 
         $mock->method('getClient')->will($this->returnValue(new Client()));
 
         $this->expectException(MissingParameterException::class);
+
         $mock
             ->injectConfig($this->config)
-            ->wallet($this->walletId)
+            ->label($this->label)
+            ->passphrase($this->walletPassphrase)
             ->run();
     }
 
@@ -240,11 +180,11 @@ class CreateAddressTest extends TestCase
         $handlerStack->push($history);
 
         /**
-         * Listen to the CreateAddress class method and use the interceptor
+         * Listen to the CreateWallet class method and use the interceptor
          *
          * Intercept all calls to the server from the createHandler method
          */
-        $mock = $this->getMockBuilder(CreateAddress::class)
+        $mock = $this->getMockBuilder(CreateWallet::class)
             ->setMethods(['createHandler'])
             ->getMock();
 
@@ -258,9 +198,10 @@ class CreateAddressTest extends TestCase
 
             //Setup the required parameters
 
-            ->wallet($this->walletId)
             ->coinType($this->coin)
-            ->chain(0);
+            ->label($this->label)
+            ->passphrase($this->walletPassphrase)
+        ;
 
         /**
          * Run the call to the server
@@ -285,7 +226,7 @@ class CreateAddressTest extends TestCase
         $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
 
         $this->assertContains(
-            "https://some-host.com/api/v2/" . $this->coin . "/wallet/existing-wallet-id/address",
+            "https://some-host.com/api/v2/" . $this->coin . "/wallet/generate",
             $request->getUri()->__toString()
         );
     }
