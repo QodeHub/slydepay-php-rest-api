@@ -60,7 +60,6 @@ class Transactions extends Wallet implements WalletInterface
      */
     public function __construct($data = null)
     {
-
         if (is_string($data)) {
             $this->setTransactionId($data);
         }
@@ -68,6 +67,8 @@ class Transactions extends Wallet implements WalletInterface
         if (is_array($data)) {
             $this->massAssign($data);
         }
+
+        return $this;
     }
 
     /**
@@ -121,7 +122,7 @@ class Transactions extends Wallet implements WalletInterface
      *
      * @return self
      */
-    public function allTokens($allTokens)
+    public function allTokens($allTokens = true)
     {
         return $this->setallTokens($allTokens);
     }

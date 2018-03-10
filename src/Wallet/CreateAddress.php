@@ -94,7 +94,15 @@ class CreateAddress extends Wallet implements WalletInterface
      */
     public function __construct($data = [])
     {
-        $this->massAssign($data);
+        if (is_string($data)) {
+            $this->address = $data;
+        }
+
+        if (is_array($data)) {
+            $this->massAssign($data);
+        }
+
+        return $this;
     }
 
     /**

@@ -12,20 +12,15 @@
 
 namespace Qodehub\Bitgo\Tests\Unit\WalletTest;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Qodehub\Bitgo\Bitgo;
 use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Utility\BitgoHandler;
 use Qodehub\Bitgo\Wallet;
 use Qodehub\Bitgo\Wallet\Addresses;
 use Qodehub\Bitgo\Wallet\CreateAddress;
 use Qodehub\Bitgo\Wallet\CreateWallet;
 use Qodehub\Bitgo\Wallet\SendCoins;
+use Qodehub\Bitgo\Wallet\Transactions;
 
 class WalletTest extends TestCase
 {
@@ -81,6 +76,14 @@ class WalletTest extends TestCase
     }
 
     /** @test */
+    public function a_wallet_can_set_the_coin_and_create_a_wallet_instance()
+    {
+        $instance = Wallet::{$this->coin}();
+
+        $this->assertSame($instance->getCoinType(), $this->coin);
+    }
+
+    /** @test */
     public function the_addresses_method_should_give_an_addresses_instance()
     {
         $this->assertInstanceOf(Addresses::class, Wallet::{$this->coin}()->addresses());
@@ -107,145 +110,30 @@ class WalletTest extends TestCase
     /** @test */
     public function the_transactions_method_returns_a_transaction_instance()
     {
-        $this->assertInstanceOf(CreateWallet::class, Wallet::{$this->coin}()->CreateWallet());
+        $this->assertInstanceOf(Transactions::class, Wallet::{$this->coin}()->Transactions());
     }
 
     /** @test */
-    public function test_that_a_call_to_the_server_will_be_successful_if_all_is_right()
+    public function the_create_method_returns_a_wallet_instance()
     {
-        /**
-         * Setup the Handler and middlewares interceptor to intercept the call to the server
-         */
-        $container = [];
-
-        $history = Middleware::history($container);
-
-        $httpMock = new MockHandler([
-            new Response(200, ['X-Foo' => 'Bar'], json_encode(['X-Foo' => 'Bar'])),
-        ]);
-
-        $handlerStack = (new BitgoHandler($this->config, HandlerStack::create($httpMock)))->createHandler();
-
-        $handlerStack->push($history);
-
-        /**
-         * Listen to the Wallet class method and use the interceptor
-         *
-         * Intercept all calls to the server from the createHandler method
-         */
-        $mock = $this->getMockBuilder(Wallet::class)
-            ->setMethods(['createHandler'])
-            ->getMock();
-
-        $mock->expects($this->once())->method('createHandler')->will($this->returnValue($handlerStack));
-
-        /**
-         * Inject the configuration and use the
-         */
-        $mock
-            ->injectConfig($this->config)
-
-            //Setup the required parameters
-
-            ->wallet($this->walletId)
-            ->coinType($this->coin)
-        ;
-
-        /**
-         * Run the call to the server
-         */
-        $result = $mock->run();
-
-        /**
-         * Run assertion that call reached the Mock Server
-         */
-        $this->assertEquals($result, ['X-Foo' => 'Bar']);
-
-        /**
-         * Grab the requests and test that the request parameters
-         * are correct as expected.
-         */
-        $request = $container[0]['request'];
-
-        $this->assertEquals($request->getMethod(), 'GET', 'it should be a post request.');
-        $this->assertEquals($request->getUri()->getHost(), $this->host, 'Hostname should be' . $this->host);
-        $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
-
-        $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
-
-        $this->assertContains(
-            "https://some-host.com/api/v2/" . $this->coin . "/wallet/",
-            $request->getUri()->__toString()
-        );
+        $this->assertInstanceOf(CreateWallet::class, Wallet::{$this->coin}()->Create());
     }
 
     /** @test */
-    public function test_that_a_call_to_the_server_will_be_successful_if_all_is_right_for_a_single_transaction()
+    public function can_set_a_wallet_id_using_the_constructor()
     {
-        /**
-         * Setup the Handler and middlewares interceptor to intercept the call to the server
-         */
-        $container = [];
+        $instance = new Wallet($this->walletId);
 
-        $history = Middleware::history($container);
+        $this->assertSame($this->walletId, $instance->getWalletId());
+    }
 
-        $httpMock = new MockHandler([
-            new Response(200, ['X-Foo' => 'Bar'], json_encode(['X-Foo' => 'Bar'])),
-        ]);
+    /** @test */
+    public function the_find_method_sets_the_walletID_on_the_wallet_instance()
+    {
+        $instance = new Wallet();
 
-        $handlerStack = (new BitgoHandler($this->config, HandlerStack::create($httpMock)))->createHandler();
+        $instance->find($this->walletId);
 
-        $handlerStack->push($history);
-
-        /**
-         * Listen to the Wallet class method and use the interceptor
-         *
-         * Intercept all calls to the server from the createHandler method
-         */
-        $mock = $this->getMockBuilder(Wallet::class)
-            ->setMethods(['createHandler'])
-            ->getMock();
-
-        $mock->expects($this->once())->method('createHandler')->will($this->returnValue($handlerStack));
-
-        /**
-         * Inject the configuration and use the
-         */
-        $mock
-            ->injectConfig($this->config)
-
-            //Setup the required parameters
-
-            ->wallet($this->walletId)
-            ->coinType($this->coin)
-            // ->find($this->walletId)
-        ;
-
-        /**
-         * Run the call to the server
-         */
-        $result = $mock->run();
-
-        /**
-         * Run assertion that call reached the Mock Server
-         */
-        $this->assertEquals($result, ['X-Foo' => 'Bar']);
-
-        /**
-         * Grab the requests and test that the request parameters
-         * are correct as expected.
-         */
-        $request = $container[0]['request'];
-
-        $this->assertEquals($request->getMethod(), 'GET', 'it should be a post request.');
-        $this->assertEquals($request->getUri()->getHost(), $this->host, 'Hostname should be' . $this->host);
-        $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
-
-        $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
-
-        $this->assertContains(
-            "https://some-host.com/api/v2/" . $this->coin . "/wallet/" . $this->walletId,
-            $request->getUri()->__toString()
-        );
+        $this->assertSame($this->walletId, $instance->getWalletId());
     }
 }

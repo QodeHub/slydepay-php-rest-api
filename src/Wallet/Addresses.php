@@ -66,7 +66,7 @@ class Addresses extends Wallet implements WalletInterface
     {
 
         if (is_string($data)) {
-            $this->address = $data;
+            $this->setAddress($data);
         }
 
         if (is_array($data)) {
@@ -104,7 +104,6 @@ class Addresses extends Wallet implements WalletInterface
     public function setAddress($address)
     {
         $this->address = $address;
-        $this->urlPattern = '';
 
         return $this;
     }

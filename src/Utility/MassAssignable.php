@@ -32,13 +32,22 @@ trait MassAssignable
      * available in the class for those required options.
      *
      * @param   array $data
-     * @example ['a' => 10, 'b' => ['name' => 'victor', ...] ...etc ]
+     * @example [
+     *              'walletId' => 'some-existing-walletId',
+     *              'transactionId' => 'someExistingTransactionId'
+     *          ]
      * @return  self
      */
     protected function massAssign($data = [])
     {
         if (is_array($data)) {
-            //TODO: Add methods to loop through for mass assignment.
+            foreach ($data as $key => $value) {
+                if (method_exists($this, 'set' . $key)
+                    && in_array($key, array_merge($this->parametersRequired, $this->parametersOptional))
+                ) {
+                    $this->{'set' . $key}($value);
+                }
+            }
         }
 
         return $this;

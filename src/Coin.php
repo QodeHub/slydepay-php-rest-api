@@ -14,6 +14,7 @@
 namespace Qodehub\Bitgo;
 
 use Qodehub\Bitgo\Config;
+use Qodehub\Bitgo\ConfigInterface;
 
 /**
  * CoinTrait Trait
@@ -148,7 +149,7 @@ trait Coin
             return (new self)->$method(...$parameters);
         }
 
-        throw new \BadStaticCallException('Undefined method [ ' . $method . '] called.');
+        throw new \Error('Call to undefined method ' . static::class . '::' . $method);
     }
 
     /**
@@ -158,23 +159,23 @@ trait Coin
      * @param  any    $parameters The remianing parameters passed into the coin.
      * @return self
      */
-    private static function initializeWithCoinName($method, $config = null, ...$parameters)
+    private static function initializeWithCoinName($method, $parameters)
     {
+
         /**
-         * If the class name is among possible coins,
          * create a new instance of the class using
-         * this trait and set the coins to static
-         * coin name.
+         * and set the coins to static coin name
+         * that was passed in earlier.
          */
 
-        $instance = (new self(...$parameters))->coinType($method);
+        $instance = (new self)->coinType($method);
 
         /**
-         * Inject the Api configuration if is the first arguement passed in
-         * is a configuration instance.
+         * Inject the Api configuration if is the
+         * first arguement that was passed into
          */
-        if ($config instanceof Config) {
-            $instance->injectConfig($config);
+        if (array_key_exists(0, $parameters) && $parameters[0] instanceof ConfigInterface) {
+            $instance->setConfig($parameters[0]);
         }
 
         return $instance;

@@ -87,7 +87,7 @@ class Wallet extends Api implements WalletInterface
      */
     public function __construct($walletId = null)
     {
-        $this->setId($walletId);
+        $this->wallet($walletId);
     }
 
     /**
@@ -111,10 +111,6 @@ class Wallet extends Api implements WalletInterface
      */
     public function create($attributes = [])
     {
-        if ($this instanceof Addresses) {
-            return $this->getWalletIntsance('CreateWallet', $attributes);
-        }
-
         return $this->getWalletInstance('CreateWallet', $attributes);
     }
 
@@ -186,47 +182,34 @@ class Wallet extends Api implements WalletInterface
         $class = '\\Qodehub\\Bitgo\\Wallet\\' . ucwords($method);
 
         /**
-         * Check if the class exists
+         * Create a new instance of the class
+         * since it exists and is in the
+         * list of allowed magic
+         * methods lists.
          */
-        if (class_exists($class)) {
-            /**
-             * Create a new instance of the class
-             * since it exists and is in the
-             * list of allowed magic
-             * methods lists.
-             */
-            $executionInstace = new $class(...$parameters);
-
-            /**
-             * Inject the wallet ID from the current
-             * wallet instance so that it is
-             * accessible in the class
-             * that will need it.
-             */
-            $executionInstace->wallet($this->getId());
-
-            /**
-             * Inject the coin type
-             */
-            $executionInstace->coinType($this->getCoinType());
-
-            /**
-             * Inject the Api configuration if
-             * any exists on the chain.
-             */
-            if ($this->getConfig() instanceof Config) {
-                $executionInstace->injectConfig($this->getConfig());
-            }
-
-            return $executionInstace;
-        }
+        $executionInstace = new $class($parameters);
 
         /**
-         * Catch bad method calls and throw and error.
-         * This will be expected if the dynamic
-         * method does not exist in the array
-         * list
+         * Inject the wallet ID from the current
+         * wallet instance so that it is
+         * accessible in the class
+         * that will need it.
          */
-        throw new \BadMethodCallException('Undefined method [ ' . $method . '] called.');
+        $executionInstace->wallet($this->getWalletId());
+
+        /**
+         * Inject the coin type
+         */
+        $executionInstace->coinType($this->getCoinType());
+
+        /**
+         * Inject the Api configuration if
+         * any exists on the chain.
+         */
+        if ($this->getConfig() instanceof Config) {
+            $executionInstace->injectConfig($this->getConfig());
+        }
+
+        return $executionInstace;
     }
 }

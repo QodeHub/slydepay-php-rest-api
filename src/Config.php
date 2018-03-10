@@ -51,21 +51,29 @@ class Config implements ConfigInterface
     protected $port;
     /**
      * This will be a boolean as to if or not the server
-     * runs on a https server.
+     * runs on https.
      *
      * @var boolean
      */
     protected $secure = true;
     /**
-     * This will be a boolean as to if or not the server
-     * runs on a https server.
+     * This is the scheme. Eg: https, http, ftp, etc..
+     * This will be set automatically depending on
+     * if the secure flag is true or false
      *
      * @var string
      */
     protected $scheme;
-
     /**
-     * The Default Bitgo Base Api url
+     * This is a base URL used in place of the URL.
+     * When this is set, the cnofiguration will
+     * ignore the secure and port flag.
+     *
+     * This must be a full base URL inlcuding
+     * the port and path on which the
+     * server is running.
+     *
+     * @example http://www.example.com:8090
      *
      * @var string
      */
@@ -91,7 +99,9 @@ class Config implements ConfigInterface
     }
 
     /**
-     * Get the Bitgo payment Base Url from the Api Instance
+     * This will build and return the API Endpoint using
+     * the configuration or will give the baseURL
+     * that has been set on the instance.
      *
      * @return string [This is the base URL that is on the class instance]
      */

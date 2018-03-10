@@ -1,7 +1,5 @@
 <?php
-/**
- * FIX
- */
+
 /**
  * @package     Qodehub\Bitgo
  * @link        https://github.com/qodehub/bitgo-php
@@ -52,6 +50,7 @@ class CreateWallet extends Wallet implements WalletInterface
     protected $parametersRequired = [
         'label',
         'passphrase',
+        'coinType',
     ];
 
     /**
@@ -159,46 +158,6 @@ class CreateWallet extends Wallet implements WalletInterface
     public function passphrase($passphrase)
     {
         return $this->setPassphrase($passphrase);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParametersRequired()
-    {
-        return $this->parametersRequired;
-    }
-
-    /**
-     * @param mixed $parametersRequired
-     *
-     * @return self
-     */
-    public function setParametersRequired($parametersRequired)
-    {
-        $this->parametersRequired = $parametersRequired;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParametersOptional()
-    {
-        return $this->parametersOptional;
-    }
-
-    /**
-     * @param mixed $parametersOptional
-     *
-     * @return self
-     */
-    public function setParametersOptional($parametersOptional)
-    {
-        $this->parametersOptional = $parametersOptional;
-
-        return $this;
     }
 
     /**

@@ -48,32 +48,41 @@ class Bitgo implements ConfigInterface
     /**
      * Constructor
      *
-     * @param Config|array|string $config This could either be the configuration
-     *                                    instance, an array with the configuration
-     *                                    data, or the bearer token.
+     * @param Config|array|string $data   This could either be the configuration
+     *                                    instance, an array with the
+     *                                    configuration data, or the bearer
+     *                                    token.
      * @param boolean             $secure This will switch https on or off. Defaults to true.
      * @param string              $host   this is a string of the host address excluding the scheme and port
      * @param integer             $port   This is the Api port.
      */
-    public function __construct($config = null, $secure = null, $host = null, $port = null)
+    public function __construct($data = null, $secure = null, $host = null, $port = null)
     {
-
         /**
          * Check if a configuration instance was passed in.
          */
-        if ($config instanceof Config) {
-            $this->config = $config;
+        if ($data instanceof Config) {
+            /**
+             * Set the configutation on the instance
+             * if this test passed.
+             */
 
-            return;
+            return $this->setConfig($data);
         }
 
         /**
          * Check if an array was passed and with key and values
          */
-        if (is_array($config)) {
-            $this->config = new Config($config['config'], $config['secure'], $config['host'], $config['port']);
+        if (is_array($data)) {
+            /**
+             * Build the configuration instance from
+             * the array data if this
+             * test passed.
+             */
 
-            return;
+            return $this->setConfig(
+                new Config($data['token'], $data['secure'], $data['host'], $data['port'])
+            );
         }
 
         /**
@@ -82,10 +91,13 @@ class Bitgo implements ConfigInterface
          * that the the configuration data
          * was passed accordingly.
          */
-        $this->config = new Config($config, $secure, $host, $port);
+
+        return $this->setConfig(
+            new Config($data, $secure, $host, $port)
+        );
     }
     /**
-     * Create a new Qodehub Studio
+     * Create a new Qodehub Instance
      *
      * @return self A new class of self.
      */
@@ -108,7 +120,7 @@ class Bitgo implements ConfigInterface
      * @param  \Qodehub\Bitgo\ConfigInterface $config
      * @return $this
      */
-    public function setConfig(Config $config)
+    public function setConfig(ConfigInterface $config)
     {
         $this->config = $config;
 
@@ -188,6 +200,11 @@ class Bitgo implements ConfigInterface
                  * methods lists.
                  */
                 $executionInstace = new $class(...$parameters);
+
+                /**
+                 * Inject the coin type
+                 */
+                $executionInstace->coinType($this->getCoinType());
 
                 /**
                  * Inject the Api configuration if
