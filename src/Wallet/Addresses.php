@@ -75,6 +75,19 @@ class Addresses extends Wallet implements WalletInterface
     }
 
     /**
+     * Find a single address adminst all the addresses
+     * from the server.
+     *
+     * @param  string $address This will be an existing
+     *                         address or addressId
+     * @return self
+     */
+    public function find($address)
+    {
+        return $this->address($address);
+    }
+
+    /**
      * This will allow chaining the address to the insance
      *
      * @param string $address This is an address or an addressID
@@ -83,7 +96,7 @@ class Addresses extends Wallet implements WalletInterface
      */
     public function address($address)
     {
-        $this->address = $address;
+        $this->setAddress($address);
 
         return $this;
     }

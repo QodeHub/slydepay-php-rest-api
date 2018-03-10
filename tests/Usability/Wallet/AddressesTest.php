@@ -72,7 +72,7 @@ class AddressesTest extends TestCase
     }
 
     /** @test */
-    public function getting_a_list_of_wallet_address_expressively()
+    public function getting_a_list_of_wallet_addresses_expressively()
     {
         $instance =
 
@@ -83,7 +83,7 @@ class AddressesTest extends TestCase
         // ->get()  can be used instead of ->run()
         ;
 
-        $this->checkGetTeansactionsListInstanceValues($instance);
+        $this->checkGetAddressesListInstanceValues($instance);
     }
 
     /** @test */
@@ -100,11 +100,11 @@ class AddressesTest extends TestCase
         // ->get()  can be used instead of ->run()
         ;
 
-        $this->checkGetTeansactionsListInstanceValues($instance);
+        $this->checkGetSingleAddressInstanceValues($instance);
     }
 
     /** @test */
-    public function getting_a_single_Address_expressively()
+    public function getting_a_single_address_expressively()
     {
 
         $instance1 =
@@ -134,7 +134,7 @@ class AddressesTest extends TestCase
         $this->checkGetSingleAddressInstanceValues($instance2);
     }
 
-    protected function checkGetTeansactionsListInstanceValues($instance)
+    protected function checkGetAddressesListInstanceValues($instance)
     {
 
         $this->assertSame(
