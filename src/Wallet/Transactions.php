@@ -29,8 +29,9 @@ use Qodehub\Bitgo\Wallet;
  * @example Bitgo::btc($config)->wallet($walletId)->transactions()->get();
  * @example Bitgo::btc($config)->wallet($walletId)->transactions($transactionId)->get();
  */
-class Transactions extends Wallet implements WalletInterface
+class Transactions extends Api
 {
+    use WalletTrait;
     use MassAssignable;
     use CanCleanParameters;
     use Coin;

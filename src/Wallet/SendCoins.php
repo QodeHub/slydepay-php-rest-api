@@ -32,8 +32,9 @@ use Qodehub\Bitgo\Wallet;
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class SendCoins extends Wallet implements WalletInterface
+class SendCoins extends Api
 {
+    use WalletTrait;
     use MassAssignable;
     use CanCleanParameters;
     use SendCoinsAccessors;

@@ -26,8 +26,9 @@ use Qodehub\Bitgo\Wallet;
  *
  * @example Bitgo::btc($config)->wallet($walletId)->createAddress()->run();
  */
-class CreateAddress extends Wallet implements WalletInterface
+class CreateAddress extends Api
 {
+    use WalletTrait;
     use MassAssignable;
     use CanCleanParameters;
     use Coin;

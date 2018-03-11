@@ -32,8 +32,9 @@ use Qodehub\Bitgo\Wallet;
  * @SuppressWarnings(PHPMD.ShortVariable)
  * @SuppressWarnings(PHPMD.LongVariable)
  */
-class CreateWallet extends Wallet implements WalletInterface
+class CreateWallet extends Api
 {
+    use WalletTrait;
     use MassAssignable;
     use CanCleanParameters;
     use Coin;

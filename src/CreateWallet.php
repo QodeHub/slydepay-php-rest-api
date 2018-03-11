@@ -17,7 +17,6 @@ use Qodehub\Bitgo\Coin;
 use Qodehub\Bitgo\Utility\CanCleanParameters;
 use Qodehub\Bitgo\Utility\MassAssignable;
 use Qodehub\Bitgo\Wallet\CreateWallet as WalletCreator;
-use Qodehub\Bitgo\Wallet\WalletInterface;
 
 /**
  * CreateAddress Class
@@ -30,7 +29,7 @@ use Qodehub\Bitgo\Wallet\WalletInterface;
  * @SuppressWarnings(PHPMD.ShortVariable)
  * @SuppressWarnings(PHPMD.LongVariable)
  */
-class CreateWallet extends WalletCreator implements WalletInterface
+class CreateWallet extends WalletCreator
 {
     use MassAssignable;
     use CanCleanParameters;
