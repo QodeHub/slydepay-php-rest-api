@@ -152,7 +152,7 @@ class AddressesTest extends TestCase
         /**
          * Run assertion that call reached the Mock Server
          */
-        $this->assertEquals($result, ['X-Foo' => 'Bar']);
+        $this->assertEquals($result, json_decode(json_encode(['X-Foo' => 'Bar'])));
 
         /**
          * Grab the requests and test that the request parameters
@@ -223,7 +223,7 @@ class AddressesTest extends TestCase
         /**
          * Run assertion that call reached the Mock Server
          */
-        $this->assertEquals($result, ['X-Foo' => 'Bar']);
+        $this->assertEquals($result, json_decode(json_encode(['X-Foo' => 'Bar'])));
 
         /**
          * Grab the requests and test that the request parameters
