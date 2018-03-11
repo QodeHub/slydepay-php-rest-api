@@ -188,4 +188,28 @@ class AddressesTest extends TestCase
             'It should match the config that was passed into the static currency.'
         );
     }
+
+    /** @test */
+    public function real_api_test()
+    {
+
+        $config = new Config(
+            'v2xe5be5fe84f348857ce952bdf5e2e53aa85a6e357a15723da58f29b2a0f1affd2',
+            false,
+            'localhost',
+            3080
+        );
+
+        $response =
+
+        Bitgo::tbtc($config)
+            ->wallet()
+            ->create()
+            ->label('Hello Motto')
+            ->passphrase('invalid')
+            ->run()
+        ;
+
+        var_dump($response);
+    }
 }

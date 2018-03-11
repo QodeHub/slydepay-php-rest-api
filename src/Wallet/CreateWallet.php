@@ -345,6 +345,6 @@ class CreateWallet extends Api
     {
         $this->propertiesPassRequired();
 
-        return $this->_post('/wallet/generate');
+        return $this->_post('/wallet/generate', $this->propertiesToArray());
     }
 }
