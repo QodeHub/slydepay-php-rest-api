@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 use Qodehub\Bitgo\Bitgo;
 use Qodehub\Bitgo\Config;
 use Qodehub\Bitgo\Wallet;
-use Qodehub\Bitgo\Wallet\Transactions;
 
 class TransactionsTest extends TestCase
 {
@@ -63,6 +62,12 @@ class TransactionsTest extends TestCase
     protected $transactionId = 'existing-transaction-id';
 
     /**
+     * Optional Parameters for getting a list of transactions
+     */
+    protected $allTokens = true;
+    protected $prevId = 'a-valid-prev-id';
+
+    /**
      * Setup the test environment viriables
      * @return [type] [description]
      */
@@ -72,38 +77,21 @@ class TransactionsTest extends TestCase
     }
 
     /** @test */
-    public function getting_a_list_of_transaction_expressively()
+    public function it_can_get_a_list_of_transactions_expressively()
     {
         $instance =
 
         Bitgo::{$this->coin}($this->config)
             ->wallet($this->walletId)
             ->transactions()
-            ->allTokens() // Optional
-            ->prevId($this->transactionId) // Optional
+            ->prevId($this->prevId) //Optional
+            ->allTokens($this->allTokens) //Optional
+
         // ->run()  will execute the call to the server.
         // ->get()  can be used instead of ->run()
         ;
 
-        $this->checkGetTeansactionsListInstanceValues($instance);
-    }
-
-    /** @test */
-    public function getting_a_list_of_transaction_using_massassignment()
-    {
-        $instance =
-
-        Bitgo::{$this->coin}($this->config)
-            ->wallet($this->walletId)
-            ->transactions([
-                'allTokens' => true, // Optional
-                'prevId' => $this->transactionId, // Optional
-            ])
-        // ->run()  will execute the call to the server.
-        // ->get()  can be used instead of ->run()
-        ;
-
-        $this->checkGetTeansactionsListInstanceValues($instance);
+        $this->checkGetTransactionsListInstanceValues($instance);
     }
 
     /** @test */
@@ -137,8 +125,49 @@ class TransactionsTest extends TestCase
         $this->checkGetSingleTransactionInstanceValues($instance2);
     }
 
-    protected function checkGetTeansactionsListInstanceValues($instance)
+    /** @test */
+    public function get_a_list_of_transactions_using_massAssignment()
     {
+        $instance =
+
+        Bitgo::{$this->coin}($this->config)
+            ->wallet($this->walletId)
+            ->transactions([
+                'prevId' => $this->prevId, //Optional
+                'allTokens' => $this->allTokens, //Optional
+            ])
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkGetTransactionsListInstanceValues($instance);
+    }
+
+    /** @test */
+    public function getting_a_single_transaction_using_massassignment()
+    {
+        $instance =
+
+        Bitgo::{$this->coin}($this->config)
+            ->wallet($this->walletId)
+            ->transactions([
+                'transactionId' => $this->transactionId, // Required
+            ])
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkGetSingleTransactionInstanceValues($instance);
+    }
+
+    protected function checkGetTransactionsListInstanceValues($instance)
+    {
+
+        $this->assertEquals(
+            $this->config,
+            $instance->getConfig(),
+            'It should match the config that was passed into the static currency.'
+        );
 
         $this->assertSame(
             $instance->getCoinType(),
@@ -149,7 +178,7 @@ class TransactionsTest extends TestCase
         $this->assertSame(
             $instance->getWalletId(),
             $this->walletId,
-            'The walletId must have the valid wallet Id'
+            'The instance must have the valid wallet Id'
         );
 
         $this->assertNull(
@@ -157,26 +186,27 @@ class TransactionsTest extends TestCase
             'The transactionId must be null to get list of transactions'
         );
 
-        $this->assertTrue(
-            $instance->getAllTokens(),
-            'The allTokens should be optional and exactly "True" for this test.'
+        $this->assertEquals(
+            $this->prevId,
+            $instance->getPrevId(),
+            'prevId is Optional but should match ' . $this->prevId . ' for this test'
         );
 
         $this->assertEquals(
-            $this->transactionId,
-            $instance->getPrevId(),
-            'The prevID should be optional and exactly "' . $this->transactionId . '"" for this test'
+            $this->allTokens,
+            $instance->getAllTokens(),
+            'allTokens is Optional but should match ' . $this->allTokens . ' for this test'
         );
+    }
+
+    protected function checkGetSingleTransactionInstanceValues($instance)
+    {
 
         $this->assertEquals(
             $this->config,
             $instance->getConfig(),
             'It should match the config that was passed into the static currency.'
         );
-    }
-
-    protected function checkGetSingleTransactionInstanceValues($instance)
-    {
 
         $this->assertSame(
             $instance->getCoinType(),
@@ -191,15 +221,9 @@ class TransactionsTest extends TestCase
         );
 
         $this->assertSame(
-            $instance->getTransactionId(),
             $this->transactionId,
-            'The transactionId is required for getting a single transaction'
-        );
-
-        $this->assertEquals(
-            $this->config,
-            $instance->getConfig(),
-            'It should match the config that was passed into the static currency.'
+            $instance->getTransactionId(),
+            'The tractionId is required for getting a single transaction'
         );
     }
 }

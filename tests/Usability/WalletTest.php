@@ -12,15 +12,9 @@
 
 namespace Qodehub\Bitgo\Tests\Usability;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Qodehub\Bitgo\Bitgo;
 use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Utility\BitgoHandler;
 use Qodehub\Bitgo\Wallet;
 
 class WalletTest extends TestCase
@@ -62,10 +56,11 @@ class WalletTest extends TestCase
     protected $coin = 'tbtc';
 
     /**
-     * Tis the transactionID used in this test.
-     * @var string
+     * Optional Parameters for getting a list of wallet
      */
-    protected $transactionId = 'existing-transaction-id';
+    protected $allTokens = true;
+    protected $prevId = 'a-valid-prev-id';
+    protected $limit = 10;
 
     /**
      * Setup the test environment viriables
@@ -77,141 +72,144 @@ class WalletTest extends TestCase
     }
 
     /** @test */
-    public function end_2_end_test_for_all_wallets()
+    public function it_can_get_a_list_of_wallet_expressively()
     {
-        /**
-         * Setup the Handler and middlewares interceptor to intercept the call to the server
-         */
-        $container = [];
+        $instance =
 
-        $history = Middleware::history($container);
+        Bitgo::{$this->coin}($this->config)
+            ->wallet()
+            ->prevId($this->prevId) //Optional
+            ->allTokens($this->allTokens) //Optional
+            ->limit($this->limit) //Optional
 
-        $httpMock = new MockHandler([
-            new Response(200, ['X-Foo' => 'Bar'], json_encode(['X-Foo' => 'Bar'])),
-        ]);
-
-        $handlerStack = (new BitgoHandler($this->config, HandlerStack::create($httpMock)))->createHandler();
-
-        $handlerStack->push($history);
-
-        /**
-         * Listen to the Wallet class method and use the interceptor
-         *
-         * Intercept all calls to the server from the createHandler method
-         */
-        $mock = $this->getMockBuilder(Wallet::class)
-            ->setMethods(['createHandler'])
-            ->getMock();
-
-        $mock->expects($this->once())->method('createHandler')->will($this->returnValue($handlerStack));
-
-        /**
-         * Inject the configuration and use the
-         */
-        $mock
-            ->injectConfig($this->config)
-
-            //Setup the required parameters
-
-            ->wallet($this->walletId)
-            ->coinType($this->coin)
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
         ;
 
-        /**
-         * Run the call to the server
-         */
-        $result = $mock->run();
-
-        /**
-         * Run assertion that call reached the Mock Server
-         */
-        $this->assertEquals($result, ['X-Foo' => 'Bar']);
-
-        /**
-         * Grab the requests and test that the request parameters
-         * are correct as expected.
-         */
-        $request = $container[0]['request'];
-
-        $this->assertEquals($request->getMethod(), 'GET', 'it should be a post request.');
-        $this->assertEquals($request->getUri()->getHost(), $this->host, 'Hostname should be' . $this->host);
-        $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
-
-        $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
-
-        $this->assertContains(
-            "https://some-host.com/api/v2/" . $this->coin . "/wallet/",
-            $request->getUri()->__toString()
-        );
+        $this->checkGetWalletListInstanceValues($instance);
     }
 
     /** @test */
-    public function end_2_end_test_for_single_wallet()
+    public function getting_a_single_wallet_expressively()
     {
-        /**
-         * Setup the Handler and middlewares interceptor to intercept the call to the server
-         */
-        $container = [];
 
-        $history = Middleware::history($container);
+        $instance1 =
 
-        $httpMock = new MockHandler([
-            new Response(200, ['X-Foo' => 'Bar'], json_encode(['X-Foo' => 'Bar'])),
-        ]);
-
-        $handlerStack = (new BitgoHandler($this->config, HandlerStack::create($httpMock)))->createHandler();
-
-        $handlerStack->push($history);
-
-        /**
-         * Listen to the Wallet class method and use the interceptor
-         *
-         * Intercept all calls to the server from the createHandler method
-         */
-        $mock = $this->getMockBuilder(Wallet::class)
-            ->setMethods(['createHandler'])
-            ->getMock();
-
-        $mock->expects($this->once())->method('createHandler')->will($this->returnValue($handlerStack));
-
-        /**
-         * Inject the configuration and use the
-         */
-        $mock
-            ->injectConfig($this->config)
-
-            //Setup the required parameters
-
+        Bitgo::{$this->coin}($this->config)
             ->wallet($this->walletId)
-            ->coinType($this->coin)
-            // ->find($this->walletId)
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
         ;
 
-        /**
-         * Run the call to the server
-         */
-        $result = $mock->run();
+        $this->checkGetSingleWalletInstanceValues($instance1);
 
         /**
-         * Run assertion that call reached the Mock Server
+         * The class also exposes a find helper method
          */
-        $this->assertEquals($result, ['X-Foo' => 'Bar']);
+        $instance2 =
 
-        /**
-         * Grab the requests and test that the request parameters
-         * are correct as expected.
-         */
-        $request = $container[0]['request'];
+        Bitgo::{$this->coin}($this->config)
+            ->wallet()
+            ->find($this->walletId)
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
 
-        $this->assertEquals($request->getMethod(), 'GET', 'it should be a post request.');
-        $this->assertEquals($request->getUri()->getHost(), $this->host, 'Hostname should be' . $this->host);
-        $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
+        $this->checkGetSingleWalletInstanceValues($instance2);
+    }
 
-        $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
+    /** @test */
+    public function get_a_list_of_wallet_using_massAssignment()
+    {
+        $instance =
 
-        $this->assertContains(
-            "https://some-host.com/api/v2/" . $this->coin . "/wallet/" . $this->walletId,
-            $request->getUri()->__toString()
+        Bitgo::{$this->coin}($this->config)
+            ->wallet([
+                'prevId' => $this->prevId, //Optional
+                'allTokens' => $this->allTokens, //Optional
+                'limit' => $this->limit, //Optional
+            ])
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkGetWalletListInstanceValues($instance);
+    }
+
+    /** @test */
+    public function getting_a_single_wallet_using_massassignment()
+    {
+        $instance =
+
+        Bitgo::{$this->coin}($this->config)
+            ->wallet([
+                'walletId' => $this->walletId, // Required
+            ])
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkGetSingleWalletInstanceValues($instance);
+    }
+
+    protected function checkGetWalletListInstanceValues($instance)
+    {
+
+        $this->assertEquals(
+            $this->config,
+            $instance->getConfig(),
+            'It should match the config that was passed into the static currency.'
+        );
+
+        $this->assertSame(
+            $instance->getCoinType(),
+            $this->coin,
+            'Must have a coin type'
+        );
+
+        $this->assertNull(
+            $instance->getWalletId(),
+            'The wallet must be null to get list of wallet'
+        );
+
+        $this->assertEquals(
+            $this->prevId,
+            $instance->getPrevId(),
+            'prevId is Optional but should match ' . $this->prevId . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->allTokens,
+            $instance->getAllTokens(),
+            'allTokens is Optional but should match ' . $this->allTokens . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->limit,
+            $instance->getLimit(),
+            'limit is Optional but should match ' . $this->limit . ' for this test'
+        );
+    }
+
+    protected function checkGetSingleWalletInstanceValues($instance)
+    {
+
+        $this->assertEquals(
+            $this->config,
+            $instance->getConfig(),
+            'It should match the config that was passed into the static currency.'
+        );
+
+        $this->assertSame(
+            $instance->getCoinType(),
+            $this->coin,
+            'It must have a coin type'
+        );
+
+        $this->assertSame(
+            $instance->getWalletId(),
+            $this->walletId,
+            'The walletId must have the valid wallet Id'
         );
     }
 }

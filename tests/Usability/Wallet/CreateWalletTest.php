@@ -12,18 +12,10 @@
 
 namespace Qodehub\Bitgo\Tests\Usability\Wallet;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Qodehub\Bitgo\Bitgo;
 use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Exception\MissingParameterException;
-use Qodehub\Bitgo\Utility\BitgoHandler;
 use Qodehub\Bitgo\Wallet;
-use Qodehub\Bitgo\Wallet\CreateWallet;
 
 class CreateWalletTest extends TestCase
 {
@@ -52,22 +44,43 @@ class CreateWalletTest extends TestCase
     protected $config;
 
     /**
+     * This is the ID of the wallet used in this test
+     * @var string
+     */
+    protected $walletId = 'existing-wallet-id';
+
+    /**
      * This is the coin type used for this test. Can be changed for other coin tests.
      * @var string
      */
     protected $coin = 'tbtc';
 
     /**
-     * This is the label we will use for testing the wallet.
+     * The Human-readable wallet name
+     * used in this test.
+     *
      * @var string
      */
-    protected $label = 'my new wallet';
+    protected $label = 'A-random-label';
+    /**
+     * Passphrase to decrypt the wallet’s
+     * private key used in this test.
+     *
+     * @var string
+     */
+    protected $passphrase = 'SecureWalletPassword$%#';
 
     /**
-     * This is the waller passphrase that will be used in this test.
-     * @var string
+     * Values of other optional parameters
+     * used in this test.
      */
-    protected $walletPassphrase = 'hello-world';
+    protected $userKey = 'random-user-key';
+    protected $backupXpub = 'backupXpub';
+    protected $backupXpubProvider = 'backupXpubProvider';
+    protected $enterprise = 'Enterprise Name';
+    protected $disableTransactionNotifications = true;
+    protected $gasPrice = 1000;
+    protected $passcodeEncryptionCode = 'AnotherSecurePassword$%#';
 
     /**
      * Setup the test environment viriables
@@ -79,114 +92,253 @@ class CreateWalletTest extends TestCase
     }
 
     /** @test */
-    public function a_call_to_the_run_method_should_return_an_error_if_the_label_value_is_missing()
+    public function it_can_create_a_wallet_expressively()
     {
         /**
-         * Mock the getClient method in the CreateWallet to intercept calls to the server
+         * This expression uses the create
+         * method from the wallet
+         * instance.
          */
-        $mock = $this->getMockBuilder(CreateWallet::class)
-            ->setMethods(['getClient'])
-            ->getMock();
+        $instance1 =
 
-        $mock->method('getClient')->will($this->returnValue(null));
-
-        $this->expectException(MissingParameterException::class);
-
-        $mock
-            ->injectConfig($this->config)
-            ->coinType($this->coin)
-            ->passphrase($this->walletPassphrase)
-            ->run();
-    }
-
-    /** @test */
-    public function a_call_to_the_run_method_should_return_an_error_if_the_coin_value_is_missing()
-    {
-        /**
-         * Mock the getClient method in the CreateWallet to intercept calls to the server
-         */
-        $mock = $this->getMockBuilder(CreateWallet::class)
-            ->setMethods(['getClient'])
-            ->getMock();
-
-        $mock->method('getClient')->will($this->returnValue(new Client()));
-
-        $this->expectException(MissingParameterException::class);
-
-        $mock
-            ->injectConfig($this->config)
+        Bitgo::{$this->coin}($this->config)
+            ->wallet()->create()
             ->label($this->label)
-            ->passphrase($this->walletPassphrase)
-            ->run();
-    }
-
-    /** @test */
-    public function test_that_a_call_to_the_server_will_be_successful_if_all_is_right()
-    {
+            ->passphrase($this->passphrase)
         /**
-         * Setup the Handler and middlewares interceptor to intercept the call to the server
-         */
-        $container = [];
-
-        $history = Middleware::history($container);
-
-        $httpMock = new MockHandler([
-            new Response(200, ['X-Foo' => 'Bar'], json_encode(['X-Foo' => 'Bar'])),
-        ]);
-
-        $handlerStack = (new BitgoHandler($this->config, HandlerStack::create($httpMock)))->createHandler();
-
-        $handlerStack->push($history);
-
-        /**
-         * Listen to the CreateWallet class method and use the interceptor
+         * Even more optional parameters.
+         * ==============================
          *
-         * Intercept all calls to the server from the createHandler method
+         * I percieve that this will be rarely used
+         * so I have left them as conventional
+         * accessors using set and get
          */
-        $mock = $this->getMockBuilder(CreateWallet::class)
-            ->setMethods(['createHandler'])
-            ->getMock();
-
-        $mock->expects($this->once())->method('createHandler')->will($this->returnValue($handlerStack));
-
-        /**
-         * Inject the configuration and use the
-         */
-        $mock
-            ->injectConfig($this->config)
-
-            //Setup the required parameters
-
-            ->coinType($this->coin)
-            ->label($this->label)
-            ->passphrase($this->walletPassphrase)
+            ->setUserKey($this->userKey)
+            ->setBackupXpub($this->backupXpub)
+            ->setBackupXpubProvider($this->backupXpubProvider)
+            ->setEnterprise($this->enterprise)
+            ->setDisableTransactionNotifications($this->disableTransactionNotifications)
+            ->setGasPrice($this->gasPrice)
+            ->setPasscodeEncryptionCode($this->passcodeEncryptionCode)
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
         ;
 
-        /**
-         * Run the call to the server
-         */
-        $result = $mock->run();
+        $this->checkCreateWalletInstanceValues($instance1);
 
         /**
-         * Run assertion that call reached the Mock Server
+         * This expression uses the createWallet
+         * method from the wallet
+         * instance.
          */
-        $this->assertEquals($result, ['X-Foo' => 'Bar']);
+        $instance2 =
+
+        Bitgo::{$this->coin}($this->config)
+            ->wallet()->createWallet()
+            ->label($this->label)
+            ->passphrase($this->passphrase)
+        // ==============================
+            ->setUserKey($this->userKey)
+            ->setBackupXpub($this->backupXpub)
+            ->setBackupXpubProvider($this->backupXpubProvider)
+            ->setEnterprise($this->enterprise)
+            ->setDisableTransactionNotifications($this->disableTransactionNotifications)
+            ->setGasPrice($this->gasPrice)
+            ->setPasscodeEncryptionCode($this->passcodeEncryptionCode)
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkCreateWalletInstanceValues($instance2);
 
         /**
-         * Grab the requests and test that the request parameters
-         * are correct as expected.
+         * This expression uses the createWallet
+         * method from the magic coinType method.
          */
-        $request = $container[0]['request'];
+        $instance3 =
 
-        $this->assertEquals($request->getMethod(), 'POST', 'it should be a post request.');
-        $this->assertEquals($request->getUri()->getHost(), 'some-host.com', 'Hostname should be some-host.com');
-        $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
+        Bitgo::{$this->coin}($this->config)
+            ->createWallet()
+            ->label($this->label)
+            ->passphrase($this->passphrase)
+        // ==============================
+            ->setUserKey($this->userKey)
+            ->setBackupXpub($this->backupXpub)
+            ->setBackupXpubProvider($this->backupXpubProvider)
+            ->setEnterprise($this->enterprise)
+            ->setDisableTransactionNotifications($this->disableTransactionNotifications)
+            ->setGasPrice($this->gasPrice)
+            ->setPasscodeEncryptionCode($this->passcodeEncryptionCode)
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
 
-        $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
+        $this->checkCreateWalletInstanceValues($instance3);
+    }
 
-        $this->assertContains(
-            "https://some-host.com/api/v2/" . $this->coin . "/wallet/generate",
-            $request->getUri()->__toString()
+    /** @test */
+    public function getting_a_single_address_using_massassignment()
+    {
+        /**
+         * This expression uses the create
+         * method from the wallet
+         * instance.
+         */
+        $instance1 =
+
+        Bitgo::{$this->coin}($this->config)
+            ->wallet()->create([
+
+            'label' => $this->label,
+            'passphrase' => $this->passphrase,
+
+            /**
+             * Even more optional parameters.
+             * ==============================
+             *
+             * I percieve that this will be rarely used
+             * so I have left them as conventional
+             * accessors using set and get
+             */
+            'userKey' => $this->userKey,
+            'gasPrice' => $this->gasPrice,
+            'backupXpub' => $this->backupXpub,
+            'enterprise' => $this->enterprise,
+            'backupXpubProvider' => $this->backupXpubProvider,
+            'passcodeEncryptionCode' => $this->passcodeEncryptionCode,
+            'disableTransactionNotifications' => $this->disableTransactionNotifications,
+            ])
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkCreateWalletInstanceValues($instance1);
+
+        /**
+         * This expression uses the createWallet
+         * method from the wallet
+         * instance.
+         */
+        $instance2 =
+
+        Bitgo::{$this->coin}($this->config)
+            ->wallet()->createWallet([
+
+            'label' => $this->label,
+            'passphrase' => $this->passphrase,
+            // ==============================
+            'userKey' => $this->userKey,
+            'gasPrice' => $this->gasPrice,
+            'backupXpub' => $this->backupXpub,
+            'enterprise' => $this->enterprise,
+            'backupXpubProvider' => $this->backupXpubProvider,
+            'passcodeEncryptionCode' => $this->passcodeEncryptionCode,
+            'disableTransactionNotifications' => $this->disableTransactionNotifications,
+
+            ])
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkCreateWalletInstanceValues($instance2);
+
+        $this->checkCreateWalletInstanceValues($instance1);
+
+        /**
+         * This expression uses the createWallet
+         * method from the magic coinType method.
+         */
+        $instance3 =
+
+        Bitgo::{$this->coin}($this->config)
+            ->wallet()->createWallet([
+
+            'label' => $this->label,
+            'passphrase' => $this->passphrase,
+            // ==============================
+            'userKey' => $this->userKey,
+            'gasPrice' => $this->gasPrice,
+            'backupXpub' => $this->backupXpub,
+            'enterprise' => $this->enterprise,
+            'backupXpubProvider' => $this->backupXpubProvider,
+            'passcodeEncryptionCode' => $this->passcodeEncryptionCode,
+            'disableTransactionNotifications' => $this->disableTransactionNotifications,
+
+            ])
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkCreateWalletInstanceValues($instance3);
+    }
+
+    protected function checkCreateWalletInstanceValues($instance)
+    {
+
+        $this->assertSame(
+            $instance->getCoinType(),
+            $this->coin,
+            'Must have a coin type'
+        );
+
+        $this->assertEquals(
+            $this->config,
+            $instance->getConfig(),
+            'It should match the config that was passed into the static currency.'
+        );
+
+        $this->assertEquals(
+            $this->label,
+            $instance->getLabel(),
+            'The label should match ' . $this->label . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->passphrase,
+            $instance->getPassphrase(),
+            'The passphrase should match ' . $this->passphrase . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->userKey,
+            $instance->getUserKey(),
+            'userKey is Optional but should match ' . $this->userKey . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->gasPrice,
+            $instance->getGasPrice(),
+            'gasPrice is Optional but should match ' . $this->gasPrice . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->backupXpub,
+            $instance->getBackupXpub(),
+            'backupXpub is Optional but should match ' . $this->backupXpub . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->enterprise,
+            $instance->getEnterprise(),
+            'enterprise is Optional but should match ' . $this->enterprise . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->backupXpubProvider,
+            $instance->getBackupXpubProvider(),
+            'backupXpubProvider is Optional but should match ' . $this->backupXpubProvider . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->passcodeEncryptionCode,
+            $instance->getPasscodeEncryptionCode(),
+            'passcodeEncryptionCode is Optional but should match ' . $this->passcodeEncryptionCode . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->disableTransactionNotifications,
+            $instance->getDisableTransactionNotifications(),
+            'disableTransactionNotifications is Optional but ' . $this->disableTransactionNotifications . ' for this test'
         );
     }
 }

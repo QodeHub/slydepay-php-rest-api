@@ -144,4 +144,17 @@ class ApiTest extends TestCase
 
         $this->assertSame($this->config, $mock->getConfig(), 'it should inject the configuration on the api');
     }
+
+    public function test_get_function()
+    {
+        $mock = $this->getMockBuilder(Api::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['run'])
+            ->getMockForAbstractClass();
+
+        $mock->expects($this->exactly(1))
+                ->method('run');
+
+        $mock->get();
+    }
 }

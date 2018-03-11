@@ -214,7 +214,13 @@ class SendCoins extends Wallet implements WalletInterface
      */
     public function __construct($data = [])
     {
-        $this->massAssign($data);
+        if (is_array($data)) {
+            return $this->massAssign($data);
+        }
+
+        if (preg_match('/^(?:\d*\.)?\d+$/', $data)) {
+            $this->setAmount($data);
+        }
     }
 
     /**
@@ -230,6 +236,19 @@ class SendCoins extends Wallet implements WalletInterface
     public function to($address)
     {
         return $this->receiver($address);
+    }
+
+    /**
+     * This helper method wills et the comment on the
+     * send coins instance.
+     *
+     * @param  string $comment this is the comment
+     *                         for a transaction
+     * @return self
+     */
+    public function comment($comment)
+    {
+        return $this->setComment($comment);
     }
 
     /**
@@ -278,7 +297,7 @@ class SendCoins extends Wallet implements WalletInterface
      *                                  to send money from.
      * @return self
      */
-    public function passPhrase($walletPassphrase)
+    public function passphrase($walletPassphrase)
     {
         return $this->setWalletPassphrase($walletPassphrase);
     }

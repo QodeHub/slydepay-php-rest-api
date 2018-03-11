@@ -120,7 +120,7 @@ class Config implements ConfigInterface
      */
     public function setBaseUrl($baseUrl)
     {
-        $this->$baseUrl = $baseUrl;
+        $this->baseUrl = $baseUrl;
 
         return $this;
     }
@@ -184,26 +184,6 @@ class Config implements ConfigInterface
     /**
      * @return string
      */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * @param string $version
-     *
-     * @return self
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getHost()
     {
         return $this->host;
@@ -239,14 +219,6 @@ class Config implements ConfigInterface
         $this->port = $port;
 
         return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isScheme()
-    {
-        return $this->scheme;
     }
 
     /**

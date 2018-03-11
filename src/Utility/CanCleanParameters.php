@@ -93,10 +93,12 @@ trait CanCleanParameters
      */
     protected function accessPropertyByKey($key)
     {
-        try {
+        if (method_exists($this, 'get' . $key)) {
             return $this->{'get' . ucwords($key)}();
-        } catch (BadMethodCallException $e) {
-            throw new \RuntimeException('The ' . $key . ' parameter must have a defined get' . ucwords($key) . ' method.');
         }
+
+        throw new \RuntimeException(
+            'The ' . $key . ' parameter must have a defined get' . ucwords($key) . ' method.'
+        );
     }
 }

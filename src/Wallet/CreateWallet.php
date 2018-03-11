@@ -283,7 +283,7 @@ class CreateWallet extends Wallet implements WalletInterface
     /**
      * @return boolean
      */
-    public function isDisableTransactionNotifications()
+    public function getDisableTransactionNotifications()
     {
         return $this->disableTransactionNotifications;
     }

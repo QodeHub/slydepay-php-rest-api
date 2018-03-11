@@ -24,14 +24,16 @@ use Qodehub\Bitgo\Wallet\WalletTrait;
 /**
  * Wallet Class
  *
- * This API call retrieves wallet object information by the wallet ID.
- * This is useful to get the balance of the wallet, or
- * identify the keys used to sign with the wallet
- * using the Get Keychain API.
+ * This class retrieves wallet object information by the wallet ID.
+ * This is useful to get the balance, transactions
+ * or the address of a wallet.
  *
- * @example Transactions::btc($config)->wallet('waletId')->get();
- * @example Transactions::btc($config)->wallet('waletId')->get('waletId');
- * @example Transactions::btc($config)->wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
+ * This class is also responsible for listing all wallets
+ * associated with the token bearer.
+ *
+ * @example Bitgo::btc($config)->wallet()->get();
+ * @example Bitgo::btc($config)->wallet('waletId')->get();
+ * @example Bitgo::btc($config)->wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
  *
  * @SuppressWarnings(PHPMD.LongVariable)
  */
@@ -52,7 +54,7 @@ class Wallet extends Api implements WalletInterface
      * {@inheritdoc}
      */
     protected $parametersOptional = [
-        'walletId',
+        'walletId', // Required for getting a single wallet
         'allTokens',
         'prevId',
         'limit',
@@ -83,11 +85,19 @@ class Wallet extends Api implements WalletInterface
      * The construct method accepts a the ID of the wallet
      * that it will be interracting with.
      *
-     * @param string $walletId the wallet id to interract with
+     * @param string $data the wallet to interract with
+     *                     or an array of wallet query
+     *                     data.
      */
-    public function __construct($walletId = null)
+    public function __construct($data = [])
     {
-        $this->wallet($walletId);
+        if (is_array($data)) {
+            $this->massAssign($data);
+        }
+
+        if (is_string($data)) {
+            $this->setWalletId($data);
+        }
     }
 
     /**
@@ -102,6 +112,14 @@ class Wallet extends Api implements WalletInterface
      * {@inheritdoc}
      */
     public function sendCoins($attributes = [])
+    {
+        return $this->getWalletInstance('SendCoins', $attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function send($attributes = [])
     {
         return $this->getWalletInstance('SendCoins', $attributes);
     }
@@ -148,6 +166,41 @@ class Wallet extends Api implements WalletInterface
     public function find($walletId)
     {
         return $this->setWalletId($walletId);
+    }
+
+    /**
+     * Continue iterating wallets from this prevId as
+     * provided by nextBatchPrevId in the previous list
+     *
+     * @param  string $prevId Next Batch PrevID
+     * @return self
+     */
+    public function prevId($prevId)
+    {
+        return $this->setPrevId($prevId);
+    }
+
+    /**
+     * Gets details of all tokens associated with
+     * this wallet. Only valid for eth/teth
+     *
+     * @param  boolean $allTokens Set the flag for allTkens
+     * @return self
+     */
+    public function allTokens($allTokens)
+    {
+        return $this->setAllTokens($allTokens);
+    }
+
+    /**
+     * Sets the max number of results in a single call.
+     *
+     * @param  integer $limit Defaults to 25
+     * @return self
+     */
+    public function limit($limit)
+    {
+        return $this->setLimit($limit);
     }
 
     /**
