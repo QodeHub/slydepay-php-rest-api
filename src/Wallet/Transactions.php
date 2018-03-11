@@ -122,9 +122,9 @@ class Transactions extends Api
      *
      * @return self
      */
-    public function allTokens($allTokens = true)
+    public function allTokens($allTokens = null)
     {
-        return $this->setallTokens($allTokens);
+        return $this->setallTokens(is_null($allTokens) ? true : $allTokens);
     }
 
     /**
