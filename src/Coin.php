@@ -123,9 +123,9 @@ trait Coin
      * @return self
      * @throws \BadMethodCallException
      *
-     * @example Transactions::btc($config)->wallets($walletId)->get();
-     * @example Addresses::ltc($config)->wallets($walletId)->get();
-     * @example Wallets::eth($config)->wallets($walletId)->get();
+     * @example Transactions::btc($config)->wallet($walletId)->get();
+     * @example Addresses::ltc($config)->wallet($walletId)->get();
+     * @example Wallets::eth($config)->wallet($walletId)->get();
      */
     public static function __callStatic($method, $parameters)
     {

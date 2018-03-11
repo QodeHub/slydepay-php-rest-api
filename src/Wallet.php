@@ -220,8 +220,8 @@ class Wallet extends Api implements WalletInterface
      * @param   array  $parameters
      * @return  self
      * @throws  \BadMethodCallException
-     * @example walletInstance->transactions()->get();
-     * @example walletInstance->transactions()->get('transactionId');
+     * @example walletInstance::transactions()->get();
+     * @example walletInstance::transactions()->get('transactionId');
      */
     protected function getWalletInstance($method, $parameters)
     {

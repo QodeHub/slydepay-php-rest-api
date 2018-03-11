@@ -26,14 +26,8 @@ use Qodehub\Bitgo\Wallet;
  * This class is responsible for creating addresses
  * on a wallet.
  *
- * @example Wallet::createAddress()
- *
- * Wallet::createWallet()
- * Wallet::create()
- * Wallet::address()->create()
- * Wallet::createAddress()
- * Address::create()->walletId($walletId)->run()
- * Address::create()->wallet($walletId)->run()
+ * @example Bitgo::btc($config)->createWallet()->run();
+ * @example Wallet::btc($config)->createWallet()->run();
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
  * @SuppressWarnings(PHPMD.LongVariable)

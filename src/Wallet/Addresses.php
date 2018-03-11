@@ -23,12 +23,11 @@ use Qodehub\Bitgo\Wallet;
  *
  * This will be the base for all wallet related transaction
  *
- * This class will require that a walletId is present. Examples are attaches
+ * This class requires that a walletId be present. Examples are attaches
  *
- * @example Addresses::btc('waletId')->get();
- * @example Btc::wallet('waletId')->addresses($optional-address-id)->config($config)->get();
- * @example Bitgo::btc($config)->wallet('waletId')->addresses($optional-address-id)->get();
- * @example Transactions::wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
+ * @example Btc::btc($config)->wallet($waletId)->addresses()->get();
+ * @example Btc::btc($config)->wallet($waletId)->addresses($address)->get();
+ * @example Btc::btc($config)->wallet($waletId)->addresses($addressId)->get();
  */
 class Addresses extends Wallet implements WalletInterface
 {

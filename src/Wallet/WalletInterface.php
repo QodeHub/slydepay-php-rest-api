@@ -77,6 +77,17 @@ interface WalletInterface extends ApiInterface
     public function sendCoins($attributes = []);
 
     /**
+     * This function will place a magic call to the SendCoins
+     * class, giving all available methods on for chaining.
+     *
+     * @param  array|null $attributes This will accept an
+     *                                array of arguements
+     *                                for configuration.
+     * @return SendCoins
+     */
+    public function send($attributes = []);
+
+    /**
      * This function will place a magic call to the Create
      * class, giving all available methods on for chaining.
      *

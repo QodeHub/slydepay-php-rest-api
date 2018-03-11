@@ -22,17 +22,9 @@ use Qodehub\Bitgo\Wallet;
 /**
  * CreateAddress Class
  *
- * This class is responsible for creating addresses
- * on a wallet.
+ * This class is responsible for creating addresses on a wallet.
  *
- * @example Wallet::createAddress()
- *
- * Wallet::createWallet()
- * Wallet::create()
- * Wallet::address()->create()
- * Wallet::createAddress()
- * Address::create()->walletId($walletId)->run()
- * Address::create()->wallet($walletId)->run()
+ * @example Bitgo::btc($config)->wallet($walletId)->createAddress()->run();
  */
 class CreateAddress extends Wallet implements WalletInterface
 {

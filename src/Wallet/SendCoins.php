@@ -23,13 +23,12 @@ use Qodehub\Bitgo\Wallet;
 /**
  * SendCoins Class
  *
- * This will be the base for all wallet related transaction
+ * This class implements methods for sending money from a wallet to an address
  *
  * This class will require that a walletId is present. Examples are attaches
  *
- * @example                               Transactions::wallet('waletId')->get();
- * @example                               Transactions::wallet('waletId')->get('waletId');
- * @example                               Transactions::wallet('waletId')->skip(10)->limit(10)->minConfirms(10)->compact()->get();
+ * @example Bitgo::btc($config)->wallet($walletId)->send($amout)->to($address)->passphrase($passphrase)->run();
+ *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.TooManyFields)
  */

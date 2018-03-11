@@ -22,6 +22,8 @@ use Qodehub\Bitgo\ConfigInterface;
  * This class holds the instance confuguration
  * and the methods required to update or retrieve
  * required configuration data.
+ *
+ * @example new Config($bearerToken, $secure = true, $host = 'http://localhost', $port = 3080);
  */
 class Config implements ConfigInterface
 {

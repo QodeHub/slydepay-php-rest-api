@@ -26,9 +26,8 @@ use Qodehub\Bitgo\Wallet;
  *
  * This class will require that a walletId is present. Examples are attaches
  *
- * @example Transactions::wallet('waletId')->get();
- * @example Transactions::wallet('waletId')->get('waletId');
- * @example Transactions::wallet('waletId')->prevId(10)->allTokens(10)->minConfirms(10)->compact()->get();
+ * @example Bitgo::btc($config)->wallet($walletId)->transactions()->get();
+ * @example Bitgo::btc($config)->wallet($walletId)->transactions($transactionId)->get();
  */
 class Transactions extends Wallet implements WalletInterface
 {
