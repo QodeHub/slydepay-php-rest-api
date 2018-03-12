@@ -34,7 +34,7 @@ deploy_document(){
 	# Remove all files from the github pages folder
 	shopt -s extglob;
 	shopt -s dotglob nullglob;
-	rm -rf !*.git;
+	for i in `ls | grep -v ".git"` ; do rm -rf $i; done;
 
 	# Make a directory for the sami generated doc and test coverage
 	mkdir -p ./api;
