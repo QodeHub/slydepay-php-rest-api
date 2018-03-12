@@ -46,6 +46,34 @@ menu:
                 installation:
                     text: Installation
                     relativeUrl: installation.html
+                    
+                config:
+                    text: Configuration
+                    relativeUrl: configuration.html
+                    
+                createwallet:
+                    text: Creating a Wallet
+                    relativeUrl: createwallet.html
+                    
+                wallet:
+                    text: Getting a Wallet
+                    relativeUrl: wallet.html
+                    
+                createaddress:
+                    text: Creating Wallet Address
+                    relativeUrl: createaddress.html
+                    
+                addresses:
+                    text: Getting Addresses
+                    relativeUrl: getaddress.html
+                    
+                sendcoins:
+                    text: Sending Coins
+                    relativeUrl: sendcoins.html
+                    
+                transactions:
+                    text: Wallet Transactions
+                    relativeUrl: transactions.html
         
         api:
             name: Api
@@ -73,4 +101,4 @@ menu:
             items:
                 hubtel-documentation:
                     text: Bitgo API Official Documentation
-                    absoluteUrl: https://bitgo.github.io/bitgo-docs/?shell#wallet-operations-basic
+                    absoluteUrl: https://www.bitgo.com/api/v2/
