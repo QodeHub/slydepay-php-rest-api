@@ -49,7 +49,7 @@ deploy_document(){
 	mv  -v ../build/coverage/* ./coverage/;
 
 	# Add all and commit to github if deploy was enabled
-	git add --all . && git add **/.* && git commit -m 'Update Documentation 📒' && git push origin gh-pages;
+	git add --all . && git add **/.* && git commit -m 'Update Documentation 📒' && git push;
 }
 
 

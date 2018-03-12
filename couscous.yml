@@ -49,7 +49,7 @@ menu:
                     
                 config:
                     text: Configuration
-                    relativeUrl: configuration.html
+                    relativeUrl: config.html
                     
                 createwallet:
                     text: Creating a Wallet
