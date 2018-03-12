@@ -15,9 +15,9 @@ namespace Qodehub\Bitgo\Tests\Unit\WalletTest;
 use PHPUnit\Framework\TestCase;
 use Qodehub\Bitgo\Bitgo;
 use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Exception\MissingParameterException;
 use Qodehub\Bitgo\Wallet;
 use Qodehub\Bitgo\Wallet\Addresses;
+use Qodehub\Bitgo\Wallet\CreateAddress;
 
 class AddressesTest extends TestCase
 {
@@ -56,6 +56,12 @@ class AddressesTest extends TestCase
      * @var string
      */
     protected $addressId = 'existing-address';
+
+    /**
+     * This is the coin used in this test
+     * @var string
+     */
+    protected $coin = 'tbtc';
 
     /**
      * Setup the test environment viriables
@@ -102,34 +108,14 @@ class AddressesTest extends TestCase
     }
 
     /** @test */
-    public function a_call_to_the_run_method_should_return_an_error_if_the_walletID_is_missing()
+    public function the_create_method_should_return_a_createAddress_instance()
     {
-        /**
-         * Mock the execute method in the Addresses to intercept calls to the server
-         */
-        $mock = $this->getMockBuilder(Addresses::class)
-            ->setMethods(['execute'])
-            ->getMock();
+        $instance = Bitgo::{$this->coin}()->wallet($this->walletId)->addresses()->create();
 
-        $mock->method('execute')->will($this->returnValue(null));
+        $this->assertInstanceOf(CreateAddress::class, $instance);
 
-        $this->expectException(MissingParameterException::class);
-        $mock->run();
-    }
+        $this->assertSame($this->walletId, $instance->getWalletId());
 
-    /** @test */
-    public function a_call_to_the_run_method_should_return_an_error_if_the_coinType_is_missing()
-    {
-        /**
-         * Mock the execute method in the Addresses to intercept calls to the server
-         */
-        $mock = $this->getMockBuilder(Addresses::class)
-            ->setMethods(['execute'])
-            ->getMock();
-
-        $mock->method('execute')->will($this->returnValue(null));
-
-        $this->expectException(MissingParameterException::class);
-        $mock->run();
+        $this->assertSame($this->coin, $instance->getCoinType());
     }
 }

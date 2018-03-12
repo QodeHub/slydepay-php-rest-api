@@ -123,6 +123,18 @@ class Addresses extends Api
     }
 
     /**
+     * Create a new address
+     *
+     * @return \Qodehub\Bitgo\Wallet\CreateAddress A CreateAddress instance
+     */
+    public function create()
+    {
+        return (new CreateAddress)
+            ->coinType($this->coinType)
+            ->wallet($this->walletId);
+    }
+
+    /**
      * The method places the call to the Bitgo API
      *
      * @return Object
