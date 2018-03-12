@@ -48,7 +48,6 @@ class CreateAddress extends Api
         'allowMigrated',
         'chain',
         'gasPrice',
-        'label',
     ];
 
     /**
