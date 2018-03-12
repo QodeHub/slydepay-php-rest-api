@@ -25,11 +25,9 @@ deploy_document(){
 	php couscous.phar generate --target=./build/couscous;
 
 	# clone the project and climb into the directory and switch to the gh-pages branch
-	git clone ssh://git@github.com/qodehub/bitgo-php.git staging_dir;
+	git clone ssh://git@github.com/QodeHub/bitgo-php-doc.git staging_dir;
 
 	cd staging_dir;
-
-	git checkout gh-pages;
 
 	# Remove all files from the github pages folder
 	shopt -s extglob;
