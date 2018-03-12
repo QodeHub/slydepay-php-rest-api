@@ -12,18 +12,10 @@
 
 namespace Qodehub\Bitgo\Tests\Usability\Wallet;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Qodehub\Bitgo\Bitgo;
 use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Exception\MissingParameterException;
-use Qodehub\Bitgo\Utility\BitgoHandler;
 use Qodehub\Bitgo\Wallet;
-use Qodehub\Bitgo\Wallet\CreateAddress;
 
 class CreateAddressTest extends TestCase
 {
@@ -64,6 +56,15 @@ class CreateAddressTest extends TestCase
     protected $coin = 'tbtc';
 
     /**
+     * Values of other optional parameters
+     * used in this test.
+     */
+    protected $label = 'A-random-label';
+    protected $allowMigrated = true;
+    protected $chain = 10;
+    protected $gasPrice = 1000;
+
+    /**
      * Setup the test environment viriables
      * @return [type] [description]
      */
@@ -73,106 +74,144 @@ class CreateAddressTest extends TestCase
     }
 
     /** @test */
-    public function a_call_to_the_run_method_should_return_an_error_if_the_walletID_is_missing()
+    public function it_can_create_a_wallet_expressively()
     {
         /**
-         * Mock the getClient method in the CreateAddress to intercept calls to the server
+         * This expression uses the create method
+         * from the walet addresses instance.
          */
-        $mock = $this->getMockBuilder(CreateAddress::class)
-            ->setMethods(['getClient'])
-            ->getMock();
+        $instance1 =
 
-        $mock->method('getClient')->will($this->returnValue(null));
-
-        $this->expectException(MissingParameterException::class);
-        $mock->chain(10)->run();
-    }
-
-    /** @test */
-    public function a_call_to_the_run_method_should_return_an_error_if_the_coin_value_is_missing()
-    {
-        /**
-         * Mock the getClient method in the CreateAddress to intercept calls to the server
-         */
-        $mock = $this->getMockBuilder(CreateAddress::class)
-            ->setMethods(['getClient'])
-            ->getMock();
-
-        $mock->method('getClient')->will($this->returnValue(new Client()));
-
-        $this->expectException(MissingParameterException::class);
-        $mock
-            ->injectConfig($this->config)
+        Bitgo::{$this->coin}($this->config)
             ->wallet($this->walletId)
-            ->run();
-    }
-
-    /** @test */
-    public function test_that_a_call_to_the_server_will_be_successful_if_all_is_right()
-    {
+            ->addresses()->create()
+        // === Optional parameters
+            ->label($this->label) //Optional
+            ->chain($this->chain) //Optional
+            ->gasPrice($this->gasPrice) //Optional
+            ->allowMigrated($this->allowMigrated) //Optional
         /**
-         * Setup the Handler and middlewares interceptor to intercept the call to the server
-         */
-        $container = [];
-
-        $history = Middleware::history($container);
-
-        $httpMock = new MockHandler([
-            new Response(200, ['X-Foo' => 'Bar'], json_encode(['X-Foo' => 'Bar'])),
-        ]);
-
-        $handlerStack = (new BitgoHandler($this->config, HandlerStack::create($httpMock)))->createHandler();
-
-        $handlerStack->push($history);
-
-        /**
-         * Listen to the CreateAddress class method and use the interceptor
+         * Even more optional parameters.
+         * ==============================
          *
-         * Intercept all calls to the server from the createHandler method
+         * I percieve that this will be rarely used
+         * so I have left them as conventional
+         * accessors using set and get
          */
-        $mock = $this->getMockBuilder(CreateAddress::class)
-            ->setMethods(['createHandler'])
-            ->getMock();
+        // ->setUserKey($this->userKey)
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
 
-        $mock->expects($this->once())->method('createHandler')->will($this->returnValue($handlerStack));
+        $this->checkCreateWalletInstanceValues($instance1);
 
         /**
-         * Inject the configuration and use the
+         * This expression uses the createWallet
+         * method from the wallet
+         * instance.
          */
-        $mock
-            ->injectConfig($this->config)
+        $instance2 =
 
-            //Setup the required parameters
-
+        Bitgo::{$this->coin}($this->config)
             ->wallet($this->walletId)
-            ->coinType($this->coin)
-            ->chain(0);
+            ->createAddress()
+        // ==============================
+            ->label($this->label) //Optional
+            ->allowMigrated($this->allowMigrated) //Optional
+            ->chain($this->chain) //Optional
+            ->gasPrice($this->gasPrice) //Optional
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkCreateWalletInstanceValues($instance2);
+    }
+
+    /** @test */
+    public function getting_a_single_address_using_massassignment()
+    {
+        /**
+         * This expression uses the create
+         * method from the wallet
+         * instance.
+         */
+        $instance1 =
+
+        Bitgo::{$this->coin}($this->config)
+            ->wallet($this->walletId)
+            ->addresses()->create([
+            // === Optional parameters
+            'label' => $this->label,
+            'allowMigrated' => $this->allowMigrated,
+            'chain' => $this->chain,
+            'gasPrice' => $this->gasPrice,
+            ])
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
+
+        $this->checkCreateWalletInstanceValues($instance1);
 
         /**
-         * Run the call to the server
+         * This expression uses the createWallet
+         * method from the wallet
+         * instance.
          */
-        $result = $mock->run();
+        $instance2 =
 
-        /**
-         * Run assertion that call reached the Mock Server
-         */
-        $this->assertEquals($result, json_decode(json_encode(['X-Foo' => 'Bar'])));
+        Bitgo::{$this->coin}($this->config)
+            ->wallet($this->walletId)
+            ->addresses()->createAddress([
+            // ==============================
+            'label' => $this->label,
+            'allowMigrated' => $this->allowMigrated,
+            'chain' => $this->chain,
+            'gasPrice' => $this->gasPrice,
+            ])
+        // ->run()  will execute the call to the server.
+        // ->get()  can be used instead of ->run()
+        ;
 
-        /**
-         * Grab the requests and test that the request parameters
-         * are correct as expected.
-         */
-        $request = $container[0]['request'];
+        $this->checkCreateWalletInstanceValues($instance2);
+    }
 
-        $this->assertEquals($request->getMethod(), 'POST', 'it should be a post request.');
-        $this->assertEquals($request->getUri()->getHost(), 'some-host.com', 'Hostname should be some-host.com');
-        $this->assertEquals($request->getHeaderLine('User-Agent'), Bitgo::CLIENT . ' v' . Bitgo::VERSION);
+    protected function checkCreateWalletInstanceValues($instance)
+    {
 
-        $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
+        $this->assertSame(
+            $instance->getCoinType(),
+            $this->coin,
+            'Must have a coin type'
+        );
 
-        $this->assertContains(
-            "https://some-host.com/api/v2/" . $this->coin . "/wallet/existing-wallet-id/address",
-            $request->getUri()->__toString()
+        $this->assertEquals(
+            $this->config,
+            $instance->getConfig(),
+            'It should match the config that was passed into the static currency.'
+        );
+
+        $this->assertEquals(
+            $this->walletId,
+            $instance->getWalletId(),
+            'The walletId should match ' . $this->walletId . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->allowMigrated,
+            $instance->getAllowMigrated(),
+            'allowMigrated is Optional but should match ' . $this->allowMigrated . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->chain,
+            $instance->getChain(),
+            'chain is Optional but should match ' . $this->chain . ' for this test'
+        );
+
+        $this->assertEquals(
+            $this->gasPrice,
+            $instance->getGasPrice(),
+            'gasPrice is Optional but should match ' . $this->gasPrice . ' for this test'
         );
     }
 }

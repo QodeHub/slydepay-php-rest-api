@@ -125,13 +125,30 @@ class Addresses extends Api
     /**
      * Create a new address
      *
-     * @return \Qodehub\Bitgo\Wallet\CreateAddress A CreateAddress instance
+     * @param  any ...$args this will pass all arguments to the
+     *                      createAddress constructor and make
+     *                      a new instance.
+     * @return \Qodehub\Bitgo\Wallet\CreateAddress A new CreateAddress instance
      */
-    public function create()
+    public function createAddress(...$args)
     {
-        return (new CreateAddress)
+        return (new CreateAddress(...$args))
             ->coinType($this->coinType)
-            ->wallet($this->walletId);
+            ->wallet($this->walletId)
+            ->injectConfig($this->config);
+    }
+
+    /**
+     * An intuitive helper method for creating a new address
+     *
+     * @param  any ...$args this will pass all arguments to the
+     *                      createAddress constructor and make
+     *                      a new instance.
+     * @return \Qodehub\Bitgo\Wallet\CreateAddress A new CreateAddress instance
+     */
+    public function create(...$args)
+    {
+        return $this->createAddress(...$args);
     }
 
     /**
