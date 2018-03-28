@@ -216,7 +216,7 @@ class Config implements ConfigInterface
      *
      * @return self
      */
-    public function setPort($port)
+    public function setPort(int $port)
     {
         $this->port = $port;
 
