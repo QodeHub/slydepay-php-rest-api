@@ -49,7 +49,7 @@
         "component": "package",
         "laravel": {
             "providers": [
-                "Qodehub\\Bitgo\\Laravel\\ServiceProvider"
+                "Qodehub\\Bitgo\\Laravel\\PackageServiceProvider"
             ],
             "aliases": {
                 "Bitgo": "Qodehub\\Bitgo\\Laravel\\Facades\\Bitgo"
