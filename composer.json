@@ -1,5 +1,5 @@
 {
-    "name": "qodehub/bitgo",
+    "name": "qodehub/bitgo-php",
     "description": "Carefully crafted Bitgo PHP SDK from the Qodehub team.",
     "license": "MIT",
     "authors": [
