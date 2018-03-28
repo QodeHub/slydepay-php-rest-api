@@ -144,7 +144,7 @@ class Bitgo implements ConfigInterface
     }
 
     /**
-     * Dynamically handle missing Api Classes and Methods.
+     * Dynamically handle allowed magic-method calls.
      *
      * @param  string $method
      * @param  array  $parameters
@@ -152,6 +152,18 @@ class Bitgo implements ConfigInterface
      */
     public function __call($method, array $parameters)
     {
+        /**
+         * Check if the call is to a dynamic coin method and
+         * initialize a new instance for the given coin
+         * type if it is in the list of available
+         * coin types.
+         *
+         * This method requires the coin trait.
+         */
+        if (in_array(strtolower($method), self::possibleCoinTypes())) {
+            return self::initializeWithCoinName($method, $parameters);
+        }
+
         return $this->getApiInstance($method, ...$parameters);
     }
 
@@ -210,8 +222,8 @@ class Bitgo implements ConfigInterface
                  * Inject the Api configuration if
                  * any exists on the chain.
                  */
-                if ($this->config instanceof Config) {
-                    $executionInstace->injectConfig($this->config);
+                if ($this->getConfig() instanceof Config) {
+                    $executionInstace->injectConfig($this->getConfig());
                 }
 
                 return $executionInstace;
