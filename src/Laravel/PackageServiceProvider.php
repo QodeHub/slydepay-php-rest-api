@@ -15,6 +15,7 @@ namespace Qodehub\Bitgo\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use Qodehub\Bitgo\Bitgo;
+use Qodehub\Bitgo\Config;
 
 /**
  * class PackageServiceProvider
@@ -57,8 +58,16 @@ class PackageServiceProvider extends ServiceProvider
     {
         $this->prepareResources();
 
-        $this->app->bind('qodehub.bitgo', Bitgo::class);
+        $this->app->bind('qodehub.bitgo', function () {
 
-        $this->app->alias('qodehub.bitgo', BitgoBoot::class);
+            return new Bitgo(
+                new Config(
+                    config('qodehub.bitgo.token'),
+                    config('qodehub.bitgo.secure'),
+                    config('qodehub.bitgo.host'),
+                    config('qodehub.bitgo.port')
+                )
+            );
+        });
     }
 }
