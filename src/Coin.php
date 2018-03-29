@@ -48,7 +48,7 @@ trait Coin
      *
      * @return array an array of possible coins
      */
-    protected static function possibleCoinTypes()
+    public static function possibleCoinTypes()
     {
         return [
             'btc',
