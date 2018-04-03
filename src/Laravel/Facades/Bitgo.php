@@ -15,6 +15,12 @@ namespace Qodehub\Bitgo\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * class Bitgo
+ *
+ * This class is the entrypoint of this package
+ * in a laravel application
+ */
 class Bitgo extends Facade
 {
     /**
