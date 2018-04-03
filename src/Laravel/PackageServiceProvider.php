@@ -30,7 +30,6 @@ class PackageServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
 
     /**
@@ -62,10 +61,10 @@ class PackageServiceProvider extends ServiceProvider
 
             return new Bitgo(
                 new Config(
-                    config('qodehub.bitgo.token'),
-                    config('qodehub.bitgo.secure'),
-                    config('qodehub.bitgo.host'),
-                    config('qodehub.bitgo.port')
+                    (string) config('qodehub.bitgo.token'),
+                    (boolean) config('qodehub.bitgo.secure'),
+                    (string) config('qodehub.bitgo.host'),
+                    (integer) config('qodehub.bitgo.port')
                 )
             );
         });
