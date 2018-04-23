@@ -151,6 +151,14 @@ class Wallet extends Api implements WalletInterface
     /**
      * {@inheritdoc}
      */
+    public function transfers($attributes = [])
+    {
+        return $this->getWalletInstance('Transfers', $attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function createWallet($attributes = [])
     {
         return $this->getWalletInstance('CreateWallet', $attributes);

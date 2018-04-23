@@ -110,6 +110,28 @@ interface WalletInterface extends ApiInterface
     public function addresses($attributes = []);
 
     /**
+     * This function will place a magic call to the Transactions
+     * class, giving all available methods on for chaining.
+     *
+     * @param  array|null $attributes This will accept an
+     *                                array of arguements
+     *                                for configuration.
+     * @return Transactions
+     */
+    public function transactions($attributes = []);
+
+    /**
+     * This function will place a magic call to the Transfers
+     * class, giving all available methods on for chaining.
+     *
+     * @param  array|null $attributes This will accept an
+     *                                array of arguements
+     *                                for configuration.
+     * @return Transfers
+     */
+    public function transfers($attributes = []);
+
+    /**
      * This function will place a magic call to the CreateWallet
      * class, giving all available methods on for chaining.
      *

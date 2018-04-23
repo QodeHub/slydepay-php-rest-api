@@ -21,6 +21,7 @@ use Qodehub\Bitgo\Wallet\CreateAddress;
 use Qodehub\Bitgo\Wallet\CreateWallet;
 use Qodehub\Bitgo\Wallet\SendCoins;
 use Qodehub\Bitgo\Wallet\Transactions;
+use Qodehub\Bitgo\Wallet\Transfers;
 
 class WalletTest extends TestCase
 {
@@ -111,6 +112,12 @@ class WalletTest extends TestCase
     public function the_transactions_method_returns_a_transaction_instance()
     {
         $this->assertInstanceOf(Transactions::class, Wallet::{$this->coin}()->Transactions());
+    }
+
+    /** @test */
+    public function the_transactions_method_returns_a_transfer_instance()
+    {
+        $this->assertInstanceOf(Transfers::class, Wallet::{$this->coin}()->Transfers());
     }
 
     /** @test */
