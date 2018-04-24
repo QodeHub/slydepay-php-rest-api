@@ -61,6 +61,6 @@ class Transfers extends Transactions
     {
         $this->propertiesPassRequired();
 
-        return $this->_get('/wallet/{walletId}/transfers/{transactionId}', $this->propertiesToArray());
+        return $this->_get('/wallet/{walletId}/transfer/{transactionId}', $this->propertiesToArray());
     }
 }

@@ -177,7 +177,7 @@ class TransfersTest extends TestCase
         $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
 
         $this->assertContains(
-            "https://some-host.com/api/v2/" . $this->coin . "/wallet/" . $this->walletId . '/transfers/',
+            "https://some-host.com/api/v2/" . $this->coin . "/wallet/" . $this->walletId . '/transfer/',
             $request->getUri()->__toString()
         );
     }
@@ -247,7 +247,7 @@ class TransfersTest extends TestCase
         $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
 
         $this->assertContains(
-            "https://some-host.com/api/v2/" . $this->coin . "/wallet/" . $this->walletId . "/transfers/" . $this->transactionId,
+            "https://some-host.com/api/v2/" . $this->coin . "/wallet/" . $this->walletId . "/transfer/" . $this->transactionId,
             $request->getUri()->__toString()
         );
     }
