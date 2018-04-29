@@ -50,4 +50,14 @@ return [
     |
      */
     'secure' => env('BITGO_SECURE', false),
+    /*
+    |--------------------------------------------------------------------------
+    | Bitgo Enterprise ID
+    |--------------------------------------------------------------------------
+    |
+    | This will be the Bitgo Enterprise ID for creating wallets for
+    | coins that require an enterprise ID
+    |
+     */
+    'enterprise' => env('BITGO_ENTERPRISE', null),
 ];
