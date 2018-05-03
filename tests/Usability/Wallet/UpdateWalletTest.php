@@ -17,7 +17,7 @@ use Qodehub\Bitgo\Bitgo;
 use Qodehub\Bitgo\Config;
 use Qodehub\Bitgo\Wallet;
 
-class CreateWalletTest extends TestCase
+class UpdateWalletTest extends TestCase
 {
     /**
      * The bearer token that will be used by this API
@@ -74,13 +74,9 @@ class CreateWalletTest extends TestCase
      * Values of other optional parameters
      * used in this test.
      */
-    protected $userKey = 'random-user-key';
-    protected $backupXpub = 'backupXpub';
-    protected $backupXpubProvider = 'backupXpubProvider';
-    protected $enterprise = 'Enterprise Name';
     protected $disableTransactionNotifications = true;
-    protected $gasPrice = 1000;
-    protected $passcodeEncryptionCode = 'AnotherSecurePassword$%#';
+    protected $tokenFlushThresholds = 1000;
+    protected $approvalsRequired = 10;
 
     /**
      * Setup the test environment viriables
@@ -92,19 +88,18 @@ class CreateWalletTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_a_wallet_expressively()
+    public function it_can_update_a_wallet_expressively()
     {
         /**
-         * This expression uses the create
+         * This expression uses the update
          * method from the wallet
          * instance.
          */
         $instance1 =
 
         Bitgo::{$this->coin}($this->config)
-            ->wallet()->create()
+            ->wallet($this->walletId)->update()
             ->label($this->label)
-            ->passphrase($this->passphrase)
         /**
          * Even more optional parameters.
          * ==============================
@@ -113,84 +108,69 @@ class CreateWalletTest extends TestCase
          * so I have left them as conventional
          * accessors using set and get
          */
-            ->setUserKey($this->userKey)
-            ->setBackupXpub($this->backupXpub)
-            ->setBackupXpubProvider($this->backupXpubProvider)
-            ->setEnterprise($this->enterprise)
             ->setDisableTransactionNotifications($this->disableTransactionNotifications)
-            ->setGasPrice($this->gasPrice)
-            ->setPasscodeEncryptionCode($this->passcodeEncryptionCode)
+            ->setTokenFlushThresholds($this->tokenFlushThresholds)
+            ->setApprovalsRequired($this->approvalsRequired)
         // ->run()  will execute the call to the server.
         // ->get()  can be used instead of ->run()
         ;
 
-        $this->checkCreateWalletInstanceValues($instance1);
+        $this->checkUpdateWalletInstanceValues($instance1);
 
         /**
-         * This expression uses the createWallet
+         * This expression uses the updateWallet
          * method from the wallet
          * instance.
          */
         $instance2 =
 
         Bitgo::{$this->coin}($this->config)
-            ->wallet()->createWallet()
+            ->wallet($this->walletId)->updateWallet()
             ->label($this->label)
-            ->passphrase($this->passphrase)
         // ==============================
-            ->setUserKey($this->userKey)
-            ->setBackupXpub($this->backupXpub)
-            ->setBackupXpubProvider($this->backupXpubProvider)
-            ->setEnterprise($this->enterprise)
             ->setDisableTransactionNotifications($this->disableTransactionNotifications)
-            ->setGasPrice($this->gasPrice)
-            ->setPasscodeEncryptionCode($this->passcodeEncryptionCode)
+            ->setTokenFlushThresholds($this->tokenFlushThresholds)
+            ->setApprovalsRequired($this->approvalsRequired)
         // ->run()  will execute the call to the server.
         // ->get()  can be used instead of ->run()
         ;
 
-        $this->checkCreateWalletInstanceValues($instance2);
+        $this->checkUpdateWalletInstanceValues($instance2);
 
         /**
-         * This expression uses the createWallet
+         * This expression uses the updateWallet
          * method from the magic coinType method.
          */
         $instance3 =
 
         Bitgo::{$this->coin}($this->config)
-            ->createWallet()
+            ->wallet($this->walletId)->updateWallet()
             ->label($this->label)
-            ->passphrase($this->passphrase)
         // ==============================
-            ->setUserKey($this->userKey)
-            ->setBackupXpub($this->backupXpub)
-            ->setBackupXpubProvider($this->backupXpubProvider)
-            ->setEnterprise($this->enterprise)
             ->setDisableTransactionNotifications($this->disableTransactionNotifications)
-            ->setGasPrice($this->gasPrice)
-            ->setPasscodeEncryptionCode($this->passcodeEncryptionCode)
+            ->setTokenFlushThresholds($this->tokenFlushThresholds)
+            ->setApprovalsRequired($this->approvalsRequired)
         // ->run()  will execute the call to the server.
         // ->get()  can be used instead of ->run()
         ;
 
-        $this->checkCreateWalletInstanceValues($instance3);
+        $this->checkUpdateWalletInstanceValues($instance3);
     }
 
     /** @test */
     public function getting_a_single_address_using_massassignment()
     {
         /**
-         * This expression uses the create
+         * This expression uses the update
          * method from the wallet
          * instance.
          */
         $instance1 =
 
         Bitgo::{$this->coin}($this->config)
-            ->wallet()->create([
+            ->wallet($this->walletId)->update([
 
             'label' => $this->label,
-            'passphrase' => $this->passphrase,
 
             /**
              * Even more optional parameters.
@@ -200,39 +180,30 @@ class CreateWalletTest extends TestCase
              * so I have left them as conventional
              * accessors using set and get
              */
-            'userKey' => $this->userKey,
-            'gasPrice' => $this->gasPrice,
-            'backupXpub' => $this->backupXpub,
-            'enterprise' => $this->enterprise,
-            'backupXpubProvider' => $this->backupXpubProvider,
-            'passcodeEncryptionCode' => $this->passcodeEncryptionCode,
+            'tokenFlushThresholds' => $this->tokenFlushThresholds,
+            'approvalsRequired' => $this->approvalsRequired,
             'disableTransactionNotifications' => $this->disableTransactionNotifications,
         ])
         // ->run()  will execute the call to the server.
         // ->get()  can be used instead of ->run()
         ;
 
-        $this->checkCreateWalletInstanceValues($instance1);
+        $this->checkUpdateWalletInstanceValues($instance1);
 
         /**
-         * This expression uses the createWallet
+         * This expression uses the updateWallet
          * method from the wallet
          * instance.
          */
         $instance2 =
 
         Bitgo::{$this->coin}($this->config)
-            ->wallet()->createWallet([
+            ->wallet($this->walletId)->updateWallet([
 
             'label' => $this->label,
-            'passphrase' => $this->passphrase,
             // ==============================
-            'userKey' => $this->userKey,
-            'gasPrice' => $this->gasPrice,
-            'backupXpub' => $this->backupXpub,
-            'enterprise' => $this->enterprise,
-            'backupXpubProvider' => $this->backupXpubProvider,
-            'passcodeEncryptionCode' => $this->passcodeEncryptionCode,
+            'tokenFlushThresholds' => $this->tokenFlushThresholds,
+            'approvalsRequired' => $this->approvalsRequired,
             'disableTransactionNotifications' => $this->disableTransactionNotifications,
 
         ])
@@ -240,28 +211,23 @@ class CreateWalletTest extends TestCase
         // ->get()  can be used instead of ->run()
         ;
 
-        $this->checkCreateWalletInstanceValues($instance2);
+        $this->checkUpdateWalletInstanceValues($instance2);
 
-        $this->checkCreateWalletInstanceValues($instance1);
+        $this->checkUpdateWalletInstanceValues($instance1);
 
         /**
-         * This expression uses the createWallet
+         * This expression uses the updateWallet
          * method from the magic coinType method.
          */
         $instance3 =
 
         Bitgo::{$this->coin}($this->config)
-            ->wallet()->createWallet([
+            ->wallet($this->walletId)->updateWallet([
 
             'label' => $this->label,
-            'passphrase' => $this->passphrase,
             // ==============================
-            'userKey' => $this->userKey,
-            'gasPrice' => $this->gasPrice,
-            'backupXpub' => $this->backupXpub,
-            'enterprise' => $this->enterprise,
-            'backupXpubProvider' => $this->backupXpubProvider,
-            'passcodeEncryptionCode' => $this->passcodeEncryptionCode,
+            'tokenFlushThresholds' => $this->tokenFlushThresholds,
+            'approvalsRequired' => $this->approvalsRequired,
             'disableTransactionNotifications' => $this->disableTransactionNotifications,
 
         ])
@@ -269,10 +235,10 @@ class CreateWalletTest extends TestCase
         // ->get()  can be used instead of ->run()
         ;
 
-        $this->checkCreateWalletInstanceValues($instance3);
+        $this->checkUpdateWalletInstanceValues($instance3);
     }
 
-    protected function checkCreateWalletInstanceValues($instance)
+    protected function checkUpdateWalletInstanceValues($instance)
     {
 
         $this->assertSame(
@@ -294,45 +260,15 @@ class CreateWalletTest extends TestCase
         );
 
         $this->assertEquals(
-            $this->passphrase,
-            $instance->getPassphrase(),
-            'The passphrase should match ' . $this->passphrase . ' for this test'
+            $this->tokenFlushThresholds,
+            $instance->getTokenFlushThresholds(),
+            'tokenFlushThresholds is Optional but should match ' . $this->tokenFlushThresholds . ' for this test'
         );
 
         $this->assertEquals(
-            $this->userKey,
-            $instance->getUserKey(),
-            'userKey is Optional but should match ' . $this->userKey . ' for this test'
-        );
-
-        $this->assertEquals(
-            $this->gasPrice,
-            $instance->getGasPrice(),
-            'gasPrice is Optional but should match ' . $this->gasPrice . ' for this test'
-        );
-
-        $this->assertEquals(
-            $this->backupXpub,
-            $instance->getBackupXpub(),
-            'backupXpub is Optional but should match ' . $this->backupXpub . ' for this test'
-        );
-
-        $this->assertEquals(
-            $this->enterprise,
-            $instance->getEnterprise(),
-            'enterprise is Optional but should match ' . $this->enterprise . ' for this test'
-        );
-
-        $this->assertEquals(
-            $this->backupXpubProvider,
-            $instance->getBackupXpubProvider(),
-            'backupXpubProvider is Optional but should match ' . $this->backupXpubProvider . ' for this test'
-        );
-
-        $this->assertEquals(
-            $this->passcodeEncryptionCode,
-            $instance->getPasscodeEncryptionCode(),
-            'passcodeEncryptionCode is Optional but should match ' . $this->passcodeEncryptionCode . ' for this test'
+            $this->approvalsRequired,
+            $instance->getApprovalsRequired(),
+            'approvalsRequired is Optional but should match ' . $this->approvalsRequired . ' for this test'
         );
 
         $this->assertEquals(

@@ -165,6 +165,22 @@ class Wallet extends Api implements WalletInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function updateWallet($attributes = [])
+    {
+        return $this->getWalletInstance('UpdateWallet', $attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update($attributes = [])
+    {
+        return $this->getWalletInstance('UpdateWallet', $attributes);
+    }
+
+    /**
      * This will set the ID of the wallet that you want to get.
      * for a single wallet.
      *
