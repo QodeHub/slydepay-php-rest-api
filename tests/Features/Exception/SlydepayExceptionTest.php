@@ -1,16 +1,16 @@
 <?php
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Tests\Features\Exception;
+namespace Qodehub\Slydepay\Tests\Features\Exception;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -20,39 +20,19 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use Qodehub\Bitgo\Bitgo;
-use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Exception\BadRequestException;
-use Qodehub\Bitgo\Exception\BitgoException;
-use Qodehub\Bitgo\Exception\Handler;
-use Qodehub\Bitgo\Exception\InvalidRequestException;
-use Qodehub\Bitgo\Exception\MissingParameterException;
-use Qodehub\Bitgo\Exception\NotFoundException;
-use Qodehub\Bitgo\Exception\UnauthorizedException;
-use Qodehub\Bitgo\Utility\BitgoHandler;
-use Qodehub\Bitgo\Wallet;
+use Qodehub\Slydepay\Config;
+use Qodehub\Slydepay\Exception\BadRequestException;
+use Qodehub\Slydepay\Exception\Handler;
+use Qodehub\Slydepay\Exception\InvalidRequestException;
+use Qodehub\Slydepay\Exception\MissingParameterException;
+use Qodehub\Slydepay\Exception\NotFoundException;
+use Qodehub\Slydepay\Exception\SlydepayException;
+use Qodehub\Slydepay\Exception\UnauthorizedException;
+use Qodehub\Slydepay\Slydepay;
+use Qodehub\Slydepay\Utility\SlydepayHandler;
 
-class BitgoExceptionTest extends TestCase
+class SlydepayExceptionTest extends TestCase
 {
-
-    /**
-     * The bearer token that will be used by this API
-     * @var string
-     */
-    protected $token = 'existing-token';
-
-    /**
-     * This will determine if HTTP(S) will be used
-     * @var boolean
-     */
-    protected $secure = true;
-
-    /**
-     * This is the host on which the Bitgo API is running.
-     * @var string
-     */
-    protected $host = 'some-host.com';
-
     /**
      * The configuration instance.
      * @var Config
@@ -60,16 +40,23 @@ class BitgoExceptionTest extends TestCase
     protected $config;
 
     /**
-     * This is the ID of the wallet used in this test
+     * This Package Version.
+     *
      * @var string
      */
-    protected $walletId = 'existing-wallet-id';
-
+    protected $version = '1.0.0';
     /**
-     * This is the ID of the address used in this test
+     * This will be the Authorization merchantKey
+     *
      * @var string
      */
-    protected $addressId = 'existing-address';
+    protected $merchantKey = 'some-valid-merchantKey';
+    /**
+     * This is the emailOrPhoneNumber for the Slydepay Server
+     *
+     * @var string
+     */
+    protected $emailOrPhoneNumber = 1234567890;
 
     /**
      * Setup the test environment viriables
@@ -77,7 +64,7 @@ class BitgoExceptionTest extends TestCase
      */
     public function setup()
     {
-        $this->config = new Config($this->token, $this->secure, $this->host);
+        $this->config = new Config($this->emailOrPhoneNumber, $this->merchantKey);
     }
 
     public function useResponse($code = 200, $body = null)
@@ -88,9 +75,9 @@ class BitgoExceptionTest extends TestCase
             new RequestException("Error Communicating with Server", new Request('GET', 'test')),
         ]);
 
-        $handler = (new BitgoHandler($this->config, HandlerStack::create($mock)))->createHandler();
+        $handler = (new SlydepayHandler($this->config, HandlerStack::create($mock)))->createHandler();
 
-        $handler->remove('bitgo-retry-request');
+        $handler->remove('slydepay-retry-request');
 
         $client = new Client(['handler' => $handler]);
 
@@ -127,7 +114,7 @@ class BitgoExceptionTest extends TestCase
 
     public function test_other_error_response()
     {
-        $this->expectException(BitgoException::class);
+        $this->expectException(SlydepayException::class);
         try {
             $this->useResponse(403);
         } catch (ClientException $e) {

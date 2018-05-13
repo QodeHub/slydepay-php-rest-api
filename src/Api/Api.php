@@ -1,27 +1,26 @@
 <?php
 
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Api;
+namespace Qodehub\Slydepay\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\uri_template;
-use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\ConfigInterface;
-use Qodehub\Bitgo\Exception\Handler;
-use Qodehub\Bitgo\Exception\MissingParameterException;
-use Qodehub\Bitgo\Utility\BitgoHandler;
+use Qodehub\Slydepay\Config;
+use Qodehub\Slydepay\ConfigInterface;
+use Qodehub\Slydepay\Exception\Handler;
+use Qodehub\Slydepay\Utility\SlydepayHandler;
 
 /**
  * Api Class
@@ -36,15 +35,21 @@ abstract class Api implements ApiInterface
     /**
      * The Config repository instance.
      *
-     * @var \Qodehub\Bitgo\ConfigInterface
+     * @var \Qodehub\Slydepay\ConfigInterface
      */
     protected $config;
+    /**
+     * The default base URL for the Slydepay API
+     *
+     * @var string
+     */
+    protected $baseUrl = 'https://app.slydepay.com.gh';
     /**
      * The default basePath on the API instance
      *
      * @var string
      */
-    protected $basePath = '/api/v2';
+    protected $basePath = '/api/merchant/';
     /**
      * This is the response received from the bitgo server
      * if no exception was thrown.
@@ -56,7 +61,7 @@ abstract class Api implements ApiInterface
     /**
      * Constructor.
      *
-     * @param  \Qodehub\Bitgo\ConfigInterface $config
+     * @param  \Qodehub\Slydepay\ConfigInterface $config
      * @return void
      */
     public function __construct(Config $config)
@@ -67,7 +72,7 @@ abstract class Api implements ApiInterface
     /**
      * Injects the configuration to the Api Instance
      *
-     * @param  \Qodehub\Bitgo\ConfigInterface $config
+     * @param  \Qodehub\Slydepay\ConfigInterface $config
      * @return self
      */
     public function injectConfig(Config $config)
@@ -158,7 +163,7 @@ abstract class Api implements ApiInterface
 
                     \GuzzleHttp\uri_template(
 
-                        $this->getBasePath() . $this->getOrSkipCoin() . $url,
+                        $this->getBasePath() . $url,
                         $parameters
                     ),
                     [
@@ -185,7 +190,7 @@ abstract class Api implements ApiInterface
     {
         return new Client(
             [
-                'base_uri' => $this->config->getBaseUrl(),
+                'base_uri' => $this->baseUrl,
                 'handler' => $this->createHandler($this->config),
                 $parameters,
 
@@ -196,16 +201,16 @@ abstract class Api implements ApiInterface
     /**
      * Create the client handler.
      *
-     * @param  \Qodehub\Bitgo\Config $config
+     * @param  \Qodehub\Slydepay\Config $config
      * @return \GuzzleHttp\HandlerStack
      */
     protected function createHandler(Config $config)
     {
-        return (new BitgoHandler($config))->createHandler();
+        return (new SlydepayHandler($config))->createHandler();
     }
 
     /**
-     * @return \Qodehub\Bitgo\ConfigInterface
+     * @return \Qodehub\Slydepay\ConfigInterface
      */
     public function getConfig()
     {
@@ -213,7 +218,7 @@ abstract class Api implements ApiInterface
     }
 
     /**
-     * @param \Qodehub\Bitgo\ConfigInterface $config
+     * @param \Qodehub\Slydepay\ConfigInterface $config
      *
      * @return self
      */
@@ -222,31 +227,6 @@ abstract class Api implements ApiInterface
         $this->config = $config;
 
         return $this;
-    }
-
-    /**
-     * Skip or append coin path depending on if
-     * the isCoinPath was changed to true by
-     * a child class.
-     *
-     * @return string|null the coin path partial
-     */
-    public function getOrSkipCoin()
-    {
-        if (method_exists($this, 'getCoinType')) {
-
-            /**
-             * Validate that there is a value on the coin
-             * Api
-             */
-            if ($this->getCoinType()) {
-                return '/' . $this->getCoinType();
-            }
-
-            throw new MissingParameterException(
-                'The coinType value is required.'
-            );
-        }
     }
 
     /**

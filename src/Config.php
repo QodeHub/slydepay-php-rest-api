@@ -1,20 +1,19 @@
 <?php
 
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo;
+namespace Qodehub\Slydepay;
 
-use Qodehub\Bitgo\Bitgo;
-use Qodehub\Bitgo\ConfigInterface;
+use Qodehub\Slydepay\ConfigInterface;
 
 /**
  * Config Class
@@ -23,7 +22,7 @@ use Qodehub\Bitgo\ConfigInterface;
  * and the methods required to update or retrieve
  * required configuration data.
  *
- * @example new Config($bearerToken, $secure = true, $host = 'http://localhost', $port = 3080);
+ * @example new Config($emailOrMobileNumber, $merchantKey);
  */
 class Config implements ConfigInterface
 {
@@ -34,98 +33,33 @@ class Config implements ConfigInterface
      */
     protected $version;
     /**
-     * This will be the Authorization Token
+     * This will be the Slidepay Merchant Token
      *
      * @var string
      */
-    protected $token;
+    protected $merchantKey;
     /**
-     * This is the host for the Bitgo Server
+     * This is the Email Or MobileNumber for the Slydepay Merchant
      *
      * @var string
      */
-    protected $host = 'test.bitgo.com';
-    /**
-     * This will be the port on which the server is running.
-     *
-     * @var integer
-     */
-    protected $port;
-    /**
-     * This will be a boolean as to if or not the server
-     * runs on https.
-     *
-     * @var boolean
-     */
-    protected $secure = true;
-    /**
-     * This is the scheme. Eg: https, http, ftp, etc..
-     * This will be set automatically depending on
-     * if the secure flag is true or false
-     *
-     * @var string
-     */
-    protected $scheme;
-    /**
-     * This is a base URL used in place of the URL.
-     * When this is set, the cnofiguration will
-     * ignore the secure and port flag.
-     *
-     * This must be a full base URL inlcuding
-     * the port and path on which the
-     * server is running.
-     *
-     * @example http://www.example.com:8090
-     *
-     * @var string
-     */
-    protected $baseUrl;
+    protected $emailOrMobileNumber;
 
     /**
      * Constructor
      *
      * This configuration constructor holds the config data.
      *
-     * @param string  $token  This is your token from the Bitgo Server
-     * @param boolean $secure This determines if the servere url should be HTTP(S)
-     * @param string  $host   This is the reacable Bitgo Server
-     * @param integer $port   This is the port for the reachable Bitgo server
+     * @param boolean $emailOrPhoneNumber This determines if the servere url should be HTTP(S)
+     * @param string  $merchantKey        This is your Slydepay Merchant Key
      */
-    public function __construct($token = null, $secure = 1, $host = 'test.bitgo.com', $port = null)
+    public function __construct($emailOrPhoneNumber = null, $merchantKey = null)
     {
-        $this->setPackageVersion(Bitgo::VERSION);
-        $this->setToken($token ?: getenv('BITGO_TOKEN'));
-        $this->setHost($host ?: getenv('BITGO_HOST'));
-        $this->setSecure($secure ?: (bool) getenv('BITGO_SECURE'));
-        $this->setPort($port ?: getenv('BITGO_PORT'));
+        $this->setPackageVersion(Slydepay::VERSION);
+        $this->setEmailOrMobileNumber($emailOrPhoneNumber ?: getenv('SLYDEPAY_EMAIL_OR_PHONE'));
+        $this->setMerchantKey($merchantKey ?: getenv('SLYDEPAY_MERCHANT_KEY'));
     }
 
-    /**
-     * This will build and return the API Endpoint using
-     * the configuration or will give the baseURL
-     * that has been set on the instance.
-     *
-     * @return string [This is the base URL that is on the class instance]
-     */
-    public function getBaseUrl()
-    {
-        $this->setScheme($this->isSecure() ? 'https' : 'http');
-
-        return $this->baseUrl ?: $this->getScheme() . '://' . $this->getHost() . ($this->getPort() ? (':' . $this->getPort()) : null);
-    }
-
-    /**
-     * Change the Default Api baseUrl
-     *
-     * @param  string $baseUrl The Bitgo Resource Base URL
-     * @return self
-     */
-    public function setBaseUrl($baseUrl)
-    {
-        $this->baseUrl = $baseUrl;
-
-        return $this;
-    }
     /**
      * {@inheritdoc}
      */
@@ -146,39 +80,19 @@ class Config implements ConfigInterface
     /**
      * @return string
      */
-    public function getToken()
+    public function getMerchantKey()
     {
-        return $this->token;
+        return $this->merchantKey;
     }
 
     /**
-     * @param string $token
+     * @param string $merchantKey
      *
      * @return self
      */
-    public function setToken($token)
+    public function setMerchantKey($merchantKey)
     {
-        $this->token = $token;
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isSecure()
-    {
-        return $this->secure;
-    }
-
-    /**
-     * @param boolean $secure
-     *
-     * @return self
-     */
-    public function setSecure($secure)
-    {
-        $this->secure = $secure;
+        $this->merchantKey = $merchantKey;
 
         return $this;
     }
@@ -186,60 +100,20 @@ class Config implements ConfigInterface
     /**
      * @return string
      */
-    public function getHost()
+    public function getEmailOrMobileNumber()
     {
-        return $this->host;
+        return $this->emailOrMobileNumber;
     }
 
     /**
-     * @param string $host
+     * @param string $emailOrMobileNumber
      *
      * @return self
      */
-    public function setHost($host)
+    public function setEmailOrMobileNumber($emailOrMobileNumber)
     {
-        $this->host = $host;
+        $this->emailOrMobileNumber = $emailOrMobileNumber;
 
         return $this;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getPort()
-    {
-        return $this->port;
-    }
-
-    /**
-     * @param integer $port
-     *
-     * @return self
-     */
-    public function setPort(int $port)
-    {
-        $this->port = $port;
-
-        return $this;
-    }
-
-    /**
-     * @param boolean $scheme
-     *
-     * @return self
-     */
-    public function setScheme($scheme)
-    {
-        $this->scheme = $scheme;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getScheme()
-    {
-        return $this->scheme;
     }
 }

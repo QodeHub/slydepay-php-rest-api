@@ -1,44 +1,26 @@
 <?php
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Tests\Features\Wallet;
+namespace Qodehub\Slydepay\Tests\Features\Wallet;
 
 use GuzzleHttp\Exception\TransferException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Utility\BitgoHandler;
+use Qodehub\Slydepay\Config;
+use Qodehub\Slydepay\Utility\SlydepayHandler;
 
-class BitgoHandlerTest extends TestCase
+class SlydepayHandlerTest extends TestCase
 {
-
-    /**
-     * The bearer token that will be used by this API
-     * @var string
-     */
-    protected $token = 'existing-token';
-
-    /**
-     * This will determine if HTTP(S) will be used
-     * @var boolean
-     */
-    protected $secure = true;
-
-    /**
-     * This is the host on which the Bitgo API is running.
-     * @var string
-     */
-    protected $host = 'some-host.com';
 
     /**
      * The configuration instance.
@@ -47,16 +29,23 @@ class BitgoHandlerTest extends TestCase
     protected $config;
 
     /**
-     * This is the ID of the wallet used in this test
+     * This Package Version.
+     *
      * @var string
      */
-    protected $walletId = 'existing-wallet-id';
-
+    protected $version = '1.0.0';
     /**
-     * This is the ID of the address used in this test
+     * This will be the Authorization merchantKey
+     *
      * @var string
      */
-    protected $addressId = 'existing-address';
+    protected $merchantKey = 'some-valid-merchantKey';
+    /**
+     * This is the emailOrPhoneNumber for the Bitgo Server
+     *
+     * @var string
+     */
+    protected $emailOrPhoneNumber = 1234567890;
 
     /**
      * Setup the test environment viriables
@@ -64,12 +53,12 @@ class BitgoHandlerTest extends TestCase
      */
     public function setup()
     {
-        $this->config = new Config($this->token, $this->secure, $this->host);
+        $this->config = new Config($this->emailOrPhoneNumber, $this->merchantKey);
     }
 
     public function test_createHandler()
     {
-        $mock = $this->getMockBuilder(BitgoHandler::class)
+        $mock = $this->getMockBuilder(SlydepayHandler::class)
             ->setConstructorArgs([$this->config])
             ->setMethods(['pushHeaderMiddleware', 'pushRetryMiddleware', 'pushBasicAuthMiddleware'])
             ->getMockForAbstractClass();
@@ -78,7 +67,7 @@ class BitgoHandlerTest extends TestCase
         $responseMock = $this->createMock(ResponseInterface::class);
         $tfException = $this->createMock(TransferException::class);
 
-        $requestMock->expects($this->exactly(2))->method('withHeader');
+        $requestMock->expects($this->exactly(1))->method('withHeader');
 
         $mock->expects($this->once())->method('pushHeaderMiddleware')->with(
             $this->callback(function (callable $callable) use ($requestMock) {
@@ -88,13 +77,13 @@ class BitgoHandlerTest extends TestCase
             })
         );
 
-        $mock->expects($this->Once())->method('pushBasicAuthMiddleware')->with(
-            $this->callback(function (callable $callable) use ($requestMock) {
-                $callable($requestMock);
+        // $mock->expects($this->Once())->method('pushBasicAuthMiddleware')->with(
+        //     $this->callback(function (callable $callable) use ($requestMock) {
+        //         $callable($requestMock);
 
-                return true;
-            })
-        );
+        //         return true;
+        //     })
+        // );
 
         $mock->expects($this->once())->method('pushRetryMiddleware')->with(
             $this->callback(function (callable $callable) use ($requestMock, $responseMock, $tfException) {

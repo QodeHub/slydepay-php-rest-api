@@ -1,11 +1,11 @@
 [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Scrutinizer Code Quality][scrutinizer-image]][scrutinizer-url]  [![Documentation Status][readthedocs-image]][readthedocs-url] [![Clear architecture][clear-architecture-image]][clear-architecture-url]
 ---
 
-#Qodehub's PHP-SDK for Bitgo.
+#Qodehub's PHP-SDK for Slydepay.
 
 ## Documentation
 
-Please find the [project documentation on the the official documentation website](http://qodehub.github.io/bitgo-php).
+Please find the [project documentation on the the official documentation website](http://qodehub.github.io/slydepay).
 
 ## Installation
 
@@ -13,7 +13,7 @@ This library requires PHP >=5.4.0 <=~7.1. I recommend using the latest available
 
 ## Dependencies
 
-![Composer dependency graph](https://rawgit.com/qodehub/bitgo-php/master/doc/dependencies.svg)
+![Composer dependency graph](https://rawgit.com/qodehub/slydepay/master/doc/dependencies.svg)
 
 ## Quality
 
@@ -23,20 +23,20 @@ This library attempts to comply with [PSR-1][], [PSR-2][], and [PSR-4][]. If you
 
 ## Contributing
 
-Found a bug or have a feature request? [Please have a look at the known issues](https://github.com/qodehub/bitgo-php/issues) first and open a new issue if necessary. Please see [contributing](CONTRIBUTING.md) and [conduct](CONDUCT.md) for details.
+Found a bug or have a feature request? [Please have a look at the known issues](https://github.com/qodehub/slydepay/issues) first and open a new issue if necessary. Please see [contributing](CONTRIBUTING.md) and [conduct](CONDUCT.md) for details.
 
 ## Security
 
 If you discover any security related issues, please email iamovac@gmail.com instead of using the issue tracker.
 
-[travis-image]: https://secure.travis-ci.org/qodehub/bitgo-php.svg
-[travis-url]: https://travis-ci.org/qodehub/bitgo-php
-[coveralls-image]: https://coveralls.io/repos/qodehub/bitgo-php/badge.svg?branch=master&service=github
-[coveralls-url]: https://coveralls.io/github/qodehub/bitgo-php?branch=master
-[scrutinizer-image]: https://scrutinizer-ci.com/g/qodehub/bitgo-php/badges/quality-score.png?b=master
-[scrutinizer-url]: https://scrutinizer-ci.com/g/qodehub/bitgo-php/?branch=master
-[readthedocs-image]: https://readthedocs.org/projects/qodehub-bitgo-php/badge/?version=latest
-[readthedocs-url]: http://qodehub-bitgo-php.readthedocs.io/en/latest/?badge=latest
+[travis-image]: https://secure.travis-ci.org/qodehub/slydepay.svg
+[travis-url]: https://travis-ci.org/qodehub/slydepay
+[coveralls-image]: https://coveralls.io/repos/qodehub/slydepay/badge.svg?branch=master&service=github
+[coveralls-url]: https://coveralls.io/github/qodehub/slydepay?branch=master
+[scrutinizer-image]: https://scrutinizer-ci.com/g/qodehub/slydepay/badges/quality-score.png?b=master
+[scrutinizer-url]: https://scrutinizer-ci.com/g/qodehub/slydepay/?branch=master
+[readthedocs-image]: https://readthedocs.org/projects/qodehub-slydepay/badge/?version=latest
+[readthedocs-url]: http://qodehub-slydepay.readthedocs.io/en/latest/?badge=latest
 [clear-architecture-image]: https://img.shields.io/badge/Clear%20Architecture-%E2%9C%94-brightgreen.svg
 [clear-architecture-url]: https://github.com/jkphl/clear-architecture
 [author-url]: http://www.qodehub.com
@@ -45,12 +45,12 @@ If you discover any security related issues, please email iamovac@gmail.com inst
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 
 
-# QodeHub PHP SDK for Bitgo v2
+# QodeHub PHP SDK for Slydepay
 
 #TODO - Completed
 TODO: Clear out table for this project. ✅
 TODO: Automate Documentation Build ✅
-TODO: Study the BitGo API in depth. ✅
+TODO: Study the Slydepay API in depth. ✅
 - -Looks like this will walk with me through out the development phase.- 📝 ✅
 TODO: Code implementation for the required use cases based on src. 🎬 ✅
 - Currently in action 🎉 ✅

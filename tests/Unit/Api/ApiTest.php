@@ -1,44 +1,24 @@
 <?php
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Tests\Unit\Api;
+namespace Qodehub\Slydepay\Tests\Unit\Api;
 
 use PHPUnit\Framework\TestCase;
-use Qodehub\Bitgo\Api\Api;
-use Qodehub\Bitgo\Bitgo;
-use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Wallet;
+use Qodehub\Slydepay\Api\Api;
+use Qodehub\Slydepay\Bitgo;
+use Qodehub\Slydepay\Config;
 
 class ApiTest extends TestCase
 {
-
-    /**
-     * The bearer token that will be used by this API
-     * @var string
-     */
-    protected $token = 'existing-token';
-
-    /**
-     * This will determine if HTTP(S) will be used
-     * @var boolean
-     */
-    protected $secure = true;
-
-    /**
-     * This is the host on which the Bitgo API is running.
-     * @var string
-     */
-    protected $host = 'some-host.com';
-
     /**
      * The configuration instance.
      * @var Config
@@ -46,16 +26,23 @@ class ApiTest extends TestCase
     protected $config;
 
     /**
-     * This is the ID of the wallet used in this test
+     * This Package Version.
+     *
      * @var string
      */
-    protected $walletId = 'existing-wallet-id';
-
+    protected $version = '1.0.0';
     /**
-     * This is the ID of the address used in this test
+     * This will be the Authorization merchantKey
+     *
      * @var string
      */
-    protected $addressId = 'existing-address';
+    protected $merchantKey = 'some-valid-merchantKey';
+    /**
+     * This is the emailOrPhoneNumber for the Bitgo Server
+     *
+     * @var string
+     */
+    protected $emailOrPhoneNumber = 1234567890;
 
     /**
      * Setup the test environment viriables
@@ -63,7 +50,7 @@ class ApiTest extends TestCase
      */
     public function setup()
     {
-        $this->config = new Config($this->token, $this->secure, $this->host);
+        $this->config = new Config($this->emailOrPhoneNumber, $this->merchantKey);
     }
 
     public function test_api_constructor_must_receive_config_type_constructor()
@@ -153,7 +140,7 @@ class ApiTest extends TestCase
             ->getMockForAbstractClass();
 
         $mock->expects($this->exactly(1))
-                ->method('run');
+            ->method('run');
 
         $mock->get();
     }

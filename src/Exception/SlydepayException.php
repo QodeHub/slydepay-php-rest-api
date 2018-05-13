@@ -1,50 +1,50 @@
 <?php
 
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Exception;
+namespace Qodehub\Slydepay\Exception;
 
 /**
- * Class BitgoException
- * throws Qodehub\Bitgo\Exception\BitgoException
+ * Class SlydepayException
+ * throws Qodehub\Slydepay\Exception\SlydepayException
  */
-class BitgoException extends \Exception
+class SlydepayException extends \Exception
 {
     /**
-     * The error code returned by Bitgo.
+     * The error code returned by Slydepay.
      *
      * @var string
      */
     protected $errorCode;
     /**
-     * The error type returned by Bitgo.
+     * The error type returned by Slydepay.
      *
      * @var string
      */
     protected $errorType;
     /**
-     * The missing parameter returned by Bitgo.
+     * The missing parameter returned by Slydepay.
      *
      * @var string
      */
     protected $missingParameter;
     /**
-     * The raw output returned by Bitgo in case of exception.
+     * The raw output returned by Slydepay in case of exception.
      *
      * @var string
      */
     protected $rawOutput;
     /**
-     * Returns the error type returned by Bitgo.
+     * Returns the error type returned by Slydepay.
      *
      * @return string
      */
@@ -53,7 +53,7 @@ class BitgoException extends \Exception
         return $this->errorCode;
     }
     /**
-     * Sets the error type returned by Bitgo.
+     * Sets the error type returned by Slydepay.
      *
      * @param  string $errorCode
      * @return self
@@ -65,7 +65,7 @@ class BitgoException extends \Exception
         return $this;
     }
     /**
-     * Returns the error type returned by Bitgo.
+     * Returns the error type returned by Slydepay.
      *
      * @return string
      */
@@ -74,7 +74,7 @@ class BitgoException extends \Exception
         return $this->errorType;
     }
     /**
-     * Sets the error type returned by Bitgo.
+     * Sets the error type returned by Slydepay.
      *
      * @param  string $errorType
      * @return self
@@ -86,7 +86,7 @@ class BitgoException extends \Exception
         return $this;
     }
     /**
-     * Returns missing parameter returned by Bitgo with the error.
+     * Returns missing parameter returned by Slydepay with the error.
      *
      * @return string
      */
@@ -95,7 +95,7 @@ class BitgoException extends \Exception
         return $this->missingParameter;
     }
     /**
-     * Sets the missing parameter returned by Bitgo with the error.
+     * Sets the missing parameter returned by Slydepay with the error.
      *
      * @param  string $missingParameter
      * @return self
@@ -107,7 +107,7 @@ class BitgoException extends \Exception
         return $this;
     }
     /**
-     * Returns raw output returned by Bitgo in case of exception.
+     * Returns raw output returned by Slydepay in case of exception.
      *
      * @return string
      */
@@ -116,7 +116,7 @@ class BitgoException extends \Exception
         return $this->rawOutput;
     }
     /**
-     * Sets the raw output parameter returned by Bitgo in case of exception.
+     * Sets the raw output parameter returned by Slydepay in case of exception.
      *
      * @param  string $rawOutput
      * @return self

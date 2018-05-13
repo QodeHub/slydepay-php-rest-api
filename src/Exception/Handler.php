@@ -1,17 +1,17 @@
 <?php
 
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Exception;
+namespace Qodehub\Slydepay\Exception;
 
 use GuzzleHttp\Exception\ClientException;
 
@@ -19,7 +19,7 @@ use GuzzleHttp\Exception\ClientException;
  * Class Handler
  *
  * Handles Bitgo Exceptions
- * throws \Qodehub\Bitgo\Exception\BitgoException
+ * throws \Qodehub\Slydepay\Exception\SlydepayException
  */
 class Handler
 {
@@ -47,7 +47,7 @@ class Handler
      * Constructor.
      *
      * @param  \GuzzleHttp\Exception\ClientException $exception
-     * @throws \Qodehub\Bitgo\Exception\BitgoException
+     * @throws \Qodehub\Slydepay\Exception\SlydepayException
      */
     public function __construct(ClientException $exception)
     {
@@ -79,7 +79,7 @@ class Handler
      * @param  string $errorType
      * @param  string $errorCode
      * @param  array  $missingParameter
-     * @return \Qodehub\Bitgo\Exception\BitgoException
+     * @return \Qodehub\Slydepay\Exception\SlydepayException
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
@@ -90,14 +90,14 @@ class Handler
         } elseif (array_key_exists($statusCode, $this->excByStatusCode)) {
             $class = $this->excByStatusCode[$statusCode];
         } else {
-            $class = 'Bitgo';
+            $class = 'Slydepay';
         }
 
         if ((!$message) && is_array($rawOutput) && array_key_exists('message', $rawOutput)) {
             $msssage = $rawOutput['message'];
         }
 
-        $class = '\\Qodehub\\Bitgo\\Exception\\' . $class . 'Exception';
+        $class = '\\Qodehub\\Slydepay\\Exception\\' . $class . 'Exception';
         $instance = new $class($message, $statusCode);
         $instance->setErrorCode($errorCode);
         $instance->setErrorType($errorType ?: $class);

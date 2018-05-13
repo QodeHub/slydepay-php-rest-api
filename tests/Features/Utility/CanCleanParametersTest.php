@@ -1,21 +1,19 @@
 <?php
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Tests\Features\Wallet;
+namespace Qodehub\Slydepay\Tests\Features\Wallet;
 
 use PHPUnit\Framework\TestCase;
-use Qodehub\Bitgo\Bitgo;
-use Qodehub\Bitgo\Utility\CanCleanParameters;
-use Qodehub\Bitgo\Wallet;
+use Qodehub\Slydepay\Utility\CanCleanParameters;
 
 class CanCleanParametersTest extends TestCase
 {

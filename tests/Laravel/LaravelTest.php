@@ -1,21 +1,21 @@
 <?php
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Tests\Laravel;
+namespace Qodehub\Slydepay\Tests\Laravel;
 
 use Orchestra\Testbench\TestCase;
-use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Laravel\Facades\Bitgo;
-use Qodehub\Bitgo\Laravel\PackageServiceProvider;
+use Qodehub\Slydepay\Config;
+use Qodehub\Slydepay\Laravel\Facades\Slydepay;
+use Qodehub\Slydepay\Laravel\PackageServiceProvider;
 
 class LaravelTest extends TestCase
 {
@@ -27,10 +27,8 @@ class LaravelTest extends TestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('qodehub.bitgo.host', 'testhost.run');
-        $app['config']->set('qodehub.bitgo.token', 'testtoken');
-        $app['config']->set('qodehub.bitgo.secure', true);
-        $app['config']->set('qodehub.bitgo.port', 1234);
+        $app['config']->set('qodehub.slydepay.email-or-phone', 'emailOrMobileNumber@qodehub.com');
+        $app['config']->set('qodehub.slydepay.merchant-key', 'someMerchantKey');
     }
 
     /**
@@ -46,16 +44,14 @@ class LaravelTest extends TestCase
     /** @test */
     public function the_getConfig_method_should_receive_a_config_instance()
     {
-        $this->assertInstanceOf(Config::class, Bitgo::btc()->getConfig());
+        $this->assertInstanceOf(Config::class, Slydepay::getConfig());
     }
 
     public function test_env_configuration()
     {
-        $configInstance = Bitgo::getConfig();
+        $configInstance = Slydepay::getConfig();
 
-        $this->assertSame($configInstance->getToken(), 'testtoken');
-        $this->assertSame($configInstance->getHost(), 'testhost.run');
-        $this->assertSame($configInstance->isSecure(), true);
-        $this->assertSame($configInstance->getPort(), 1234);
+        $this->assertSame($configInstance->getEmailOrMobileNumber(), 'emailOrMobileNumber@qodehub.com');
+        $this->assertSame($configInstance->getMerchantKey(), 'someMerchantKey');
     }
 }

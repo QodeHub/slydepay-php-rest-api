@@ -1,6 +1,6 @@
 {
-    "name": "qodehub/bitgo-php",
-    "description": "Carefully crafted Bitgo PHP SDK from the Qodehub team.",
+    "name": "qodehub/slidepay",
+    "description": "Slydepay PHP SDK from the Qodehub team.",
     "license": "MIT",
     "authors": [
         {
@@ -10,7 +10,7 @@
     ],
     "autoload" : {
         "psr-4": {
-            "Qodehub\\Bitgo\\" : "src/"
+            "Qodehub\\Slydepay\\" : "src/"
         }
     },
     "require": {
@@ -49,10 +49,10 @@
         "component": "package",
         "laravel": {
             "providers": [
-                "Qodehub\\Bitgo\\Laravel\\PackageServiceProvider"
+                "Qodehub\\Slydepay\\Laravel\\PackageServiceProvider"
             ],
             "aliases": {
-                "Bitgo": "Qodehub\\Bitgo\\Laravel\\Facades\\Bitgo"
+                "Slydepay": "Qodehub\\Slydepay\\Laravel\\Facades\\Slydepay"
             }
         }
     },

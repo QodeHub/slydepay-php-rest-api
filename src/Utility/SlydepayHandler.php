@@ -1,17 +1,17 @@
 <?php
 
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Utility;
+namespace Qodehub\Slydepay\Utility;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
@@ -20,14 +20,14 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Qodehub\Bitgo\Bitgo;
-use Qodehub\Bitgo\Config;
-use Qodehub\Bitgo\Exception\Handler;
+use Qodehub\Slydepay\Config;
+use Qodehub\Slydepay\Exception\Handler;
+use Qodehub\Slydepay\Slydepay;
 
 /**
- * Bitgo Handler Class
+ * Slidepay Handler Class
  *
- * This class holds the Bitgo handler and can
+ * This class holds the Slidepay handler and can
  * be used with any Guzzle client to queue
  * requests and middlewares.
  *
@@ -35,7 +35,7 @@ use Qodehub\Bitgo\Exception\Handler;
  *
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class BitgoHandler
+class SlydepayHandler
 {
     /**
      * Property for holding the handler stack on the instance
@@ -46,13 +46,13 @@ class BitgoHandler
     /**
      * Holds the configuration object
      *
-     * @var \Qodehub\Bitgo\Config
+     * @var \Qodehub\Slydepay\Config
      */
     protected $config;
     /**
-     * Constructor for the BitgoHandler class
+     * Constructor for the SlydepayHandler class
      *
-     * @param \Qodehub\Bitgo\Config    $config
+     * @param \Qodehub\Slydepay\Config $config
      * @param \GuzzleHttp\HandlerStack $stack
      */
     public function __construct(Config $config, HandlerStack $stack = null)
@@ -70,16 +70,7 @@ class BitgoHandler
     {
         $this->pushHeaderMiddleware(
             function (RequestInterface $request) {
-                return $request->withHeader('User-Agent', Bitgo::CLIENT . ' v' . Bitgo::VERSION);
-            }
-        );
-
-        $this->pushBasicAuthMiddleware(
-            function (RequestInterface $request) {
-                return $request->withHeader(
-                    'Authorization',
-                    'Bearer ' . $this->config->getToken()
-                );
+                return $request->withHeader('User-Agent', Slydepay::CLIENT . ' v' . Slydepay::VERSION);
             }
         );
 
@@ -99,25 +90,7 @@ class BitgoHandler
     {
         $this->stack->push(
             Middleware::mapRequest($header),
-            'Bitgo-header-userAgent'
-        );
-
-        return $this->stack;
-    }
-    /**
-     * Push the Header Middleware to the Handler Stack containing the
-     * bacic authentication in base64
-     *
-     * @param  callable $header Function that accepts a Guzzle RequestInterface
-     *                     and returns a RequestInterface.
-     * @return \GuzzleHttp\HandlerStack
-     * @see    http://docs.guzzlephp.org/en/stable/handlers-and-middleware.html Guzzle: Handlers and Middlewares.
-     */
-    protected function pushBasicAuthMiddleware(callable $header)
-    {
-        $this->stack->push(
-            Middleware::mapRequest($header),
-            'Bitgo-header-basicAuth'
+            'Slydepay-header-userAgent'
         );
 
         return $this->stack;
@@ -143,7 +116,7 @@ class BitgoHandler
     {
         $this->stack->push(
             Middleware::retry($decider, $delay),
-            'bitgo-retry-request'
+            'slydepay-retry-request'
         );
 
         return $this->stack;

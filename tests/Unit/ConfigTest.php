@@ -1,20 +1,20 @@
 <?php
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Tests\Unit;
+namespace Qodehub\Slydepay\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Qodehub\Bitgo\Bitgo;
-use Qodehub\Bitgo\Config;
+use Qodehub\Slydepay\Config;
+use Qodehub\Slydepay\Slydepay;
 
 class ConfigTest extends TestCase
 {
@@ -23,56 +23,27 @@ class ConfigTest extends TestCase
      *
      * @var string
      */
-    protected $version = '2.0.0';
+    protected $version = '1.0.0';
     /**
-     * This will be the Authorization Token
+     * This will be the Authorization merchantKey
      *
      * @var string
      */
-    protected $token = 'some-valid-token';
+    protected $merchantKey = 'some-valid-merchantKey';
     /**
-     * This is the host for the Bitgo Server
+     * This is the emailOrPhoneNumber for the Bitgo Server
      *
      * @var string
      */
-    protected $host = 'test.bitgo.com';
-    /**
-     * This will be the port on which the server is running.
-     *
-     * @var integer
-     */
-    protected $port = 443;
-    /**
-     * This will be a boolean as to if or not the server
-     * runs on https.
-     *
-     * @var boolean
-     */
-    protected $secure = true;
-    /**
-     * This is the scheme. Eg: https, http, ftp, etc..
-     * This will be set automatically depending on
-     * if the secure flag is true or false
-     *
-     * @var string
-     */
-    protected $scheme = 'https';
-    /**
-     * This is a base URL used in place of the URL.
-     *
-     * @var string
-     */
-    protected $baseUrl = 'https://test.bitgo.com';
+    protected $emailOrPhoneNumber = 1234567890;
 
     /** @test */
     public function a_new_config_config_can_be_created_with_valid_arguements()
     {
-        $config = new Config($this->token, $this->secure, $this->host, $this->port);
+        $config = new Config($this->emailOrPhoneNumber, $this->merchantKey);
 
-        $this->assertSame($config->getToken(), $this->token);
-        $this->assertSame($config->isSecure(), $this->secure);
-        $this->assertSame($config->getHost(), $this->host);
-        $this->assertSame($config->getPort(), $this->port);
+        $this->assertSame($config->getEmailOrMobileNumber(), $this->emailOrPhoneNumber);
+        $this->assertSame($config->getmerchantKey(), $this->merchantKey);
 
         return $config;
     }
@@ -81,63 +52,26 @@ class ConfigTest extends TestCase
      * @test
      * @depends a_new_config_config_can_be_created_with_valid_arguements
      */
-    public function the_base_url_can_be_updated_in_the_configuration($config)
+    public function the_merchantKey_can_be_updated($config)
     {
-        $baseUrl = 'https://newbase.bitgo.com';
+        $merchantKey = 'a-different-merchantKey';
 
-        $config->setBaseUrl($baseUrl);
+        $config->setMerchantKey($merchantKey);
 
-        $this->assertSame($config->getBaseUrl(), $baseUrl);
+        $this->assertSame($config->getMerchantKey(), $merchantKey);
     }
 
     /**
      * @test
      * @depends a_new_config_config_can_be_created_with_valid_arguements
      */
-    public function the_token_can_be_updated($config)
+    public function the_emailOrPhoneNumber_can_be_updated($config)
     {
-        $token = 'a-different-token';
+        $emailOrPhoneNumber = '0987654321';
 
-        $config->setToken($token);
+        $config->setEmailOrMobileNumber($emailOrPhoneNumber);
 
-        $this->assertSame($config->getToken(), $token);
-    }
-
-    /**
-     * @test
-     * @depends a_new_config_config_can_be_created_with_valid_arguements
-     */
-    public function the_secure_flag_can_be_updated($config)
-    {
-        $config->setSecure(false);
-
-        $this->assertFalse($config->isSecure());
-    }
-
-    /**
-     * @test
-     * @depends a_new_config_config_can_be_created_with_valid_arguements
-     */
-    public function the_host_can_be_updated($config)
-    {
-        $host = 'api.newhost.com';
-
-        $config->setHost($host);
-
-        $this->assertSame($config->getHost(), $host);
-    }
-
-    /**
-     * @test
-     * @depends a_new_config_config_can_be_created_with_valid_arguements
-     */
-    public function the_port_can_be_updated($config)
-    {
-        $port = 9101;
-
-        $config->setPort($port);
-
-        $this->assertSame($config->getPort(), $port);
+        $this->assertSame($config->getEmailOrMobileNumber(), $emailOrPhoneNumber);
     }
 
     /**

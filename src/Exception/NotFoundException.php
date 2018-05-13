@@ -1,22 +1,22 @@
 <?php
 
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Exception;
+namespace Qodehub\Slydepay\Exception;
 
 /**
  * Class NotFoundException
- * throws Qodehub\Bitgo\Exception\NotFoundException
+ * throws Qodehub\Slydepay\Exception\NotFoundException
  */
-class NotFoundException extends BitgoException
+class NotFoundException extends SlydepayException
 {
 }

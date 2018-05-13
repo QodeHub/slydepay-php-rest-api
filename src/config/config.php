@@ -1,63 +1,33 @@
 <?php
 
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
 return [
     /*
     |--------------------------------------------------------------------------
-    | Bitgo Secret Key Token
+    | Slydepay merchant Email or Phone Number
     |--------------------------------------------------------------------------
     |
-    | Please provide your Bitgo secret key
+    | Please provide your Slydepay merchant email or phone number
     |
      */
-    'token' => env('BITGO_TOKEN'),
+    'email-or-phone' => env('SLYDEPAY_EMAIL_OR_PHONE'),
     /*
     |--------------------------------------------------------------------------
-    | Bitgo Express Server Host
+    | Slydepay merchant Key
     |--------------------------------------------------------------------------
     |
-    | Please provide your Bitgo-Express Host Url
+    | Please provide your Slydepay merchant key
     |
      */
-    'host' => env('BITGO_HOST', 'localhost'),
-    /*
-    |--------------------------------------------------------------------------
-    | Bitgo Express Server Port
-    |--------------------------------------------------------------------------
-    |
-    | Please provide your Bitgo-Express server Port if other than :80
-    |
-     */
-    'port' => env('BITGO_PORT'),
-    /*
-    |--------------------------------------------------------------------------
-    | Bitgo Express (HTTP or HTTPs)
-    |--------------------------------------------------------------------------
-    |
-    | If the express server is running on HTTPS, This should be set
-    | to true -- otherwise, this will default to false and then,
-    | http protocol will be used to access the express server.
-    |
-     */
-    'secure' => env('BITGO_SECURE', false),
-    /*
-    |--------------------------------------------------------------------------
-    | Bitgo Enterprise ID
-    |--------------------------------------------------------------------------
-    |
-    | This will be the Bitgo Enterprise ID for creating wallets for
-    | coins that require an enterprise ID
-    |
-     */
-    'enterprise' => env('BITGO_ENTERPRISE', null),
+    'merchant-key' => env('SLYDEPAY_MERCHANT_KEY', 'localhost'),
 ];

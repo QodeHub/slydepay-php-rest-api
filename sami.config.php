@@ -27,7 +27,7 @@ $config = array(
     'build_dir' => __DIR__ . '/build/sami',
     'cache_dir' => __DIR__ . '/build/sami_cache',
     'default_opened_level' => 2,
-    // 'remote_repository' => new GitHubRemoteRepository('qodehub/bitgo-php', dirname($dir)),
+    // 'remote_repository' => new GitHubRemoteRepository('qodehub/slydepay-php', dirname($dir)),
     'template_dirs' => array(__DIR__ . '/../themes/default'),
 );
 

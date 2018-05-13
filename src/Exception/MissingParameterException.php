@@ -1,22 +1,22 @@
 <?php
 
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Exception;
+namespace Qodehub\Slydepay\Exception;
 
 /**
  * Class MissingParameterException
- * throws Qodehub\Bitgo\Exception\MissingParameterException
+ * throws Qodehub\Slydepay\Exception\MissingParameterException
  */
-class MissingParameterException extends BitgoException
+class MissingParameterException extends SlydepayException
 {
 }

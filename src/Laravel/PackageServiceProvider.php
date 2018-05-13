@@ -1,21 +1,21 @@
 <?php
 
 /**
- * @package     Qodehub\Bitgo
- * @link        https://github.com/qodehub/bitgo-php
+ * @package     Qodehub\Slydepay
+ * @link        https://github.com/qodehub/slydepay-php
  *
  * @author      Ariama O. Victor (ovac4u) <victorariama@qodehub.com>
  * @link        http://www.ovac4u.com
  *
- * @license     https://github.com/qodehub/bitgo-php/blob/master/LICENSE
+ * @license     https://github.com/qodehub/slydepay-php/blob/master/LICENSE
  * @copyright   (c) 2018, QodeHub, Ltd
  */
 
-namespace Qodehub\Bitgo\Laravel;
+namespace Qodehub\Slydepay\Laravel;
 
 use Illuminate\Support\ServiceProvider;
-use Qodehub\Bitgo\Bitgo;
-use Qodehub\Bitgo\Config;
+use Qodehub\Slydepay\Config;
+use Qodehub\Slydepay\Slydepay;
 
 /**
  * class PackageServiceProvider
@@ -41,11 +41,13 @@ class PackageServiceProvider extends ServiceProvider
     {
         $config = realpath(__DIR__ . '/../config/config.php');
 
-        $this->mergeConfigFrom($config, 'qodehub.bitgo');
+        $this->mergeConfigFrom($config, 'qodehub.slydepay');
 
-        $this->publishes([
-            $config => config_path('qodehub.bitgo.php'),
-        ], 'config');
+        $this->publishes(
+            [
+            $config => config_path('qodehub.slydepay.php'),
+            ], 'config'
+        );
     }
 
     /**
@@ -57,16 +59,16 @@ class PackageServiceProvider extends ServiceProvider
     {
         $this->prepareResources();
 
-        $this->app->bind('qodehub.bitgo', function () {
+        $this->app->bind(
+            'qodehub.slydepay', function () {
 
-            return new Bitgo(
-                new Config(
-                    (string) config('qodehub.bitgo.token'),
-                    (boolean) config('qodehub.bitgo.secure'),
-                    (string) config('qodehub.bitgo.host'),
-                    (integer) config('qodehub.bitgo.port')
-                )
-            );
-        });
+                return new Slydepay(
+                    new Config(
+                        (string) config('qodehub.slydepay.email-or-phone'),
+                        (string) config('qodehub.slydepay.merchant-key')
+                    )
+                );
+            }
+        );
     }
 }

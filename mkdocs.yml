@@ -1,7 +1,7 @@
-site_name: qodehub/bitgo-php
+site_name: qodehub/slydepay-php
 site_description: Qodehub's PHP-SDK for Bitgo.
 site_author: Victor Ariama (ovac4u)
-repo_url: https://github.com/qodehub/bitgo-php
+repo_url: https://github.com/qodehub/slydepay-php
 docs_dir: doc
 pages:
 - Home: 'index.md'
