@@ -18,12 +18,12 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use Qodehub\Slydepay\Api\ListPayOptions;
+use Qodehub\Slydepay\Api\SendInvoice;
 use Qodehub\SlydePay\Config;
 use Qodehub\SlydePay\SlydePay;
 use Qodehub\SlydePay\Utility\SlydePayHandler;
 
-class ListPayOptionsTest extends TestCase
+class SendInvoiceTest extends TestCase
 {
     /**
      * The configuration instance.
@@ -82,7 +82,7 @@ class ListPayOptionsTest extends TestCase
          *
          * Intercept all calls to the server from the createHandler method
          */
-        $mock = $this->getMockBuilder(ListPayOptions::class)
+        $mock = $this->getMockBuilder(SendInvoice::class)
             ->setMethods(['createHandler'])
             ->getMock();
 
@@ -92,6 +92,11 @@ class ListPayOptionsTest extends TestCase
          * Inject the configuration and use the
          */
         $mock
+            ->payoption('mm')
+            ->paytoken('mm')
+            ->customerName('Victor')
+            ->customerEmail('iamovac@gmail.com')
+            ->customerMobileNumber(12345)
             ->injectConfig($this->config);
 
         /**
@@ -117,7 +122,7 @@ class ListPayOptionsTest extends TestCase
         $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
 
         $this->assertContains(
-            "https://app.slydepay.com.gh/api/merchant/invoice/payoptions",
+            "https://app.slydepay.com.gh/api/merchant/invoice/send",
             $request->getUri()->__toString()
         );
     }

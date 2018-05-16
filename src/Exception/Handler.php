@@ -94,7 +94,7 @@ class Handler
         }
 
         if ((!$message) && is_array($rawOutput) && array_key_exists('message', $rawOutput)) {
-            $msssage = $rawOutput['message'];
+            $message = $rawOutput['message'];
         }
 
         $class = '\\Qodehub\\Slydepay\\Exception\\' . $class . 'Exception';

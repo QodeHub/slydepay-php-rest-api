@@ -20,7 +20,7 @@ use Qodehub\Slydepay\Utility\MassAssignable;
  * ListPayOptions Class
  *
  */
-class ListPayOptions extends Api
+class CancelTransaction extends ConfirmTransaction
 {
     use MassAssignable;
     use CanCleanParameters;
@@ -35,29 +35,8 @@ class ListPayOptions extends Api
      * {@inheritdoc}
      */
     protected $parametersOptional = [
+        'transactionId',
+        'orderCode',
+        'payToken',
     ];
-
-    /**
-     * Construct for creating a new instance of this class
-     *
-     * @param array|string $data An array with assignable Parameters or an
-     *                           Address or an addressID
-     */
-    public function __construct($data = null)
-    {
-        $this->massAssign($data);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function run()
-    {
-        $this->propertiesPassRequired();
-
-        return $this->_post(
-            'invoice/payoptions',
-            $this->propertiesToArray()
-        );
-    }
 }

@@ -92,4 +92,10 @@ interface ApiInterface
      * @return array
      */
     public function execute($httpMethod, $url, array $parameters = []);
+    /**
+     * The method places the call to the SlydePay API
+     *
+     * @return Object
+     */
+    public function run();
 }

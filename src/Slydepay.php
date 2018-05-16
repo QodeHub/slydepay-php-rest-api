@@ -139,6 +139,17 @@ class Slydepay implements ConfigInterface
     }
 
     /**
+     * Dynamically handle allowed magic static method calls.
+     *
+     * @param  string $method
+     * @param  array  $parameters
+     * @return \OVAC\HubtelPayment\Api\Transaction
+     */
+    public static function __callStatic($method, $parameters)
+    {
+        return (new self)->getApiInstance($method, ...$parameters);
+    }
+    /**
      * Dynamically handle allowed magic-method calls.
      *
      * @param  string $method
