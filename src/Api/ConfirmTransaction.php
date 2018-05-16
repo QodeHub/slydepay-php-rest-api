@@ -20,7 +20,7 @@ use Qodehub\Slydepay\Utility\MassAssignable;
  * ListPayOptions Class
  *
  */
-class ConfirmTransaction extends Api
+class ConfirmTransaction extends SendInvoice
 {
     use MassAssignable;
     use CanCleanParameters;
@@ -68,6 +68,18 @@ class ConfirmTransaction extends Api
     public function __construct($data = null)
     {
         $this->massAssign($data);
+    }
+
+    /**
+     * id Optional transaction id returned by the callback url as transac_id parameter.
+     * This is optional if paytoken or orderCode is used
+     *
+     * @param  string $transactionId The transaction id
+     * @return self
+     */
+    public function transactionId($transactionId)
+    {
+        return $this->setTransactionId($transactionId);
     }
 
     /**

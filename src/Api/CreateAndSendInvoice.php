@@ -181,6 +181,16 @@ class CreateAndSendInvoice extends Api
         return $this->setOrderCode($orderCode);
     }
     /**
+     * Sets the sendInvoice to true or false.
+     *
+     * @param  boolean $status the $sendInvoice status
+     * @return self
+     */
+    public function sendInvoice(bool $status)
+    {
+        return $this->setSendInvoice($status);
+    }
+    /**
      * Sets the customer name as required by the Hubtel Receive Api
      * (requred by the Hubtel ReceiveMoney Api)
      *
@@ -342,19 +352,6 @@ class CreateAndSendInvoice extends Api
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function run()
-    {
-        $this->propertiesPassRequired();
-
-        return $this->_post(
-            'invoice/create',
-            $this->propertiesToArray()
-        );
-    }
-
-    /**
      * @return string
      */
     public function getDescription()
@@ -392,5 +389,26 @@ class CreateAndSendInvoice extends Api
         $this->orderItems = $orderItems;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSendInvoice()
+    {
+        return $this->sendInvoice;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function run()
+    {
+        $this->propertiesPassRequired();
+
+        return $this->_post(
+            'invoice/create',
+            $this->propertiesToArray()
+        );
     }
 }

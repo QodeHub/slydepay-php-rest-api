@@ -92,6 +92,9 @@ class ConfirmTransactionTest extends TestCase
          * Inject the configuration and use the
          */
         $mock
+            ->orderCode(123)
+            ->payToken(123)
+            ->transactionId(123)
             ->injectConfig($this->config);
 
         /**

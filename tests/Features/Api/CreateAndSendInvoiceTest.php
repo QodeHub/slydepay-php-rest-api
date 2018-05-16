@@ -97,9 +97,10 @@ class CreateAndSendInvoiceTest extends TestCase
             ->description('Some nasty description')
             ->orderItems([])
             ->payoption('mm')
+            ->sendInvoice(true)
             ->customerName('Victor')
             ->customerEmail('iamovac@gmail.com')
-            ->customerMobileNumber(12345)
+            ->from(12345)
             ->injectConfig($this->config);
 
         /**
