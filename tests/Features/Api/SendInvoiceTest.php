@@ -20,6 +20,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Qodehub\Slydepay\Api\SendInvoice;
 use Qodehub\SlydePay\Config;
+use Qodehub\Slydepay\Exception\MissingParameterException;
 use Qodehub\SlydePay\SlydePay;
 use Qodehub\SlydePay\Utility\SlydePayHandler;
 
@@ -57,6 +58,22 @@ class SendInvoiceTest extends TestCase
     public function setup()
     {
         $this->config = new Config($this->emailOrMobileNumber, $this->merchantKey);
+    }
+
+    /** @test */
+    public function a_call_to_the_run_method_should_return_an_error_if_some_parameters_are_missing()
+    {
+        /**
+         * Mock the execute method in the Addresses to intercept calls to the server
+         */
+        $mock = $this->getMockBuilder(SendInvoice::class)
+            ->setMethods(['execute'])
+            ->getMock();
+
+        $mock->method('execute')->will($this->returnValue(null));
+
+        $this->expectException(MissingParameterException::class);
+        $mock->run();
     }
 
     /** @test */

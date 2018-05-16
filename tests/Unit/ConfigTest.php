@@ -48,6 +48,18 @@ class ConfigTest extends TestCase
         return $config;
     }
 
+    /** @test */
+    // public function test_the_config_properties()
+    // {
+    //     $this->expectException(MissingParameterException::class);
+
+    //     $config = new Config();
+
+    //     $config->testValues();
+
+    //     return $config;
+    // }
+
     /**
      * @test
      * @depends a_new_config_config_can_be_created_with_valid_arguements

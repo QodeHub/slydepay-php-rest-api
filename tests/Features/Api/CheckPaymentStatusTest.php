@@ -92,6 +92,9 @@ class CheckPaymentStatusTest extends TestCase
          * Inject the configuration and use the
          */
         $mock
+            ->confirmTransaction(true)
+            ->payToken(123)
+            ->orderCode(123)
             ->injectConfig($this->config);
 
         /**
@@ -117,7 +120,7 @@ class CheckPaymentStatusTest extends TestCase
         $this->assertEquals($request->getUri()->getScheme(), 'https', 'it should be a https scheme');
 
         $this->assertContains(
-            "https://app.slydepay.com.gh/api/merchant/invoice/send",
+            "https://app.slydepay.com.gh/api/merchant/invoice/checkstatus",
             $request->getUri()->__toString()
         );
     }

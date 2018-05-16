@@ -56,7 +56,7 @@ class CreateAndSendInvoiceTest extends TestCase
      */
     public function setup()
     {
-        $this->config = new Config($this->emailOrMobileNumber, $this->merchantKey);
+        $this->config = new Config();
     }
 
     /** @test */

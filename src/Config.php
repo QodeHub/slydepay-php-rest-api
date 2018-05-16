@@ -14,6 +14,7 @@
 namespace Qodehub\Slydepay;
 
 use Qodehub\Slydepay\ConfigInterface;
+use Qodehub\Slydepay\Utility\CanCleanParameters;
 
 /**
  * Config Class
@@ -26,6 +27,21 @@ use Qodehub\Slydepay\ConfigInterface;
  */
 class Config implements ConfigInterface
 {
+    use CanCleanParameters;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $parametersRequired = [
+        'merchantKey',
+        'emailOrMobileNumber',
+    ];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $parametersOptional = [];
+
     /**
      * This Package Version.
      *
@@ -115,5 +131,30 @@ class Config implements ConfigInterface
         $this->emailOrMobileNumber = $emailOrMobileNumber;
 
         return $this;
+    }
+
+    /**
+     * Tests that the required configuration parameters
+     * have been pased in and put in place.
+     *
+     * This is best used before any actual execution
+     * of the class for doing validation.
+     *
+     * @return bool
+     * @throws \Qodehub\Slydepay\Exception\MissingParameterException
+     */
+    public function testValues()
+    {
+        $this->propertiesPassRequired();
+
+        return true;
+    }
+    /**
+     * Give an array representation of the required configuration data
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->propertiesToArray();
     }
 }

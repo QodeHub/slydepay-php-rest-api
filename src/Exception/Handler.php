@@ -93,10 +93,6 @@ class Handler
             $class = 'Slydepay';
         }
 
-        if ((!$message) && is_array($rawOutput) && array_key_exists('message', $rawOutput)) {
-            $message = $rawOutput['message'];
-        }
-
         $class = '\\Qodehub\\Slydepay\\Exception\\' . $class . 'Exception';
         $instance = new $class($message, $statusCode);
         $instance->setErrorCode($errorCode);

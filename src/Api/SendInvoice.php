@@ -18,7 +18,6 @@ use Qodehub\Slydepay\Utility\MassAssignable;
 
 /**
  * ListPayOptions Class
- *
  */
 class SendInvoice extends CreateAndSendInvoice
 {
@@ -44,6 +43,7 @@ class SendInvoice extends CreateAndSendInvoice
 
     /**
      * Mandatory Paytoken returned by Slydepay.
+     *
      * @var string
      */
     protected $payToken;
@@ -51,24 +51,28 @@ class SendInvoice extends CreateAndSendInvoice
      * Mandatory The payment option selected by you, a channel you wish to receive payment
      * from. It's Mandatory in this context of sending invoice. It needs to be the
      * shortname field of =the document returned by the ListPayOptions API call
+     *
      * @var string
      */
     protected $payOption;
     /**
      * Mandatory The name of your customer. It's Mandatory
      * in this context of sending invoice.
+     *
      * @var string
      */
     protected $customerName;
     /**
      * Mandatory The email of your customer. But if Mobile
      * Payment payoption is selected it's not needed.
+     *
      * @var string
      */
     protected $customerEmail;
     /**
      * Mandatory The phone number of your customer. This is also
      * mandatory only if you using mobile payment payoption
+     *
      * @var string
      */
     protected $customerMobileNumber;

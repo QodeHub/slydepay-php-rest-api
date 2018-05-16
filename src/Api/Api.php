@@ -152,34 +152,29 @@ abstract class Api implements ApiInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \RuntimeException
      * @throws \Handler
      */
     public function execute($httpMethod, $url, array $parameters = [])
     {
-        if ($this->config instanceof Config) {
-            try {
-                $this->response = $this->getClient($parameters)->{$httpMethod}(
+        $this->checkConfig();
 
-                    \GuzzleHttp\uri_template(
+        try {
+            $this->response = $this->getClient($parameters += $this->config->toArray())->{$httpMethod}(
 
-                        $this->getBasePath() . $url,
-                        $parameters
-                    ),
-                    [
-                        'json' => $parameters,
-                    ]
-                );
+                \GuzzleHttp\uri_template(
 
-                return json_decode((string) $this->response->getBody());
-            } catch (ClientException $e) {
-                throw new Handler($e);
-            }
+                    $this->getBasePath() . $url,
+                    $parameters
+                ),
+                [
+                    'json' => $parameters,
+                ]
+            );
 
-            return;
+            return json_decode((string) $this->response->getBody());
+        } catch (ClientException $e) {
+            throw new Handler($e);
         }
-
-        throw new \RuntimeException('The API requires a configuration instance.');
     }
     /**
      * Returns an Http client instance.
@@ -227,6 +222,24 @@ abstract class Api implements ApiInterface
         $this->config = $config;
 
         return $this;
+    }
+
+    /**
+     * This funciton will check the configuration instance for required
+     * parameters before allowing the execution
+     *
+     * @return boolean
+     * @throws \RuntimeException
+     * @throws \Qodehub\Slydepay\Exception\MissingParameterException
+     */
+    public function checkConfig()
+    {
+        if ($this->config instanceof Config) {
+
+            return $this->config->testValues();
+        }
+
+        throw new \RuntimeException('The API requires a configuration instance.');
     }
 
     /**

@@ -18,7 +18,6 @@ use Qodehub\Slydepay\Utility\MassAssignable;
 
 /**
  * ListPayOptions Class
- *
  */
 class ListPayOptions extends Api
 {
