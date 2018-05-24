@@ -11,10 +11,6 @@ Please find the [project documentation on the the official documentation website
 
 This library requires PHP >=5.4.0 <=~7.1. I recommend using the latest available version of PHP as a matter of principle and report issues so for continious.
 
-## Dependencies
-
-![Composer dependency graph](https://rawgit.com/qodehub/slydepay/master/doc/dependencies.svg)
-
 ## Quality
 
 To run the unit tests at the command line, issue `composer install` and then `phpunit` at the package root. This requires [Composer](http://getcomposer.org/) to be available as `composer`, and [PHPUnit](http://phpunit.de/manual/) to be available as `phpunit`.
