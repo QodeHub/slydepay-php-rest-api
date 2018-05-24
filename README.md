@@ -1,4 +1,4 @@
-[![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]]  [![Documentation Status][readthedocs-image]][readthedocs-url] [![Clear architecture][clear-architecture-image]][clear-architecture-url]
+[![Build Status][travis-image]][travis-url] ![Coverage Status][coveralls-image]  [![Documentation Status][readthedocs-image]][readthedocs-url] [![Clear architecture][clear-architecture-image]][clear-architecture-url]
 ---
 
 #Qodehub's PHP-SDK for Slydepay.
@@ -10,6 +10,7 @@ Please find the [project documentation on the the official documentation website
 ## Installation
 
 This library requires PHP >=5.4.0 <=~7.1. I recommend using the latest available version of PHP as a matter of principle and report issues so for continious.
+
 
 ## Quality
 
