@@ -45,23 +45,23 @@ If you discover any security related issues, please email victorariama@qodehub.c
 # QodeHub PHP SDK for Slydepay
 
 #TODO - Completed
-TODO: Automate Documentation Build ✅
-TODO: Study the Slydepay API in depth. ✅
-TODO: Code implementation for the required use cases based on src. 🎬 ✅
-TODO: Conventional programmer's big-bang (Initial commit) ✅
-TODO: Write Tests for all methods (at least 85% Coverage) ✅
-TODO: Ask management to move Codebase to Github for CASE tools and build process to work
-TODO: Automate Documentation Deployment.
-TODO: Pass scrutinizers tests.
-TODO: Pass code quality check (at least 85%)
-TODO: Pass Dependency and version management tests (at least 85%)
-TODO: Pass Integration tests (at least 85%)
+    - Automate Documentation Build ✅
+    - Study the Slydepay API in depth. ✅
+    - Code implementation for the required use cases based on src. 🎬 ✅
+    - Conventional programmer's big-bang (Initial commit) ✅
+    - Write Tests for all methods (at least 85% Coverage) ✅
+    - Ask management to move Codebase to Github for CASE tools and build process to work
+    - Automate Documentation Deployment.
+    - Pass scrutinizers tests.
+    - Pass code quality check (at least 85%)
+    - Pass Dependency and version management tests (at least 85%)
+    - Pass Integration tests (at least 85%)
 
 #TODO - TODO - TODO
 ```
-TODO: Flesh out documentation (100% coverage)
-TODO: Automate CI Testing
-TODO: Pass human documentation readability test.
+    - Flesh out documentation (100% coverage)
+    - Automate CI Testing
+    - Pass human documentation readability test.
 ```
 
 Checkpoints:
