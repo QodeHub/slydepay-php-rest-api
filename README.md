@@ -27,7 +27,7 @@ Found a bug or have a feature request? [Please have a look at the known issues](
 
 ## Security
 
-If you discover any security related issues, please email iamovac@gmail.com instead of using the issue tracker.
+If you discover any security related issues, please email victorariama@qodehub.com instead of using the issue tracker.
 
 [travis-image]: https://secure.travis-ci.org/qodehub/slydepay.svg
 [travis-url]: https://travis-ci.org/qodehub/slydepay
@@ -48,35 +48,24 @@ If you discover any security related issues, please email iamovac@gmail.com inst
 # QodeHub PHP SDK for Slydepay
 
 #TODO - Completed
-TODO: Clear out table for this project. ✅
 TODO: Automate Documentation Build ✅
 TODO: Study the Slydepay API in depth. ✅
-- -Looks like this will walk with me through out the development phase.- 📝 ✅
 TODO: Code implementation for the required use cases based on src. 🎬 ✅
-- Currently in action 🎉 ✅
 TODO: Conventional programmer's big-bang (Initial commit) ✅
-
-
-#TODO - In progress
 TODO: Write Tests for all methods (at least 85% Coverage) ✅
-TODO: Flesh out documentation (100% coverage)
 TODO: Ask management to move Codebase to Github for CASE tools and build process to work
-
-#TODO - TODO - TODO
-```
-TODO: Automate CI Testing
 TODO: Automate Documentation Deployment.
 TODO: Pass scrutinizers tests.
 TODO: Pass code quality check (at least 85%)
 TODO: Pass Dependency and version management tests (at least 85%)
 TODO: Pass Integration tests (at least 85%)
-TODO: Pass human documentation readability test. (This one hard oh! people still don't understand Laravel)
+
+#TODO - TODO - TODO
 ```
-
-
-Allocated Hours:
-    - Dedicated Hours:
-        + 40 Hrs/Week ⏰ ✅
+TODO: Flesh out documentation (100% coverage)
+TODO: Automate CI Testing
+TODO: Pass human documentation readability test.
+```
 
 Checkpoints:
     - Keep test coverage at 60% minimum. 👩‍⚕️ ✅
@@ -85,7 +74,6 @@ Checkpoints:
     - Check this ceckpoints Nightly! 💋 ✅
     - Don't forget to eat, sleep and step out a bit to meet with regular humans that dont code! (if possible) 🤷‍♂️
     - Check this checkpoints again and update todos and ✅
-        - 😂🤣You thought there was more. lol. That's it for now!
 
 
 #Signed
