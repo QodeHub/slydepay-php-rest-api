@@ -1,7 +1,7 @@
 [![Build Status][travis-image]][travis-url] ![Coverage Status][coveralls-image]  [![Documentation Status][readthedocs-image]][readthedocs-url] [![Clear architecture][clear-architecture-image]][clear-architecture-url]
 ---
 
-#Qodehub's PHP-SDK for Slydepay.
+#Qodehub's PHP-SDK for Slydepay. [This package is still been tested. Not production ready yet]
 
 ## Documentation
 
