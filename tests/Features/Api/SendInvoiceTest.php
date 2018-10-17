@@ -77,6 +77,32 @@ class SendInvoiceTest extends TestCase
     }
 
     /** @test */
+    public function there_should_be_a_working_optional_externalAccountRef()
+    {
+        /**
+         * Mock the execute method in the Addresses to intercept calls to the server
+         */
+        $mock = $this->getMockBuilder(SendInvoice::class)
+            ->setMethods(['execute'])
+            ->getMock();
+
+        $mock->payoption('mm')
+            ->paytoken('mm')
+            ->customerName('Victor')
+            ->customerEmail('iamovac@gmail.com')
+            ->customerMobileNumber(12345)
+            ->injectConfig($this->config);
+
+        $mock->method('execute')->will($this->returnValue(null));
+        $mock->run();
+
+        $mock2 = $mock->setExternalAccountRef('external-ref-data');
+        $mock2->run();
+
+        $this->assertSame('external-ref-data', $mock2->getExternalAccountRef());
+    }
+
+    /** @test */
     public function test_that_a_call_to_the_server_will_be_successful_if_all_is_right()
     {
         /**
@@ -143,32 +169,4 @@ class SendInvoiceTest extends TestCase
             $request->getUri()->__toString()
         );
     }
- 
-    /** @test */
-    public function there_should_be_a_working_optional_externalAccountRef()
-    {
-        /**
-         * Mock the execute method in the Addresses to intercept calls to the server
-         */
-        $mock = $this->getMockBuilder(SendInvoice::class)
-            ->setMethods(['execute'])
-            ->getMock();
-
-        $mock->payoption('mm')
-            ->paytoken('mm')
-            ->customerName('Victor')
-            ->customerEmail('iamovac@gmail.com')
-            ->customerMobileNumber(12345) 
-            ->injectConfig($this->config);
-
-        $mock->method('execute')->will($this->returnValue(null));
-        $mock->run();
-
-        $mock2 = $mock->setExternalAccountRef('external-ref-data');
-        $mock2->run();
-
-        $this->assertSame('external-ref-data', $mock2->getExternalAccountRef());
-    }
-
-
 }
