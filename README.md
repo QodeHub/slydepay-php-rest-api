@@ -17,7 +17,7 @@ Install Slydepay with [composer](https://getcomposer.org/doc/00-intro.md):
 $ composer require qodehub/slydepay-php-rest-api
 ```
 
-> In Laravel 5.5, [service providers and aliases are automatically registered](https://laravel.com/docs/5.5/packages#package-discovery). If you're using Laravel 5.5 or newer version, skip ahead directly to step 3 (do not pass go, but do collect $200).
+> In Laravel 5.5, [service providers and aliases are automatically registered](https://laravel.com/docs/5.5/packages#package-discovery). If you're using Laravel 5.5 or newer version, skip ahead directly to step 3.
 
 Once the composer installation completes, you can add the service provider and alias the facade. Open `config/app.php`, and make the following changes:
 
