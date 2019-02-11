@@ -105,7 +105,9 @@ Note: Each of the following instance asumes that you are using within a laravel 
 ### List pay options
 Retrieves a list of all possible payment options on Slydepay
 ```php
-	SlydePay::listPayOPtions()/**->injectConfig($config)*/->run();
+	SlydePay::listPayOPtions()
+		// ->injectConfig($config)
+		->run();
 ```
 
 ### Create invoice
