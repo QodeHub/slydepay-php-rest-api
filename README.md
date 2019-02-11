@@ -3,14 +3,13 @@
 
 # Qodehub's PHP-SDK for Slydepay.
 
-# Instalation
-
+ ## Minimum requirements
 This library requires PHP >=5.4.0 <=~7.1. I recommend using the latest available version of PHP as a matter of principle and report issues so for continious.
 
+This package can be used in either a [Normal php app](#php) or a [Laravel app](#laravel)
 
-## Installation
-
-### Installing Slypday in a Laravel app
+<a name="laravel"></a>
+## Installing Slypday in a Laravel app
 
 Install Slydepay with [composer](https://getcomposer.org/doc/00-intro.md):
 
@@ -52,7 +51,8 @@ Whenever you use the `Slydepay` facade in your code, remember to add this line t
 
 For more information about Laravel Facades, refer to [the Laravel documentation](https://laravel.com/docs/5.5/facades).
 
-### Installing Slydepay in a non-Laravel app
+<a name="php"></a>
+## Installing Slydepay in a PHP app
 
 1) Install Slydepay with [composer](https://getcomposer.org/doc/00-intro.md):
 
@@ -212,9 +212,13 @@ Optional:
 Status | Description
 -------| ----------
 NEW | When there is a an order but no transaction. Happens when in integration mode or customer abandoned payment
+
 PENDING | When the order is payed for but you have not confirmed it
+
 CONFIRMED | When the payment is confirmed
+
 DISPUTED | When you or Slydepay cancelled the payment
+
 CANCELLED | When your customer raised a dispute on this payment
 
 ### Confirm transaction
