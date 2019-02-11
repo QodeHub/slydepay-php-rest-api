@@ -212,13 +212,9 @@ Optional:
 Status | Description
 -------| ----------
 NEW | When there is a an order but no transaction. Happens when in integration mode or customer abandoned payment
-
 PENDING | When the order is payed for but you have not confirmed it
-
 CONFIRMED | When the payment is confirmed
-
 DISPUTED | When you or Slydepay cancelled the payment
-
 CANCELLED | When your customer raised a dispute on this payment
 
 ### Confirm transaction
