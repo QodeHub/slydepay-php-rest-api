@@ -77,12 +77,6 @@ class SendInvoice extends CreateAndSendInvoice
      * @var string
      */
     protected $customerMobileNumber;
-    /**
-     * Optional externalAccountRef
-     *
-     * @var string
-     */
-    protected $externalAccountRef;
 
     /**
      * Construct for creating a new instance of this class
@@ -204,26 +198,6 @@ class SendInvoice extends CreateAndSendInvoice
         $this->customerMobileNumber = $customerMobileNumber;
 
         return $this;
-    }
-
-    /**
-     * @param string $externalAccountRef vodafone_token
-     *
-     * @return self
-     */
-    public function setExternalAccountRef($externalAccountRef)
-    {
-        $this->externalAccountRef = $externalAccountRef;
-
-        return $this;
-    }
-
-    /**
-     * @return self
-     */
-    public function getExternalAccountRef()
-    {
-        return $this->externalAccountRef;
     }
 
     /**

@@ -43,6 +43,7 @@ class CreateAndSendInvoice extends Api
     protected $parametersOptional = [
         'description',
         'orderItems',
+        'externalAccountRef',
     ];
 
     /**
@@ -106,6 +107,12 @@ class CreateAndSendInvoice extends Api
      * @var string
      */
     protected $description;
+    /**
+     * Optional externalAccountRef
+     *
+     * @var string
+     */
+    protected $externalAccountRef;
     /**
      * Construct for creating a new instance of this class
      *
@@ -399,6 +406,26 @@ class CreateAndSendInvoice extends Api
         $this->orderItems = $orderItems;
 
         return $this;
+    }
+
+    /**
+     * @param string $externalAccountRef vodafone_token
+     *
+     * @return self
+     */
+    public function setExternalAccountRef($externalAccountRef)
+    {
+        $this->externalAccountRef = $externalAccountRef;
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function getExternalAccountRef()
+    {
+        return $this->externalAccountRef;
     }
 
     /**
