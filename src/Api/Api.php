@@ -64,7 +64,7 @@ abstract class Api implements ApiInterface
      * @param  \Qodehub\Slydepay\ConfigInterface $config
      * @return void
      */
-    public function __construct(Config $config)
+    public function __construct(Config $config = null)
     {
         $this->config = $config;
     }
