@@ -32,12 +32,14 @@ class Test extends TestCase
      * @var string
      */
     protected $version = '1.0.0';
+
     /**
      * This will be the Authorization merchantKey
      *
      * @var string
      */
     protected $merchantKey = 'some-valid-merchantKey';
+
     /**
      * This is the emailOrMobileNumber for the Slydepay Merchant
      *
